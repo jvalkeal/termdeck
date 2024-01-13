@@ -1,0 +1,17 @@
+spring:
+  main:
+    banner-mode: off
+logging:
+  pattern:
+    console:
+#  file:
+#    name: termdeck.log
+#  level:
+#    root: debug
+#    com:
+#      github:
+#        jvalkeal:
+#          termdeck: debug
+#    org:
+#      springframework:
+#        shell: debug
