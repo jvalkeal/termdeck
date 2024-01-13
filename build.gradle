@@ -17,10 +17,12 @@ repositories {
 
 ext {
 	set('springShellVersion', "3.2.0")
+	set('flexmarkVersion', "0.64.8")
 }
 
 dependencies {
 	implementation 'org.springframework.shell:spring-shell-starter'
+	implementation "com.vladsch.flexmark:flexmark-all:${flexmarkVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
