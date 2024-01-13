@@ -1,6 +1,9 @@
 spring:
   main:
     banner-mode: off
+  shell:
+    noninteractive:
+      primary-command: termdeck
 logging:
   pattern:
     console:
