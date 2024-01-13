@@ -15,14 +15,11 @@
  */
 package com.github.jvalkeal;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.shell.command.annotation.CommandScan;
 
-@SpringBootApplication
-public class TermdeckApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(TermdeckApplication.class, args);
-	}
+@Configuration
+@CommandScan
+public class TermdeckConfiguration {
 
 }
