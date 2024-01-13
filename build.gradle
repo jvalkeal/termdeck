@@ -13,10 +13,12 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
 }
 
 ext {
-	set('springShellVersion', "3.2.0")
+	set('springShellVersion', "3.2.1-SNAPSHOT")
 	set('flexmarkVersion', "0.64.8")
 }
 
