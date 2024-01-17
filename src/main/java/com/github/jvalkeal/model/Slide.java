@@ -22,4 +22,14 @@ package com.github.jvalkeal.model;
  */
 public class Slide {
 
+	private final String content;
+
+	public Slide(String content) {
+		this.content = content;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
 }

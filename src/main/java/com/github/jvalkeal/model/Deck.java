@@ -25,6 +25,7 @@ import java.util.List;
 public class Deck {
 
 	private final List<Slide> slides;
+	private int index;
 
 	public Deck(List<Slide> slides) {
 		this.slides = slides;
@@ -32,6 +33,14 @@ public class Deck {
 
 	public List<Slide> getSlides() {
 		return slides;
+	}
+
+	public Slide getCurrentSlide() {
+		return slides.get(index);
+	}
+
+	public void move(int i) {
+		index = index + i;
 	}
 
 }

@@ -7,8 +7,8 @@ spring:
 logging:
   pattern:
     console:
-#  file:
-#    name: termdeck.log
+  file:
+    name: termdeck.log
 #  level:
 #    root: debug
 #    com:
