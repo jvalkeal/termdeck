@@ -15,16 +15,17 @@
  */
 package com.github.jvalkeal;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import com.github.jvalkeal.model.Deck;
-import com.github.jvalkeal.model.Slide;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.component.view.control.BoxView;
@@ -62,7 +63,10 @@ public class TermdeckCommand {
 	}
 
 	@Command
-	void termdeck() {
+	void termdeck(
+		@Option() File file
+	) {
+		log.info("XXX file: {}", file);
 		TerminalUI ui = builder.build();
 		BoxView view = new BoxView();
 		ui.configure(view);

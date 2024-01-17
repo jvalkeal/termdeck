@@ -20,13 +20,11 @@ repositories {
 ext {
 	set('springShellVersion', "3.2.1-SNAPSHOT")
 	set('flexmarkVersion', "0.64.8")
-	set('commonmarkVersion', "0.21.0")
 }
 
 dependencies {
 	implementation 'org.springframework.shell:spring-shell-starter'
 	implementation "com.vladsch.flexmark:flexmark-all:${flexmarkVersion}"
-	implementation "org.commonmark:commonmark:${commonmarkVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

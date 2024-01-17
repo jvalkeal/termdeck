@@ -13,17 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.model;
+package com.github.jvalkeal;
 
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.ast.Document;
+import org.springframework.lang.Nullable;
 
-public class MarkdownParser {
+/**
+ * Slide represents a partial content in a {@link Deck}.
+ *
+ * @author Janne Valkealahti
+ */
+public class Slide {
 
-	public Deck parse(String content) {
-		Parser parser = Parser.builder().build();
-		Document document = parser.parse(content);
-		return null;
+	private String content;
+
+	public Slide() {
+		this(null);
+	}
+
+	public Slide(@Nullable String content) {
+		this.content = content;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }

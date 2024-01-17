@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.model;
+package com.github.jvalkeal;
+
+import org.springframework.shell.component.view.control.BoxView;
+import org.springframework.shell.component.view.control.View;
 
 /**
- * Slide represents a partial content in a {@link Deck}.
+ * {@code PageView} is a {@link View} rendering content.
  *
  * @author Janne Valkealahti
  */
-public class Slide {
-
-	private final String content;
-
-	public Slide(String content) {
-		this.content = content;
-	}
-
-	public String getContent() {
-		return content;
-	}
+public class PageView extends BoxView {
 
 }

@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.model;
+package com.github.jvalkeal;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.lang.NonNull;
+import org.springframework.util.Assert;
 
 /**
  * Deck is a container for a collection of {@link Slide}'s.
@@ -27,12 +31,22 @@ public class Deck {
 	private final List<Slide> slides;
 	private int index;
 
-	public Deck(List<Slide> slides) {
-		this.slides = slides;
+	public Deck() {
+		this(List.of());
+	}
+
+	public Deck(@NonNull List<Slide> slides) {
+		Assert.notNull(slides, "slides cannot be null");
+		this.slides = new ArrayList<>(slides);
 	}
 
 	public List<Slide> getSlides() {
 		return slides;
+	}
+
+	public void addSlide(Slide slide) {
+		Assert.notNull(slide, "slide cannot be null");
+		this.slides.add(slide);
 	}
 
 	public Slide getCurrentSlide() {
