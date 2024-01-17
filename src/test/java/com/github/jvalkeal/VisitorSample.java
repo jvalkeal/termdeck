@@ -1,9 +1,13 @@
 package com.github.jvalkeal;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.Text;
 import com.vladsch.flexmark.ast.ThematicBreak;
+import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
@@ -40,19 +44,19 @@ public class VisitorSample {
 				---
 				Key1: Value1
 				Key2: Value2
-
 				---
-
 				# Slide1
 				hello from slide 1
-
 				---
 				# Slide2
 				hello1 from slide 2
 				hello2 from slide 2
 				""";
 
-		Parser parser = Parser.builder().build();
+		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
+		Parser parser = Parser.builder()
+			.extensions(Collections.singleton(ye))
+			.build();
 		Document document = parser.parse(html);
 		visitor.visit(document);
 	}
