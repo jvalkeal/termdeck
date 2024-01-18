@@ -16,10 +16,11 @@
 package com.github.jvalkeal;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.function.BiFunction;
 
+import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,7 @@ import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.Rectangle;
 import org.springframework.shell.geom.VerticalAlign;
+import org.springframework.shell.style.ThemeResolver;
 
 @Command
 public class TermdeckCommand {
@@ -44,21 +46,28 @@ public class TermdeckCommand {
 	@Autowired
 	TerminalUIBuilder builder;
 
-	static class ContentDraw implements BiFunction<Screen, Rectangle, Rectangle> {
+	@Autowired
+	ThemeResolver themeResolver;
 
-		String content = "";
+	class ContentDraw implements BiFunction<Screen, Rectangle, Rectangle> {
+
+		private Deck deck;
+
+		ContentDraw(Deck deck) {
+			this.deck = deck;
+		}
 
 		@Override
 		public Rectangle apply(Screen screen, Rectangle rect) {
+			String content = deck.getCurrentSlide().getContent();
+			AttributedString aContent = themeResolver.evaluateExpression(content);
+			String content2 = aContent.toAnsi();
 			screen.writerBuilder()
 				.build()
-				.text(content, rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+				.text(content2, rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
 			return rect;
 		}
 
-		public void setContent(String content) {
-			this.content = content;
-		}
 
 	}
 
@@ -70,15 +79,9 @@ public class TermdeckCommand {
 		TerminalUI ui = builder.build();
 		BoxView view = new BoxView();
 		ui.configure(view);
-		Deck deck = buildDeck();
-		ContentDraw contentDraw = new ContentDraw();
+		Deck deck = buildDeck(file);
+		ContentDraw contentDraw = new ContentDraw(deck);
 		view.setDrawFunction(contentDraw);
-		// view.setDrawFunction((screen, rect) -> {
-		// 	screen.writerBuilder()
-		// 		.build()
-		// 		.text("Hello World", rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
-		// 	return rect;
-		// });
 
 		EventLoop eventLoop = ui.getEventLoop();
 		eventLoop.onDestroy(eventLoop.keyEvents()
@@ -86,7 +89,6 @@ public class TermdeckCommand {
 				log.info("XXX1: {}", m);
 				if (m.getPlainKey() == Key.q) {
 					deck.move(1);
-					contentDraw.setContent(deck.getCurrentSlide().getContent());
 				}
 			})
 			.subscribe());
@@ -95,11 +97,22 @@ public class TermdeckCommand {
 		ui.run();
 	}
 
-	private Deck buildDeck() {
-		Slide slide1 = new Slide("slide1");
-		Slide slide2 = new Slide("slide2");
-		Deck deck = new Deck(List.of(slide1, slide2));
-		return deck;
+	private Deck buildDeck(File file) {
+		try {
+			byte[] bytes = Files.readAllBytes(file.toPath());
+			ModelParser modelParser = new ModelParser();
+			Deck deck = modelParser.parse(new String(bytes));
+			return deck;
+		} catch (IOException e) {
+			throw new RuntimeException("cannot read file", e);
+		}
 	}
+
+	// private Deck buildDeck() {
+	// 	Slide slide1 = new Slide("slide1");
+	// 	Slide slide2 = new Slide("slide2");
+	// 	Deck deck = new Deck(List.of(slide1, slide2));
+	// 	return deck;
+	// }
 
 }
