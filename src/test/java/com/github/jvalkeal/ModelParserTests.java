@@ -29,7 +29,8 @@ public class ModelParserTests {
 		Deck deck = parse(data);
 		assertThat(deck).satisfies(d -> {
 			assertThat(d.getSlides()).hasSize(1);
-			assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello");
+			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello");
+			assertThat(d.getSlides().get(0).getContent()).containsExactly("hello");
 		});
 	}
 
@@ -44,8 +45,23 @@ public class ModelParserTests {
 		Deck deck = parse(data);
 		assertThat(deck).satisfies(d -> {
 			assertThat(d.getSlides()).hasSize(2);
-			assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello1");
-			assertThat(d.getSlides().get(1).getContent()).isEqualTo("hello2");
+			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello1");
+			// assertThat(d.getSlides().get(1).getContent()).isEqualTo("hello2");
+			assertThat(d.getSlides().get(0).getContent()).containsExactly("hello1");
+			assertThat(d.getSlides().get(1).getContent()).containsExactly("hello2");
+		});
+	}
+
+	@Test
+	void basicHeading() {
+		String data = """
+				# hello
+				""";
+		Deck deck = parse(data);
+		assertThat(deck).satisfies(d -> {
+			assertThat(d.getSlides()).hasSize(1);
+			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("X: hello");
+			assertThat(d.getSlides().get(0).getContent()).containsExactly("X: hello");
 		});
 	}
 

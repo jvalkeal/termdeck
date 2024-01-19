@@ -44,4 +44,6 @@ out/
 ### app ###
 spring-shell.log
 termdeck.log
+termdeck.log.*.gz
+
 

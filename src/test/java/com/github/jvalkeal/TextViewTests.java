@@ -15,14 +15,28 @@
  */
 package com.github.jvalkeal;
 
-import org.springframework.shell.component.view.control.BoxView;
-import org.springframework.shell.component.view.control.View;
+import org.junit.jupiter.api.Nested;
 
-/**
- * {@code PageView} is a {@link View} rendering content.
- *
- * @author Janne Valkealahti
- */
-public class PageView extends BoxView {
+public class TextViewTests {
+
+	@Nested
+	class Construction {
+
+	}
+
+	@Nested
+	class Styling {
+
+	}
+
+	@Nested
+	class Events {
+
+	}
+
+	@Nested
+	class Visual {
+
+	}
 
 }

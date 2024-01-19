@@ -49,27 +49,29 @@ public class TermdeckCommand {
 	@Autowired
 	ThemeResolver themeResolver;
 
-	class ContentDraw implements BiFunction<Screen, Rectangle, Rectangle> {
+	// class ContentDraw implements BiFunction<Screen, Rectangle, Rectangle> {
 
-		private Deck deck;
+	// 	private Deck deck;
 
-		ContentDraw(Deck deck) {
-			this.deck = deck;
-		}
+	// 	ContentDraw(Deck deck) {
+	// 		this.deck = deck;
+	// 	}
 
-		@Override
-		public Rectangle apply(Screen screen, Rectangle rect) {
-			String content = deck.getCurrentSlide().getContent();
-			AttributedString aContent = themeResolver.evaluateExpression(content);
-			String content2 = aContent.toAnsi();
-			screen.writerBuilder()
-				.build()
-				.text(content2, rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
-			return rect;
-		}
+	// 	@Override
+	// 	public Rectangle apply(Screen screen, Rectangle rect) {
+	// 		String content = deck.getCurrentSlide().getContent();
+	// 		AttributedString aContent = themeResolver.evaluateExpression(content);
+	// 		String content2 = aContent.toAnsi();
+	// 		screen.writerBuilder()
+	// 			.build()
+	// 			// .text(content2, 0, 0);
+	// 			// .text(content2, rect, HorizontalAlign.LEFT, VerticalAlign.TOP);
+	// 			.text(content2, rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
+	// 		return rect;
+	// 	}
 
 
-	}
+	// }
 
 	@Command
 	void termdeck(
@@ -77,11 +79,13 @@ public class TermdeckCommand {
 	) {
 		log.info("XXX file: {}", file);
 		TerminalUI ui = builder.build();
-		BoxView view = new BoxView();
+		TextView view = new TextView();
+		// BoxView view = new BoxView();
 		ui.configure(view);
 		Deck deck = buildDeck(file);
-		ContentDraw contentDraw = new ContentDraw(deck);
-		view.setDrawFunction(contentDraw);
+		update(view, deck);
+		// ContentDraw contentDraw = new ContentDraw(deck);
+		// view.setDrawFunction(contentDraw);
 
 		EventLoop eventLoop = ui.getEventLoop();
 		eventLoop.onDestroy(eventLoop.keyEvents()
@@ -89,12 +93,21 @@ public class TermdeckCommand {
 				log.info("XXX1: {}", m);
 				if (m.getPlainKey() == Key.q) {
 					deck.move(1);
+					update(view, deck);
 				}
 			})
 			.subscribe());
 
 		ui.setRoot(view, true);
 		ui.run();
+	}
+
+	private void update(TextView view, Deck deck) {
+		String[] content = deck.getCurrentSlide().getContent();
+		for (int i = 0; i < content.length; i++) {
+			content[i] = themeResolver.evaluateExpression(content[i]).toAnsi();
+		}
+		view.setContent(content);
 	}
 
 	private Deck buildDeck(File file) {

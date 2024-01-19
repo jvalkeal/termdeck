@@ -24,21 +24,21 @@ import org.springframework.lang.Nullable;
  */
 public class Slide {
 
-	private String content;
+	private String content[];
 
 	public Slide() {
 		this(null);
 	}
 
-	public Slide(@Nullable String content) {
+	public Slide(@Nullable String[] content) {
 		this.content = content;
 	}
 
-	public String getContent() {
+	public String[] getContent() {
 		return content;
 	}
 
-	public void setContent(String content) {
+	public void setContent(String[] content) {
 		this.content = content;
 	}
 

@@ -15,9 +15,13 @@
  */
 package com.github.jvalkeal;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.BiConsumer;
 
+import com.vladsch.flexmark.ast.Heading;
+import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.Text;
 import com.vladsch.flexmark.ast.ThematicBreak;
 import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
@@ -28,19 +32,12 @@ import com.vladsch.flexmark.util.ast.NodeVisitor;
 import com.vladsch.flexmark.util.ast.Visitor;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModelParser {
 
-
-	NodeVisitor visitor = new NodeVisitor(
-		// new VisitHandler<>(Node.class, this::visit)
-	) {
-		@Override
-		protected void processNode(Node node, boolean withChildren, java.util.function.BiConsumer<Node,com.vladsch.flexmark.util.ast.Visitor<Node>> processor) {
-			System.out.println("Visiting node:" + node);
-			super.processNode(node, withChildren, processor);
-		};
-	};
+	private Logger log = LoggerFactory.getLogger(ModelParser.class);
 
 	public Deck parse(String content) {
 		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
@@ -54,45 +51,81 @@ public class ModelParser {
 		return visitor.getDeck();
 	}
 
-	private static class ModelNodeVisitor extends NodeVisitor {
+	private class ModelNodeVisitor extends NodeVisitor {
 
-		private Deck deck;
-		private Slide slide;
-		private StringBuilder content;
+		private final Deck deck = new Deck();
+		private Slide currentSlide;
+		// private StringBuilder content;
+		private List<String> content;
+		private StringBuilder headingContent;
+		private StringBuilder paragraphContent;
 
 		@Override
 		protected void processNode(@NotNull Node node, boolean withChildren,
 				@NotNull BiConsumer<Node, Visitor<Node>> processor) {
 
+			log.debug("Start visit node {} {}", node.hashCode(), node);
 			// start node
 			if (node instanceof Document) {
-				this.deck = new Deck();
-				this.content = new StringBuilder();
-				this.slide = new Slide();
+				// this.deck = new Deck();
+				// this.content = new StringBuilder();
+				this.content = new ArrayList<>();
+				this.currentSlide = new Slide();
+			}
+			else if (node instanceof Text) {
+			}
+			else if (node instanceof Heading) {
+				this.headingContent = new StringBuilder();
+			}
+			else if (node instanceof Paragraph) {
+				this.paragraphContent = new StringBuilder();
 			}
 			else if (node instanceof ThematicBreak) {
 			}
 
 			super.processNode(node, withChildren, processor);
 
+			log.debug("End visit node {} {}", node.hashCode(), node);
 			// end node
 			if (node instanceof ThematicBreak) {
-				if (slide != null) {
-					slide.setContent(content.toString());
-					deck.addSlide(slide);
-					this.slide = null;
-					this.slide = new Slide();
+
+				if (currentSlide != null) {
+					// currentSlide.setContent(content.toString());
+					currentSlide.setContent(content.toArray(new String[0]));
+					deck.addSlide(currentSlide);
+					this.currentSlide = null;
+					this.currentSlide = new Slide();
 				}
-				this.content = new StringBuilder();
+				// this.content = new StringBuilder();
+				this.content = new ArrayList<>();
+			}
+			else if (node instanceof Paragraph) {
+				// this.content.append(this.paragraphContent.toString());
+				// this.content.append(System.lineSeparator());
+				this.content.add(this.paragraphContent.toString());
+				this.paragraphContent = null;
+			}
+			else if (node instanceof Heading) {
+				// this.content.append(this.headingContent.toString());
+				// this.content.append(System.lineSeparator());
+				this.content.add(this.headingContent.toString());
+				this.headingContent = null;
 			}
 			else if (node instanceof Text n) {
 				BasedSequence chars = n.getChars();
-				content.append(chars);
+				if (this.paragraphContent != null) {
+					this.paragraphContent.append(chars);
+				}
+				if (this.headingContent != null) {
+					this.headingContent.append("X: ");
+					this.headingContent.append(chars);
+				}
 			}
 			else if (node instanceof Document) {
-				if (slide != null) {
-					slide.setContent(content.toString());
-					deck.addSlide(slide);
+				if (currentSlide != null) {
+					// currentSlide.setContent(content.toString());
+					currentSlide.setContent(content.toArray(new String[0]));
+					deck.addSlide(currentSlide);
 				}
 			}
 		}

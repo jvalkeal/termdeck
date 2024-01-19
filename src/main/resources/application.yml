@@ -9,12 +9,11 @@ logging:
     console:
   file:
     name: termdeck.log
-#  level:
-#    root: debug
-#    com:
-#      github:
-#        jvalkeal:
-#          termdeck: debug
-#    org:
-#      springframework:
-#        shell: debug
+  level:
+    # root: debug
+    com:
+      github:
+        jvalkeal: debug
+    # org:
+    #   springframework:
+    #     shell: debug
