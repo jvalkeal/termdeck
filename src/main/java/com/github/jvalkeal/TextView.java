@@ -67,6 +67,9 @@ public class TextView extends BoxView {
 		super.drawInternal(screen);
 	}
 
+	/**
+	 * Generic {@link ViewEventArgs}.
+	 */
 	public record TextViewEventArgs() implements ViewEventArgs {
 
 		public static TextViewEventArgs of() {
@@ -74,6 +77,12 @@ public class TextView extends BoxView {
 		}
 	}
 
+	/**
+	 * Generic {@link ViewEvent}.
+	 *
+	 * @param view the view sending an event
+	 * @param args the event args
+	 */
 	public record TextViewEvent(View view, TextViewEventArgs args) implements ViewEvent {
 
 		public static TextViewEvent of(View view) {

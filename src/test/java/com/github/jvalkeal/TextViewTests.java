@@ -15,9 +15,16 @@
  */
 package com.github.jvalkeal;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-public class TextViewTests {
+import org.springframework.shell.component.view.control.MenuView;
+import org.springframework.shell.component.view.control.MenuView.MenuItem;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class TextViewTests extends AbstractViewTests {
 
 	@Nested
 	class Construction {
@@ -36,6 +43,22 @@ public class TextViewTests {
 
 	@Nested
 	class Visual {
+		TextView view;
+
+		@BeforeEach
+		void setup() {
+			view = new TextView();
+			configure(view);
+			view.setRect(0, 0, 10, 10);
+		}
+
+		@Test
+		void rendersSimpleText() {
+			view.setContent(new String[] { "hello" });
+			view.setRect(0, 0, 80, 24);
+			view.draw(screen24x80);
+			assertThat(forScreen(screen24x80)).hasHorizontalText("hello", 0, 0, 5);
+		}
 
 	}
 

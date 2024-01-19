@@ -18,9 +18,7 @@ package com.github.jvalkeal;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.function.BiFunction;
 
-import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +27,8 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
-import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.event.EventLoop;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
-import org.springframework.shell.component.view.screen.Screen;
-import org.springframework.shell.geom.HorizontalAlign;
-import org.springframework.shell.geom.Rectangle;
-import org.springframework.shell.geom.VerticalAlign;
 import org.springframework.shell.style.ThemeResolver;
 
 @Command
