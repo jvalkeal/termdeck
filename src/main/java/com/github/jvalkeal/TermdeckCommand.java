@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.view.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,30 +44,6 @@ public class TermdeckCommand {
 	@Autowired
 	ThemeResolver themeResolver;
 
-	// class ContentDraw implements BiFunction<Screen, Rectangle, Rectangle> {
-
-	// 	private Deck deck;
-
-	// 	ContentDraw(Deck deck) {
-	// 		this.deck = deck;
-	// 	}
-
-	// 	@Override
-	// 	public Rectangle apply(Screen screen, Rectangle rect) {
-	// 		String content = deck.getCurrentSlide().getContent();
-	// 		AttributedString aContent = themeResolver.evaluateExpression(content);
-	// 		String content2 = aContent.toAnsi();
-	// 		screen.writerBuilder()
-	// 			.build()
-	// 			// .text(content2, 0, 0);
-	// 			// .text(content2, rect, HorizontalAlign.LEFT, VerticalAlign.TOP);
-	// 			.text(content2, rect, HorizontalAlign.CENTER, VerticalAlign.CENTER);
-	// 		return rect;
-	// 	}
-
-
-	// }
-
 	@Command
 	void termdeck(
 		@Option() File file
@@ -73,12 +51,9 @@ public class TermdeckCommand {
 		log.info("XXX file: {}", file);
 		TerminalUI ui = builder.build();
 		TextView view = new TextView();
-		// BoxView view = new BoxView();
 		ui.configure(view);
 		Deck deck = buildDeck(file);
 		update(view, deck);
-		// ContentDraw contentDraw = new ContentDraw(deck);
-		// view.setDrawFunction(contentDraw);
 
 		EventLoop eventLoop = ui.getEventLoop();
 		eventLoop.onDestroy(eventLoop.keyEvents()
@@ -106,19 +81,12 @@ public class TermdeckCommand {
 	private Deck buildDeck(File file) {
 		try {
 			byte[] bytes = Files.readAllBytes(file.toPath());
-			ModelParser modelParser = new ModelParser();
+			FlexmarkParser modelParser = new FlexmarkParser();
 			Deck deck = modelParser.parse(new String(bytes));
 			return deck;
 		} catch (IOException e) {
 			throw new RuntimeException("cannot read file", e);
 		}
 	}
-
-	// private Deck buildDeck() {
-	// 	Slide slide1 = new Slide("slide1");
-	// 	Slide slide2 = new Slide("slide2");
-	// 	Deck deck = new Deck(List.of(slide1, slide2));
-	// 	return deck;
-	// }
 
 }

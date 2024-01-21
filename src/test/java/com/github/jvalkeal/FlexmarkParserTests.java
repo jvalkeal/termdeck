@@ -15,11 +15,12 @@
  */
 package com.github.jvalkeal;
 
+import com.github.jvalkeal.model.Deck;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ModelParserTests {
+public class FlexmarkParserTests {
 
 	@Test
 	void basicSinglePage() {
@@ -65,8 +66,24 @@ public class ModelParserTests {
 		});
 	}
 
+	// @Test
+	// void metadata1() {
+	// 	String data = """
+	// 			---
+	// 			key1: value1
+	// 			---
+	// 			# hello1
+	// 			data1
+
+	// 			---
+	// 			# hello2
+	// 			data2
+	// 			""";
+	// 	Deck deck = parse(data);
+	// }
+
 	private Deck parse(String data) {
-		ModelParser modelParser = new ModelParser();
+		FlexmarkParser modelParser = new FlexmarkParser();
 		return modelParser.parse(data);
 	}
 }

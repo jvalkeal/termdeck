@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.model.Slide;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.Text;
@@ -35,9 +37,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ModelParser {
+public class FlexmarkParser {
 
-	private Logger log = LoggerFactory.getLogger(ModelParser.class);
+	private Logger log = LoggerFactory.getLogger(FlexmarkParser.class);
 
 	public Deck parse(String content) {
 		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
@@ -117,7 +119,7 @@ public class ModelParser {
 					this.paragraphContent.append(chars);
 				}
 				if (this.headingContent != null) {
-					this.headingContent.append("X: ");
+					this.headingContent.append("■ ");
 					this.headingContent.append(chars);
 				}
 			}

@@ -13,33 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal;
+package com.github.jvalkeal.view;
 
-import org.springframework.lang.Nullable;
+import org.springframework.shell.component.view.control.Control;
+import org.springframework.shell.geom.Dimension;
 
-/**
- * Slide represents a partial content in a {@link Deck}.
- *
- * @author Janne Valkealahti
- */
-public class Slide {
+public interface SlideControl extends Control {
 
-	private String content[];
-
-	public Slide() {
-		this(null);
-	}
-
-	public Slide(@Nullable String[] content) {
-		this.content = content;
-	}
-
-	public String[] getContent() {
-		return content;
-	}
-
-	public void setContent(String[] content) {
-		this.content = content;
-	}
-
+	Dimension preferredDimension(Dimension dim);
 }
