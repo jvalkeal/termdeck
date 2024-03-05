@@ -17,4 +17,18 @@ package com.github.jvalkeal.model;
 
 public class ParagraphSection implements Section {
 
+	private String content;
+
+	public ParagraphSection(String content) {
+		this.content = content;
+	}
+
+	public static ParagraphSection of(String content) {
+		return new ParagraphSection(content);
+	}
+
+	public String getContent() {
+		return content;
+	}
+
 }

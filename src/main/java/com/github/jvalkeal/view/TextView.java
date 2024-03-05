@@ -30,11 +30,13 @@ import org.springframework.shell.geom.Rectangle;
  */
 public class TextView extends BoxView {
 
-	// private record TextRow(String data) {
-	// }
+	private record TextItem(char[] data) {
+	}
 
-	// private record TextItem(String data) {
-	// }
+	private record TextRow(TextItem[] data) {
+	}
+
+	private TextRow[] rows;
 
 	String[] content;
 
@@ -44,6 +46,17 @@ public class TextView extends BoxView {
 
 	public TextView(String[] content) {
 		this.content = content;
+
+		TextRow[] ddd = new TextRow[content.length];
+		for (int i = 0; i < content.length; i++) {
+			TextItem[] xxx = new TextItem[content[i].length()];
+			for (int j = 0; j < content[i].length(); j++) {
+				xxx[i] = new TextItem(new char[]{content[j].charAt(j)});
+			}
+			TextRow yyy = new TextRow(xxx);
+			ddd[i] = yyy;
+		}
+		this.rows = ddd;
 	}
 
 	public void setContent(String[] content) {
@@ -59,11 +72,18 @@ public class TextView extends BoxView {
 	protected void drawInternal(Screen screen) {
 		Writer writer = screen.writerBuilder().layer(getLayer()).build();
 		Rectangle rect = getInnerRect();
-		for (int i = 0; i < content.length; i++) {
-			if (i < content.length) {
-				writer.text(content[i], rect.x(), rect.y());
+		for (int i = 0; i < rows.length; i++) {
+			TextRow yyy = rows[i];
+			for (int j = 0; j < yyy.data().length; j++) {
+				TextItem item = yyy.data()[i];
+				writer.text(new String(item.data()), rect.x(), rect.y() + i);
 			}
 		}
+		// for (int i = 0; i < content.length; i++) {
+		// 	if (i < content.length) {
+		// 		writer.text(content[i], rect.x(), rect.y());
+		// 	}
+		// }
 		super.drawInternal(screen);
 	}
 

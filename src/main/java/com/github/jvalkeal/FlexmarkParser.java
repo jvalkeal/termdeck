@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.model.HeadingSection;
+import com.github.jvalkeal.model.ParagraphSection;
 import com.github.jvalkeal.model.Slide;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Paragraph;
@@ -67,6 +69,7 @@ public class FlexmarkParser {
 				@NotNull BiConsumer<Node, Visitor<Node>> processor) {
 
 			log.debug("Start visit node {} {}", node.hashCode(), node);
+			// System.out.println("node: " + node);
 			// start node
 			if (node instanceof Document) {
 				// this.deck = new Deck();
@@ -102,14 +105,14 @@ public class FlexmarkParser {
 				this.content = new ArrayList<>();
 			}
 			else if (node instanceof Paragraph) {
-				// this.content.append(this.paragraphContent.toString());
-				// this.content.append(System.lineSeparator());
+				currentSlide.add(ParagraphSection.of(this.paragraphContent.toString()));
+				// ParagraphSection xxx = ParagraphSection.of(this.paragraphContent.toString());
 				this.content.add(this.paragraphContent.toString());
 				this.paragraphContent = null;
 			}
 			else if (node instanceof Heading) {
-				// this.content.append(this.headingContent.toString());
-				// this.content.append(System.lineSeparator());
+				currentSlide.add(HeadingSection.of(this.headingContent.toString()));
+				// HeadingSection xxx = HeadingSection.of(this.headingContent.toString());
 				this.content.add(this.headingContent.toString());
 				this.headingContent = null;
 			}

@@ -15,6 +15,7 @@
  */
 package com.github.jvalkeal.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.lang.Nullable;
@@ -27,7 +28,7 @@ import org.springframework.lang.Nullable;
 public class Slide {
 
 	private String content[];
-	private List<Section> sections;
+	private List<Section> sections = new ArrayList<>();
 
 	public Slide() {
 		this(null);
@@ -35,6 +36,10 @@ public class Slide {
 
 	public Slide(@Nullable String[] content) {
 		this.content = content;
+	}
+
+	public void add(Section section) {
+		sections.add(section);
 	}
 
 	public String[] getContent() {

@@ -48,7 +48,7 @@ public class TermdeckCommand {
 	void termdeck(
 		@Option() File file
 	) {
-		log.info("XXX file: {}", file);
+		log.debug("Handling file: {}", file);
 		TerminalUI ui = builder.build();
 		TextView view = new TextView();
 		ui.configure(view);
@@ -58,7 +58,6 @@ public class TermdeckCommand {
 		EventLoop eventLoop = ui.getEventLoop();
 		eventLoop.onDestroy(eventLoop.keyEvents()
 			.doOnNext(m -> {
-				log.info("XXX1: {}", m);
 				if (m.getPlainKey() == Key.q) {
 					deck.move(1);
 					update(view, deck);

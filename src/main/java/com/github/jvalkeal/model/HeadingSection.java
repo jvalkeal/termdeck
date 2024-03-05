@@ -17,4 +17,18 @@ package com.github.jvalkeal.model;
 
 public class HeadingSection implements Section {
 
+	private String content;
+
+	public HeadingSection(String content) {
+		this.content = content;
+	}
+
+	public static HeadingSection of(String content) {
+		return new HeadingSection(content);
+	}
+
+	public String getContent() {
+		return content;
+	}
+
 }

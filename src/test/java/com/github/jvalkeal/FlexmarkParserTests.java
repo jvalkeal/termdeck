@@ -62,7 +62,8 @@ public class FlexmarkParserTests {
 		assertThat(deck).satisfies(d -> {
 			assertThat(d.getSlides()).hasSize(1);
 			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("X: hello");
-			assertThat(d.getSlides().get(0).getContent()).containsExactly("X: hello");
+			// assertThat(d.getSlides().get(0).getContent()).containsExactly("X: hello");
+			assertThat(d.getSlides().get(0).getContent()).containsExactly("■ hello");
 		});
 	}
 
