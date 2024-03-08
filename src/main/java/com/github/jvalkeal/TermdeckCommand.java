@@ -18,6 +18,7 @@ package com.github.jvalkeal;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.view.TextView;
@@ -74,7 +75,7 @@ public class TermdeckCommand {
 		for (int i = 0; i < content.length; i++) {
 			content[i] = themeResolver.evaluateExpression(content[i]).toAnsi();
 		}
-		// view.setContent(content);
+		view.setContent(Arrays.asList(content));
 	}
 
 	private Deck buildDeck(File file) {

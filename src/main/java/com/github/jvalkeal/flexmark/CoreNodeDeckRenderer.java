@@ -79,7 +79,6 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 
     private void render(Document node, DeckRendererContext docx) {
 		System.out.println("XXX render Document " + node);
-        // No rendering itself
         docx.renderChildren(node);
     }
 

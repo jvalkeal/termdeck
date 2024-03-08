@@ -35,6 +35,11 @@ public class TextView extends BoxView {
 	public TextView() {
 	}
 
+	public void setContent(List<String> text) {
+		content.clear();
+		content.addAll(text);
+	}
+
 	public void setContent(String text) {
 		content.clear();
 		if (text == null) {

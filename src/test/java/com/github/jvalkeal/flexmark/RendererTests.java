@@ -32,18 +32,12 @@ class RendererTests {
 					# slide
 					hello
 					""";
-			DataHolder options = new MutableDataSet();
+		DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).build();
 		DeckRenderer renderer = DeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
 		renderer.render(document);
 
-		// Deck deck = parse(data);
-		// assertThat(deck).satisfies(d -> {
-		// 	assertThat(d.getSlides()).hasSize(1);
-		// 	// assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello");
-		// 	assertThat(d.getSlides().get(0).getContent()).containsExactly("hello");
-		// });
 	}
 
 	@Test
