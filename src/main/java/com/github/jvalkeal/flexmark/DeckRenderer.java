@@ -22,18 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vladsch.flexmark.docx.converter.DocxRendererPhase;
-import com.vladsch.flexmark.docx.converter.NodeDocxRenderer;
-import com.vladsch.flexmark.docx.converter.NodeDocxRendererHandler;
-import com.vladsch.flexmark.docx.converter.PhasedNodeDocxRenderer;
-import com.vladsch.flexmark.docx.converter.internal.CoreNodeDocxRenderer;
 import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.builder.BuilderBase;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.ScopedDataSet;
 import com.vladsch.flexmark.util.misc.Extension;
-import org.docx4j.wml.CTBookmark;
 import org.jetbrains.annotations.NotNull;
 
 public class DeckRenderer {

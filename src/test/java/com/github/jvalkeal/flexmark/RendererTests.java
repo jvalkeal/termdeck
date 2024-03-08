@@ -28,10 +28,11 @@ class RendererTests {
 
 	@Test
 	void basicSinglePage() {
-		String markdown = """
-				hello
-				""";
-		DataHolder options = new MutableDataSet();
+				String markdown = """
+					# slide
+					hello
+					""";
+			DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).build();
 		DeckRenderer renderer = DeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
@@ -48,40 +49,41 @@ class RendererTests {
 	@Test
 	void docxTest() {
 		String markdown = """
-				hello
-				""";
+			# slide
+			hello
+			""";
 
-        Parser PARSER = Parser.builder(OPTIONS).build();
-        DocxRenderer RENDERER = DocxRenderer.builder(OPTIONS).build();
+		Parser PARSER = Parser.builder(OPTIONS).build();
+		DocxRenderer RENDERER = DocxRenderer.builder(OPTIONS).build();
 
-        Node document = PARSER.parse(markdown);
+		Node document = PARSER.parse(markdown);
 
-        // to get XML
-        String xml = RENDERER.render(document);
+		// to get XML
+		String xml = RENDERER.render(document);
 
-        // or to control the package
-        // WordprocessingMLPackage template = DocxRenderer.getDefaultTemplate();
-        // RENDERER.render(document, template);
+		// or to control the package
+		// WordprocessingMLPackage template = DocxRenderer.getDefaultTemplate();
+		// RENDERER.render(document, template);
 
 	}
 
-    final private static DataHolder OPTIONS = new MutableDataSet()
-            .set(Parser.EXTENSIONS, Arrays.asList(
-                    DefinitionExtension.create(),
-                    EmojiExtension.create(),
-                    FootnoteExtension.create(),
-                    StrikethroughSubscriptExtension.create(),
-                    InsExtension.create(),
-                    SuperscriptExtension.create(),
-                    TablesExtension.create(),
-                    TocExtension.create(),
-                    SimTocExtension.create(),
-                    WikiLinkExtension.create()
-            ))
-            .set(DocxRenderer.SUPPRESS_HTML, true)
-            // the following two are needed to allow doc relative and site relative address resolution
-            .set(DocxRenderer.DOC_RELATIVE_URL, "file:///Users/vlad/src/pdf") // this will be used for URLs like 'images/...' or './' or '../'
-            .set(DocxRenderer.DOC_ROOT_URL, "file:///Users/vlad/src/pdf") // this will be used for URLs like: '/...'
-            ;
+	final private static DataHolder OPTIONS = new MutableDataSet()
+			.set(Parser.EXTENSIONS, Arrays.asList(
+					DefinitionExtension.create(),
+					EmojiExtension.create(),
+					FootnoteExtension.create(),
+					StrikethroughSubscriptExtension.create(),
+					InsExtension.create(),
+					SuperscriptExtension.create(),
+					TablesExtension.create(),
+					TocExtension.create(),
+					SimTocExtension.create(),
+					WikiLinkExtension.create()
+			))
+			.set(DocxRenderer.SUPPRESS_HTML, true)
+			// the following two are needed to allow doc relative and site relative address resolution
+			.set(DocxRenderer.DOC_RELATIVE_URL, "file:///Users/vlad/src/pdf") // this will be used for URLs like 'images/...' or './' or '../'
+			.set(DocxRenderer.DOC_ROOT_URL, "file:///Users/vlad/src/pdf") // this will be used for URLs like: '/...'
+			;
 
 }
