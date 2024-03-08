@@ -38,12 +38,13 @@ import org.springframework.shell.style.ThemeResolver;
 public class TermdeckCommand {
 
 	private final Logger log = LoggerFactory.getLogger(TermdeckCommand.class);
+	private final TerminalUIBuilder builder;
+	private final ThemeResolver themeResolver;
 
-	@Autowired
-	TerminalUIBuilder builder;
-
-	@Autowired
-	ThemeResolver themeResolver;
+	public TermdeckCommand(TerminalUIBuilder builder, ThemeResolver themeResolver) {
+		this.builder = builder;
+		this.themeResolver = themeResolver;
+	}
 
 	@Command
 	void termdeck(

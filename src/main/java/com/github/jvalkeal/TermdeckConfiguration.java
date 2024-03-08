@@ -21,5 +21,4 @@ import org.springframework.shell.command.annotation.CommandScan;
 @Configuration
 @CommandScan
 public class TermdeckConfiguration {
-
 }
