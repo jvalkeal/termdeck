@@ -1,7 +1,8 @@
-package com.github.jvalkeal.xxx;
+package com.github.jvalkeal.flexmark;
 
 import java.util.Arrays;
 
+import com.github.jvalkeal.flexmark.DeckRenderer;
 import com.github.jvalkeal.model.Deck;
 import com.vladsch.flexmark.docx.converter.DocxRenderer;
 import com.vladsch.flexmark.ext.definition.DefinitionExtension;

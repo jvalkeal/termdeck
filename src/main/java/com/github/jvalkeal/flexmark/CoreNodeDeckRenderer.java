@@ -1,4 +1,4 @@
-package com.github.jvalkeal.xxx;
+package com.github.jvalkeal.flexmark;
 
 import java.util.Arrays;
 import java.util.HashSet;
