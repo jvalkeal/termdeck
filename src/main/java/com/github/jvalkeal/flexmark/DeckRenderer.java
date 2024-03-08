@@ -30,6 +30,11 @@ import com.vladsch.flexmark.util.data.ScopedDataSet;
 import com.vladsch.flexmark.util.misc.Extension;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * @author Janne Valkealahti
+ */
 public class DeckRenderer {
 
     final private DataHolder options;
@@ -218,6 +223,12 @@ public class DeckRenderer {
             }
         }
 
+        @Override
+        public void append(String text) {
+
+        }
+
+        @Override
         public void renderChildren(@NotNull Node parent) {
             // String id = getNodeId(parent);
             // if (id != null && !id.isEmpty()) {

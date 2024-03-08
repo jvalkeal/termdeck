@@ -31,6 +31,7 @@ import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.ast.NonRenderingInline;
 import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.sequence.BasedSequence;
 
 public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 
@@ -84,6 +85,9 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 
     private void render(Heading node, DeckRendererContext docx) {
 		System.out.println("XXX render Heading " + node);
+        BasedSequence text = node.getText();
+        String string = text.toString();
+        docx.append(string);
         // docx.setBlockFormatProvider(new HeadingBlockFormatProvider<>(docx, node.getLevel() - 1));
         // addBlockAttributeFormatting(node, AttributablePart.NODE, docx, false);
         docx.renderChildren(node);
