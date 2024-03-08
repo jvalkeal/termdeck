@@ -15,25 +15,72 @@
  */
 package com.github.jvalkeal.view;
 
-import com.github.jvalkeal.view.TextView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.shell.component.view.control.MenuView;
-import org.springframework.shell.component.view.control.MenuView.MenuItem;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TextViewTests extends AbstractViewTests {
+class TextViewTests extends AbstractViewTests {
+
+	private String MULTILINE_FEW_SHORT = """
+			line1
+			line2
+			line3
+			""";
+
+	private String MULTILINE_MANY_SHORT = """
+				line1
+				line2
+				line3
+				line4
+				line5
+				line6
+				line7
+				line8
+				line9
+				""";
 
 	@Nested
 	class Construction {
 
+		TextView view;
+
+		@Test
+		void constructDefault() {
+			view = new TextView();
+		}
+
 	}
 
 	@Nested
-	class Styling {
+	class Visual {
+
+		TextView view;
+
+		@BeforeEach
+		void setup() {
+			view = new TextView();
+			view.setRect(0, 0, 10, 7);
+			configure(view);
+		}
+
+		@Test
+		void simpleMultiLine() {
+			view.setContent(MULTILINE_FEW_SHORT);
+			view.draw(screen7x10);
+			assertThat(forScreen(screen7x10)).hasHorizontalText("line1", 0, 0, 5);
+			assertThat(forScreen(screen7x10)).hasHorizontalText("line2", 0, 1, 5);
+			assertThat(forScreen(screen7x10)).hasHorizontalText("line3", 0, 2, 5);
+		}
+
+		@Test
+		void moreLinesThanScreenHeight() {
+			view.setContent(MULTILINE_MANY_SHORT);
+			view.draw(screen7x10);
+			assertThat(forScreen(screen7x10)).hasHorizontalText("line1", 0, 0, 5);
+			assertThat(forScreen(screen7x10)).hasHorizontalText("line7", 0, 6, 5);
+		}
 
 	}
 
@@ -43,23 +90,7 @@ public class TextViewTests extends AbstractViewTests {
 	}
 
 	@Nested
-	class Visual {
-		TextView view;
-
-		@BeforeEach
-		void setup() {
-			view = new TextView();
-			configure(view);
-			view.setRect(0, 0, 10, 10);
-		}
-
-		@Test
-		void rendersSimpleText() {
-			view.setContent(new String[] { "hello" });
-			view.setRect(0, 0, 80, 24);
-			view.draw(screen24x80);
-			assertThat(forScreen(screen24x80)).hasHorizontalText("hello", 0, 0, 5);
-		}
+	class Styling {
 
 	}
 

@@ -74,7 +74,7 @@ public class TermdeckCommand {
 		for (int i = 0; i < content.length; i++) {
 			content[i] = themeResolver.evaluateExpression(content[i]).toAnsi();
 		}
-		view.setContent(content);
+		// view.setContent(content);
 	}
 
 	private Deck buildDeck(File file) {

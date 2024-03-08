@@ -15,99 +15,47 @@
  */
 package com.github.jvalkeal.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.shell.component.view.control.BoxView;
-import org.springframework.shell.component.view.control.View;
-import org.springframework.shell.component.view.control.ViewEvent;
-import org.springframework.shell.component.view.control.ViewEventArgs;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
 import org.springframework.shell.geom.Rectangle;
 
 /**
- * {@code TextView} is a {@link View} rendering content.
+ * {@code TextView} is used to draw a text.
  *
  * @author Janne Valkealahti
  */
 public class TextView extends BoxView {
 
-	private record TextItem(char[] data) {
-	}
-
-	private record TextRow(TextItem[] data) {
-	}
-
-	private TextRow[] rows;
-
-	String[] content;
+	private final List<String> content = new ArrayList<>();
 
 	public TextView() {
-		this(new String[0]);
 	}
 
-	public TextView(String[] content) {
-		this.content = content;
-
-		TextRow[] ddd = new TextRow[content.length];
-		for (int i = 0; i < content.length; i++) {
-			TextItem[] xxx = new TextItem[content[i].length()];
-			for (int j = 0; j < content[i].length(); j++) {
-				xxx[i] = new TextItem(new char[]{content[j].charAt(j)});
-			}
-			TextRow yyy = new TextRow(xxx);
-			ddd[i] = yyy;
+	public void setContent(String text) {
+		content.clear();
+		if (text == null) {
+			return;
 		}
-		this.rows = ddd;
-	}
-
-	public void setContent(String[] content) {
-		this.content = content;
-	}
-
-	@Override
-	protected void initInternal() {
-		super.initInternal();
+		String[] lines = text.split(System.lineSeparator());
+		for (int i = 0; i < lines.length; i++) {
+			content.add(lines[i]);
+		}
 	}
 
 	@Override
 	protected void drawInternal(Screen screen) {
-		Writer writer = screen.writerBuilder().layer(getLayer()).build();
-		Rectangle rect = getInnerRect();
-		for (int i = 0; i < rows.length; i++) {
-			TextRow yyy = rows[i];
-			for (int j = 0; j < yyy.data().length; j++) {
-				TextItem item = yyy.data()[i];
-				writer.text(new String(item.data()), rect.x(), rect.y() + i);
-			}
+		Rectangle rect = getRect();
+		Writer writer = screen.writerBuilder().build();
+		for (int i = 0; i < content.size() && rect.y() < content.size(); i++) {
+			String line = content.get(i);
+			writer.text(line, 0, i);
 		}
-		// for (int i = 0; i < content.length; i++) {
-		// 	if (i < content.length) {
-		// 		writer.text(content[i], rect.x(), rect.y());
-		// 	}
-		// }
+
 		super.drawInternal(screen);
-	}
-
-	/**
-	 * Generic {@link ViewEventArgs}.
-	 */
-	public record TextViewEventArgs() implements ViewEventArgs {
-
-		public static TextViewEventArgs of() {
-			return new TextViewEventArgs();
-		}
-	}
-
-	/**
-	 * Generic {@link ViewEvent}.
-	 *
-	 * @param view the view sending an event
-	 * @param args the event args
-	 */
-	public record TextViewEvent(View view, TextViewEventArgs args) implements ViewEvent {
-
-		public static TextViewEvent of(View view) {
-			return new TextViewEvent(view, TextViewEventArgs.of());
-		}
 	}
 
 }
