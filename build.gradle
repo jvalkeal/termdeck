@@ -25,6 +25,7 @@ ext {
 dependencies {
 	implementation 'org.springframework.shell:spring-shell-starter'
 	implementation "com.vladsch.flexmark:flexmark-all:${flexmarkVersion}"
+	implementation "com.vladsch.flexmark:flexmark-docx-converter:${flexmarkVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

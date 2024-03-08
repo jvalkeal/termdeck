@@ -18,6 +18,7 @@ package com.github.jvalkeal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 import com.github.jvalkeal.model.Deck;
@@ -28,6 +29,7 @@ import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.Text;
 import com.vladsch.flexmark.ast.ThematicBreak;
+import com.vladsch.flexmark.ext.yaml.front.matter.AbstractYamlFrontMatterVisitor;
 import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Document;
@@ -49,8 +51,14 @@ public class FlexmarkParser {
 			.extensions(Collections.singleton(ye))
 			.build();
 
-		ModelNodeVisitor visitor = new ModelNodeVisitor();
 		Document document = parser.parse(content);
+
+		AbstractYamlFrontMatterVisitor v = new AbstractYamlFrontMatterVisitor();
+		v.visit(document);
+		Map<String, List<String>> data = v.getData();
+		System.out.println("yaml data: " + data);
+
+		ModelNodeVisitor visitor = new ModelNodeVisitor();
 		visitor.visit(document);
 		return visitor.getDeck();
 	}
@@ -69,7 +77,7 @@ public class FlexmarkParser {
 				@NotNull BiConsumer<Node, Visitor<Node>> processor) {
 
 			log.debug("Start visit node {} {}", node.hashCode(), node);
-			// System.out.println("node: " + node);
+			System.out.println("node: " + node);
 			// start node
 			if (node instanceof Document) {
 				// this.deck = new Deck();

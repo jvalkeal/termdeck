@@ -67,21 +67,24 @@ public class FlexmarkParserTests {
 		});
 	}
 
-	// @Test
-	// void metadata1() {
-	// 	String data = """
-	// 			---
-	// 			key1: value1
-	// 			---
-	// 			# hello1
-	// 			data1
+	@Test
+	void metadata1() {
+		String data = """
+				---
+				key1: value1
+				---
+				# hello1
+				data1
 
-	// 			---
-	// 			# hello2
-	// 			data2
-	// 			""";
-	// 	Deck deck = parse(data);
-	// }
+				---
+				# hello2
+				data2
+				""";
+		Deck deck = parse(data);
+		assertThat(deck).satisfies(d -> {
+			assertThat(d.getSlides()).hasSize(2);
+		});
+	}
 
 	private Deck parse(String data) {
 		FlexmarkParser modelParser = new FlexmarkParser();
