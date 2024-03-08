@@ -25,7 +25,6 @@ import com.github.jvalkeal.view.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.view.TerminalUI;
@@ -47,9 +46,7 @@ public class TermdeckCommand {
 	}
 
 	@Command
-	void termdeck(
-		@Option() File file
-	) {
+	void termdeck(@Option File file) {
 		log.debug("Handling file: {}", file);
 		TerminalUI ui = builder.build();
 		TextView view = new TextView();
