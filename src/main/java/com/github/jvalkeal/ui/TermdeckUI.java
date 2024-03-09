@@ -28,6 +28,11 @@ import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.Assert;
 
+/**
+ * Handles {@link TerminalUI} logic.
+ *
+ * @author Janne Valkealahti
+ */
 public class TermdeckUI {
 
 	private final Deck deck;
@@ -39,6 +44,10 @@ public class TermdeckUI {
 		this.builder = builder;
 		this.themeResolver = themeResolver;
 		this.deck = deck;
+	}
+
+	public static void run(TerminalUIBuilder builder, ThemeResolver themeResolver, Deck deck) {
+		new TermdeckUI(builder, themeResolver, deck).run();
 	}
 
 	public void run() {
@@ -59,7 +68,6 @@ public class TermdeckUI {
 
 		ui.setRoot(view, true);
 		ui.run();
-
 	}
 
 	private void update(TextView view, Deck deck) {
@@ -67,9 +75,5 @@ public class TermdeckUI {
 			.map(c -> themeResolver.evaluateExpression(c).toAnsi())
 			.collect(Collectors.toList());
 		view.setContent(content);
-	}
-
-	public static void run(TerminalUIBuilder builder, ThemeResolver themeResolver, Deck deck) {
-		new TermdeckUI(builder, themeResolver, deck).run();
 	}
 }
