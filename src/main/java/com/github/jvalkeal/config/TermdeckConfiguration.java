@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal;
+package com.github.jvalkeal.config;
+
+import com.github.jvalkeal.commands.TermdeckCommand;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.annotation.CommandScan;
 
 @Configuration
-@CommandScan
+@CommandScan(basePackageClasses = TermdeckCommand.class)
 public class TermdeckConfiguration {
 }

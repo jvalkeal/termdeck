@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal;
+package com.github.jvalkeal.commands;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +21,7 @@ import java.nio.file.Files;
 
 import com.github.jvalkeal.flexmark.FlexmarkParser;
 import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.ui.TermdeckUI;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
@@ -28,7 +29,7 @@ import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.style.ThemeResolver;
 
 @Command
-class TermdeckCommand {
+public class TermdeckCommand {
 
 	private final TerminalUIBuilder builder;
 	private final ThemeResolver themeResolver;

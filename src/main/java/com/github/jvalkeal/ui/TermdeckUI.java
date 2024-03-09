@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal;
+package com.github.jvalkeal.ui;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.Assert;
 
-class TermdeckUI {
+public class TermdeckUI {
 
 	private final Logger log = LoggerFactory.getLogger(TermdeckUI.class);
 	private final Deck deck;
@@ -43,7 +43,7 @@ class TermdeckUI {
 		this.deck = deck;
 	}
 
-	void run() {
+	public void run() {
 		TerminalUI ui = builder.build();
 		TextView view = new TextView();
 		ui.configure(view);
@@ -74,7 +74,7 @@ class TermdeckUI {
 		view.setContent(content);
 	}
 
-	static void run(TerminalUIBuilder builder, ThemeResolver themeResolver, Deck deck) {
+	public static void run(TerminalUIBuilder builder, ThemeResolver themeResolver, Deck deck) {
 		new TermdeckUI(builder, themeResolver, deck).run();
 	}
 }
