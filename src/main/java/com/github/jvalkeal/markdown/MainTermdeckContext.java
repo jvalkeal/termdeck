@@ -13,7 +13,7 @@ import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.ScopedDataSet;
 import org.jetbrains.annotations.NotNull;
 
-class MainDeckRenderer extends TermdeckContextImpl<Node> implements TermdeckRendererContext {
+class MainTermdeckContext extends TermdeckContextImpl<Node> implements TermdeckRendererContext {
 
 	final private Map<Class<?>, NodeTermdeckRendererHandler<?>> renderers;
 	final private Set<TermdeckRendererPhase> renderingPhases;
@@ -22,7 +22,7 @@ class MainDeckRenderer extends TermdeckContextImpl<Node> implements TermdeckRend
 	final private List<PhasedNodeTermdeckRenderer> phasedFormatters;
 	final List<NodeTermdeckRendererFactory> nodeFormatterFactories;
 
-	MainDeckRenderer(DataHolder options, Document document, List<NodeTermdeckRendererFactory> nodeFormatterFactories) {
+	MainTermdeckContext(DataHolder options, Document document, List<NodeTermdeckRendererFactory> nodeFormatterFactories) {
 		super(new ScopedDataSet(document, options));
 		this.nodeFormatterFactories = nodeFormatterFactories;
 		this.renderingPhases = new HashSet<>(TermdeckRendererPhase.values().length);
@@ -106,10 +106,10 @@ class MainDeckRenderer extends TermdeckContextImpl<Node> implements TermdeckRend
 
 			if (nodeRenderer != null) {
 				NodeTermdeckRendererHandler<?> finalNodeRenderer = nodeRenderer;
-				Node oldNode = MainDeckRenderer.this.renderingNode;
+				Node oldNode = MainTermdeckContext.this.renderingNode;
 				renderingNode = node;
 
-				finalNodeRenderer.render(renderingNode, MainDeckRenderer.this);
+				finalNodeRenderer.render(renderingNode, MainTermdeckContext.this);
 				renderingNode = oldNode;
 				// contextFramed(() -> {
 				//     String id = getNodeId(node);

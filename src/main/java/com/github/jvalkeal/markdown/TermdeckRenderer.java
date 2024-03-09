@@ -42,7 +42,7 @@ public class TermdeckRenderer {
 	}
 
 	public List<List<String>> render(Node node) {
-		MainDeckRenderer renderer = new MainDeckRenderer(options, node.getDocument(), nodeFormatterFactories);
+		MainTermdeckContext renderer = new MainTermdeckContext(options, node.getDocument(), nodeFormatterFactories);
 		renderer.render(node);
 		return renderer.deck;
 	}
