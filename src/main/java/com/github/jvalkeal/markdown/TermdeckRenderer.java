@@ -22,7 +22,6 @@ import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.builder.BuilderBase;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.misc.Extension;
-import org.jetbrains.annotations.NotNull;
 
 public class TermdeckRenderer {
 
@@ -33,7 +32,6 @@ public class TermdeckRenderer {
 		options = builder.toImmutable();
 		this.nodeFormatterFactories = new ArrayList<>(builder.nodeDeckRendererFactories.size() + 1);
 		this.nodeFormatterFactories.addAll(builder.nodeDeckRendererFactories);
-
 		this.nodeFormatterFactories.add(CoreNodeTermdeckRenderer::new);
 	}
 
@@ -42,7 +40,7 @@ public class TermdeckRenderer {
 	}
 
 	public List<List<String>> render(Node node) {
-		MainTermdeckContext renderer = new MainTermdeckContext(options, node.getDocument(), nodeFormatterFactories);
+		DefaultTermdeckContext renderer = new DefaultTermdeckContext(options, node.getDocument(), nodeFormatterFactories);
 		renderer.render(node);
 		return renderer.deck;
 	}
@@ -57,20 +55,20 @@ public class TermdeckRenderer {
 		}
 
 		@Override
-		protected void removeApiPoint(@NotNull Object apiPoint) {
+		protected void removeApiPoint(Object apiPoint) {
 		}
 
 		@Override
-		protected void preloadExtension(@NotNull Extension extension) {
+		protected void preloadExtension(Extension extension) {
 		}
 
 		@Override
-		protected boolean loadExtension(@NotNull Extension extension) {
+		protected boolean loadExtension(Extension extension) {
 			throw new UnsupportedOperationException("Unimplemented method 'loadExtension'");
 		}
 
 		@Override
-		public @NotNull TermdeckRenderer build() {
+		public TermdeckRenderer build() {
 			return new TermdeckRenderer(this);
 		}
 

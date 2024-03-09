@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.jvalkeal.markdown;
 
 import java.util.ArrayList;
@@ -11,9 +26,8 @@ import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.ScopedDataSet;
-import org.jetbrains.annotations.NotNull;
 
-class MainTermdeckContext extends TermdeckContextImpl<Node> implements TermdeckRendererContext {
+class DefaultTermdeckContext extends TermdeckContextImpl<Node> implements TermdeckRendererContext {
 
 	final private Map<Class<?>, NodeTermdeckRendererHandler<?>> renderers;
 	final private Set<TermdeckRendererPhase> renderingPhases;
@@ -22,7 +36,7 @@ class MainTermdeckContext extends TermdeckContextImpl<Node> implements TermdeckR
 	final private List<PhasedNodeTermdeckRenderer> phasedFormatters;
 	final List<NodeTermdeckRendererFactory> nodeFormatterFactories;
 
-	MainTermdeckContext(DataHolder options, Document document, List<NodeTermdeckRendererFactory> nodeFormatterFactories) {
+	DefaultTermdeckContext(DataHolder options, Document document, List<NodeTermdeckRendererFactory> nodeFormatterFactories) {
 		super(new ScopedDataSet(document, options));
 		this.nodeFormatterFactories = nodeFormatterFactories;
 		this.renderingPhases = new HashSet<>(TermdeckRendererPhase.values().length);
@@ -66,8 +80,8 @@ class MainTermdeckContext extends TermdeckContextImpl<Node> implements TermdeckR
 		}
 	}
 
-	// @Override
-	public @NotNull DataHolder getOptions() {
+	@Override
+	public DataHolder getOptions() {
 		return options;
 	}
 
@@ -106,10 +120,10 @@ class MainTermdeckContext extends TermdeckContextImpl<Node> implements TermdeckR
 
 			if (nodeRenderer != null) {
 				NodeTermdeckRendererHandler<?> finalNodeRenderer = nodeRenderer;
-				Node oldNode = MainTermdeckContext.this.renderingNode;
+				Node oldNode = DefaultTermdeckContext.this.renderingNode;
 				renderingNode = node;
 
-				finalNodeRenderer.render(renderingNode, MainTermdeckContext.this);
+				finalNodeRenderer.render(renderingNode, DefaultTermdeckContext.this);
 				renderingNode = oldNode;
 				// contextFramed(() -> {
 				//     String id = getNodeId(node);
@@ -171,7 +185,7 @@ class MainTermdeckContext extends TermdeckContextImpl<Node> implements TermdeckR
 	}
 
 	@Override
-	public void renderChildren(@NotNull Node parent) {
+	public void renderChildren(Node parent) {
 		// String id = getNodeId(parent);
 		// if (id != null && !id.isEmpty()) {
 		//     if (bookmarkWrapsChildren.contains(parent.getClass())) {

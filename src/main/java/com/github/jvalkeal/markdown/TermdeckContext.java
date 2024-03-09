@@ -15,10 +15,14 @@
  */
 package com.github.jvalkeal.markdown;
 
+import com.vladsch.flexmark.util.data.DataHolder;
+
 public interface TermdeckContext<T> {
 
 	void append(String text);
 
 	void addSlide();
+
+	DataHolder getOptions();
 
 }
