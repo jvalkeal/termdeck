@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DeckRenderer {
 
-    final private DataHolder options;
+	final private DataHolder options;
 	final List<NodeDeckRendererFactory> nodeFormatterFactories;
 
 	DeckRenderer(Builder builder) {
@@ -55,17 +55,17 @@ public class DeckRenderer {
 	public List<List<String>> render(Node node) {
 		MainDeckRenderer renderer = new MainDeckRenderer(options, node.getDocument());
 		renderer.render(node);
-        return renderer.deck;
+		return renderer.deck;
 	}
 
 	public static class Builder extends BuilderBase<Builder> {
 
 		final List<NodeDeckRendererFactory> nodeDeckRendererFactories = new ArrayList<>();
 
-        public Builder(DataHolder options) {
-            super(options);
-            loadExtensions();
-        }
+		public Builder(DataHolder options) {
+			super(options);
+			loadExtensions();
+		}
 
 		@Override
 		protected void removeApiPoint(@NotNull Object apiPoint) {
@@ -87,7 +87,7 @@ public class DeckRenderer {
 
 	}
 
-    private class MainDeckRenderer extends DeckContextImpl<Node> implements DeckRendererContext {
+	private class MainDeckRenderer extends DeckContextImpl<Node> implements DeckRendererContext {
 
 		final private Map<Class<?>, NodeDeckRendererHandler<?>> renderers;
 		final private Set<DeckRendererPhase> renderingPhases;
@@ -102,46 +102,46 @@ public class DeckRenderer {
 			this.phasedFormatters = new ArrayList<>(nodeFormatterFactories.size());
 
 			for (int i = nodeFormatterFactories.size() - 1; i >= 0; i--) {
-                NodeDeckRendererFactory nodeDocxRendererFactory = nodeFormatterFactories.get(i);
-                NodeDeckRenderer nodeDeckRenderer = nodeDocxRendererFactory.create(this.getOptions());
-                Set<NodeDeckRendererHandler<?>> formattingHandlers = nodeDeckRenderer.getNodeFormattingHandlers();
-                if (formattingHandlers == null) continue;
+				NodeDeckRendererFactory nodeDocxRendererFactory = nodeFormatterFactories.get(i);
+				NodeDeckRenderer nodeDeckRenderer = nodeDocxRendererFactory.create(this.getOptions());
+				Set<NodeDeckRendererHandler<?>> formattingHandlers = nodeDeckRenderer.getNodeFormattingHandlers();
+				if (formattingHandlers == null) continue;
 
-                for (NodeDeckRendererHandler<?> nodeType : formattingHandlers) {
-                    // Overwrite existing renderer
-                    renderers.put(nodeType.getNodeType(), nodeType);
-                }
+				for (NodeDeckRendererHandler<?> nodeType : formattingHandlers) {
+					// Overwrite existing renderer
+					renderers.put(nodeType.getNodeType(), nodeType);
+				}
 
-                // // get nodes of interest
-                // Set<Class<?>> nodeClasses = nodeDeckRenderer.getNodeClasses();
-                // if (nodeClasses != null) {
-                //     collectNodeTypes.addAll(nodeClasses);
-                // }
+				// // get nodes of interest
+				// Set<Class<?>> nodeClasses = nodeDeckRenderer.getNodeClasses();
+				// if (nodeClasses != null) {
+				//     collectNodeTypes.addAll(nodeClasses);
+				// }
 
-                // // get nodes of interest
-                // Set<Class<?>> wrapChildrenClasses = nodeDeckRenderer.getBookmarkWrapsChildrenClasses();
-                // if (wrapChildrenClasses != null) {
-                //     bookmarkWrapsChildren.addAll(wrapChildrenClasses);
-                // }
+				// // get nodes of interest
+				// Set<Class<?>> wrapChildrenClasses = nodeDeckRenderer.getBookmarkWrapsChildrenClasses();
+				// if (wrapChildrenClasses != null) {
+				//     bookmarkWrapsChildren.addAll(wrapChildrenClasses);
+				// }
 
-                if (nodeDeckRenderer instanceof PhasedNodeDeckRenderer) {
-                    Set<DeckRendererPhase> phases = ((PhasedNodeDeckRenderer) nodeDeckRenderer).getFormattingPhases();
-                    if (phases != null) {
-                        if (phases.isEmpty()) throw new IllegalStateException("PhasedNodeDocxRenderer with empty Phases");
-                        this.renderingPhases.addAll(phases);
-                        this.phasedFormatters.add((PhasedNodeDeckRenderer) nodeDeckRenderer);
-                    } else {
-                        throw new IllegalStateException("PhasedNodeDocxRenderer with null Phases");
-                    }
-                }
+				if (nodeDeckRenderer instanceof PhasedNodeDeckRenderer) {
+					Set<DeckRendererPhase> phases = ((PhasedNodeDeckRenderer) nodeDeckRenderer).getFormattingPhases();
+					if (phases != null) {
+						if (phases.isEmpty()) throw new IllegalStateException("PhasedNodeDocxRenderer with empty Phases");
+						this.renderingPhases.addAll(phases);
+						this.phasedFormatters.add((PhasedNodeDeckRenderer) nodeDeckRenderer);
+					} else {
+						throw new IllegalStateException("PhasedNodeDocxRenderer with null Phases");
+					}
+				}
 
 			}
 		}
 
-        // @Override
-        public @NotNull DataHolder getOptions() {
-            return options;
-        }
+		// @Override
+		public @NotNull DataHolder getOptions() {
+			return options;
+		}
 
 		public void render(Node node) {
 			if (node instanceof Document) {
@@ -151,118 +151,118 @@ public class DeckRenderer {
 					}
 					this.phase = phase;
 					if (this.phase == DeckRendererPhase.DOCUMENT) {
-					    NodeDeckRendererHandler<?> nodeRenderer = renderers.get(node.getClass());
-					    if (nodeRenderer != null) {
-					        renderingNode = node;
-					        nodeRenderer.render(node, this);
-					        renderingNode = null;
-					    }
+						NodeDeckRendererHandler<?> nodeRenderer = renderers.get(node.getClass());
+						if (nodeRenderer != null) {
+							renderingNode = node;
+							nodeRenderer.render(node, this);
+							renderingNode = null;
+						}
 					} else {
-					    for (PhasedNodeDeckRenderer phasedFormatter : phasedFormatters) {
-					        if (phasedFormatter.getFormattingPhases().contains(phase)) {
-					            renderingNode = node;
-					            phasedFormatter.renderDocument(this, (Document) node, phase);
-					            renderingNode = null;
-					        }
-					    }
+						for (PhasedNodeDeckRenderer phasedFormatter : phasedFormatters) {
+							if (phasedFormatter.getFormattingPhases().contains(phase)) {
+								renderingNode = node;
+								phasedFormatter.renderDocument(this, (Document) node, phase);
+								renderingNode = null;
+							}
+						}
 					}
 
 				}
 			}
 			else {
-                NodeDeckRendererHandler<?> nodeRenderer = renderers.get(node.getClass());
+				NodeDeckRendererHandler<?> nodeRenderer = renderers.get(node.getClass());
 
-                if (nodeRenderer == null) {
-                    nodeRenderer = renderers.get(Node.class);
-                }
+				if (nodeRenderer == null) {
+					nodeRenderer = renderers.get(Node.class);
+				}
 
-                if (nodeRenderer != null) {
-                    NodeDeckRendererHandler<?> finalNodeRenderer = nodeRenderer;
-                    Node oldNode = MainDeckRenderer.this.renderingNode;
-                    renderingNode = node;
+				if (nodeRenderer != null) {
+					NodeDeckRendererHandler<?> finalNodeRenderer = nodeRenderer;
+					Node oldNode = MainDeckRenderer.this.renderingNode;
+					renderingNode = node;
 
 					finalNodeRenderer.render(renderingNode, MainDeckRenderer.this);
 					renderingNode = oldNode;
-                    // contextFramed(() -> {
-                    //     String id = getNodeId(node);
-                    //     if (id != null && !id.isEmpty()) {
-                    //         if (!bookmarkWrapsChildren.contains(node.getClass())) {
-                    //             boolean isBlockBookmark = node instanceof Block;
-                    //             if (isBlockBookmark) {
-                    //                 // put bookmark before the block element
-                    //                 CTBookmark bookmarkStart = createBookmarkStart(id, true);
-                    //                 createBookmarkEnd(bookmarkStart, true);
-                    //                 finalNodeRenderer.render(renderingNode, MainDocxRenderer.this);
-                    //             } else {
-                    //                 // wrap bookmark around the inline element
-                    //                 CTBookmark bookmarkStart = createBookmarkStart(id, false);
-                    //                 finalNodeRenderer.render(renderingNode, MainDocxRenderer.this);
-                    //                 createBookmarkEnd(bookmarkStart, false);
-                    //             }
-                    //         } else {
-                    //             finalNodeRenderer.render(renderingNode, MainDocxRenderer.this);
-                    //         }
-                    //     } else {
-                    //         finalNodeRenderer.render(renderingNode, MainDocxRenderer.this);
-                    //     }
-                    //     renderingNode = oldNode;
-                    // });
-                } else {
-                    // default behavior is controlled by generic Node.class that is implemented in CoreNodeDocxRenderer
-                    throw new IllegalStateException("Core Node DocxRenderer should implement generic Node renderer");
-                }
+					// contextFramed(() -> {
+					//     String id = getNodeId(node);
+					//     if (id != null && !id.isEmpty()) {
+					//         if (!bookmarkWrapsChildren.contains(node.getClass())) {
+					//             boolean isBlockBookmark = node instanceof Block;
+					//             if (isBlockBookmark) {
+					//                 // put bookmark before the block element
+					//                 CTBookmark bookmarkStart = createBookmarkStart(id, true);
+					//                 createBookmarkEnd(bookmarkStart, true);
+					//                 finalNodeRenderer.render(renderingNode, MainDocxRenderer.this);
+					//             } else {
+					//                 // wrap bookmark around the inline element
+					//                 CTBookmark bookmarkStart = createBookmarkStart(id, false);
+					//                 finalNodeRenderer.render(renderingNode, MainDocxRenderer.this);
+					//                 createBookmarkEnd(bookmarkStart, false);
+					//             }
+					//         } else {
+					//             finalNodeRenderer.render(renderingNode, MainDocxRenderer.this);
+					//         }
+					//     } else {
+					//         finalNodeRenderer.render(renderingNode, MainDocxRenderer.this);
+					//     }
+					//     renderingNode = oldNode;
+					// });
+				} else {
+					// default behavior is controlled by generic Node.class that is implemented in CoreNodeDocxRenderer
+					throw new IllegalStateException("Core Node DocxRenderer should implement generic Node renderer");
+				}
 
 			}
 		}
 
-        void renderChildrenUnwrapped(Node parent) {
-            Node node = parent.getFirstChild();
-            while (node != null) {
-                Node next = node.getNext();
-                render(node);
-                node = next;
-            }
-        }
+		void renderChildrenUnwrapped(Node parent) {
+			Node node = parent.getFirstChild();
+			while (node != null) {
+				Node next = node.getNext();
+				render(node);
+				node = next;
+			}
+		}
 
-        // List<String> content = new ArrayList<>();
+		// List<String> content = new ArrayList<>();
 
-        @Override
-        public void append(String text) {
-            currentSlide.add(text);
-        }
+		@Override
+		public void append(String text) {
+			currentSlide.add(text);
+		}
 
-        List<List<String>> deck = new ArrayList<>();
+		List<List<String>> deck = new ArrayList<>();
 		List<String> currentSlide;
 
 
-        @Override
-        public void addSlide() {
+		@Override
+		public void addSlide() {
 			List<String> slide = new ArrayList<>();
 			deck.add(slide);
 			currentSlide = slide;
-        }
+		}
 
-        @Override
-        public void renderChildren(@NotNull Node parent) {
-            // String id = getNodeId(parent);
-            // if (id != null && !id.isEmpty()) {
-            //     if (bookmarkWrapsChildren.contains(parent.getClass())) {
-            //         CTBookmark bookmarkStart = createBookmarkStart(id, false);
-            //         renderChildrenUnwrapped(parent);
-            //         createBookmarkEnd(bookmarkStart, false);
-            //         //contextFramed(new Runnable() {
-            //         //    @Override
-            //         //    public void run() {
-            //         //    }
-            //         //});
-            //     } else {
-            //         renderChildrenUnwrapped(parent);
-            //     }
-            // } else {
-            //     renderChildrenUnwrapped(parent);
-            // }
+		@Override
+		public void renderChildren(@NotNull Node parent) {
+			// String id = getNodeId(parent);
+			// if (id != null && !id.isEmpty()) {
+			//     if (bookmarkWrapsChildren.contains(parent.getClass())) {
+			//         CTBookmark bookmarkStart = createBookmarkStart(id, false);
+			//         renderChildrenUnwrapped(parent);
+			//         createBookmarkEnd(bookmarkStart, false);
+			//         //contextFramed(new Runnable() {
+			//         //    @Override
+			//         //    public void run() {
+			//         //    }
+			//         //});
+			//     } else {
+			//         renderChildrenUnwrapped(parent);
+			//     }
+			// } else {
+			//     renderChildrenUnwrapped(parent);
+			// }
 			renderChildrenUnwrapped(parent);
-        }
+		}
 
 	}
 

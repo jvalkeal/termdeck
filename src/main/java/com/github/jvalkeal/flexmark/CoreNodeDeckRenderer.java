@@ -38,13 +38,13 @@ import org.slf4j.LoggerFactory;
 
 public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 
-    private final Logger log = LoggerFactory.getLogger(CoreNodeDeckRenderer.class);
+	private final Logger log = LoggerFactory.getLogger(CoreNodeDeckRenderer.class);
 
-    final public static HashSet<DeckRendererPhase> RENDERING_PHASES = new HashSet<>(Arrays.asList(
-            DeckRendererPhase.COLLECT,
-            DeckRendererPhase.DOCUMENT_TOP,
-            DeckRendererPhase.DOCUMENT_BOTTOM
-    ));
+	final public static HashSet<DeckRendererPhase> RENDERING_PHASES = new HashSet<>(Arrays.asList(
+			DeckRendererPhase.COLLECT,
+			DeckRendererPhase.DOCUMENT_TOP,
+			DeckRendererPhase.DOCUMENT_BOTTOM
+	));
 
 
 	public CoreNodeDeckRenderer(DataHolder options) {
@@ -54,7 +54,7 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 	@Override
 	public Set<NodeDeckRendererHandler<?>> getNodeFormattingHandlers() {
 		return new HashSet<>(Arrays.asList(
-            new NodeDeckRendererHandler<>(Document.class, CoreNodeDeckRenderer.this::render),
+			new NodeDeckRendererHandler<>(Document.class, CoreNodeDeckRenderer.this::render),
 			new NodeDeckRendererHandler<>(Heading.class, CoreNodeDeckRenderer.this::render),
 			new NodeDeckRendererHandler<>(Node.class, CoreNodeDeckRenderer.this::render),
 			new NodeDeckRendererHandler<>(Paragraph.class, CoreNodeDeckRenderer.this::render),
@@ -84,98 +84,98 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 		}
 	}
 
-    private void render(Document node, DeckRendererContext docx) {
-        log.debug("Render {}", node);
+	private void render(Document node, DeckRendererContext docx) {
+		log.debug("Render {}", node);
 		// System.out.println("XXX render Document " + node);
-        docx.addSlide();
-        docx.renderChildren(node);
-    }
+		docx.addSlide();
+		docx.renderChildren(node);
+	}
 
-    private void render(Heading node, DeckRendererContext docx) {
-        log.debug("Render {}", node);
+	private void render(Heading node, DeckRendererContext docx) {
+		log.debug("Render {}", node);
 		// System.out.println("XXX render Heading " + node);
-        BasedSequence text = node.getText();
-        String string = text.toString();
-        docx.append(string);
-        // docx.setBlockFormatProvider(new HeadingBlockFormatProvider<>(docx, node.getLevel() - 1));
-        // addBlockAttributeFormatting(node, AttributablePart.NODE, docx, false);
-        docx.renderChildren(node);
-    }
+		BasedSequence text = node.getText();
+		String string = text.toString();
+		docx.append(string);
+		// docx.setBlockFormatProvider(new HeadingBlockFormatProvider<>(docx, node.getLevel() - 1));
+		// addBlockAttributeFormatting(node, AttributablePart.NODE, docx, false);
+		docx.renderChildren(node);
+	}
 
-    private void render(Node node, DeckRendererContext docx) {
-        log.debug("Render {}", node);
+	private void render(Node node, DeckRendererContext docx) {
+		log.debug("Render {}", node);
 		// System.out.println("XXX render Node " + node);
-        // BasedSequence chars = node.getChars();
-        // MainDocumentPart mdp = docx.getDocxDocument();
-        // if (node instanceof Block) {
-        //     docx.setBlockFormatProvider(new BlockFormatProviderBase<>(docx, docx.getDocxRendererOptions().LOOSE_PARAGRAPH_STYLE));
-        //     docx.createP();
-        //     docx.renderChildren(node);
-        // } else {
-        //     docx.addTextCreateR(chars.unescape());
-        // }
-    }
+		// BasedSequence chars = node.getChars();
+		// MainDocumentPart mdp = docx.getDocxDocument();
+		// if (node instanceof Block) {
+		//     docx.setBlockFormatProvider(new BlockFormatProviderBase<>(docx, docx.getDocxRendererOptions().LOOSE_PARAGRAPH_STYLE));
+		//     docx.createP();
+		//     docx.renderChildren(node);
+		// } else {
+		//     docx.addTextCreateR(chars.unescape());
+		// }
+	}
 
-    private void render(ThematicBreak node, DeckRendererContext docx) {
-        log.debug("Render {}", node);
+	private void render(ThematicBreak node, DeckRendererContext docx) {
+		log.debug("Render {}", node);
 		// System.out.println("XXX render ThematicBreak " + node);
-        docx.addSlide();
-    }
+		docx.addSlide();
+	}
 
-    private void render(Paragraph node, DeckRendererContext docx) {
-        log.debug("Render {}", node);
+	private void render(Paragraph node, DeckRendererContext docx) {
+		log.debug("Render {}", node);
 		// System.out.println("XXX render Paragraph " + node);
-        docx.append(node.getChars().toString());
-        if (node.getParent() instanceof EnumeratedReferenceBlock) {
-        //     // we need to unwrap the paragraphs
-        //     addBlockAttributeFormatting(node, AttributablePart.NODE, docx, false);
-            docx.renderChildren(node);
-        }
-        else if (!(node.getParent() instanceof ParagraphItemContainer) || !((ParagraphItemContainer) node.getParent()).isItemParagraph(node)) {
-            if (node.getParent() instanceof BlockQuote || node.getParent() instanceof AsideBlock) {
-                // the parent handles our formatting
-                // addBlockAttributeFormatting(node, AttributablePart.NODE, docx, true);
-                docx.renderChildren(node);
-            } else {
-                if (node.getFirstChildAnyNot(NonRenderingInline.class) != null || hasRenderingAttribute(node)) {
-                    // docx.setBlockFormatProvider(new BlockFormatProviderBase<>(docx, docx.getDocxRendererOptions().LOOSE_PARAGRAPH_STYLE));
-                    // addBlockAttributeFormatting(node, AttributablePart.NODE, docx, true);
-                    docx.renderChildren(node);
-                }
-            }
-        }
-        else {
-        //     // the parent handles our formatting
-        //     // for footnotes there is already an open paragraph, re-use it
-        //     addBlockAttributeFormatting(node, AttributablePart.NODE, docx, !(node.getParent() instanceof FootnoteBlock));
-            docx.renderChildren(node);
-        }
-    }
+		docx.append(node.getChars().toString());
+		if (node.getParent() instanceof EnumeratedReferenceBlock) {
+		//     // we need to unwrap the paragraphs
+		//     addBlockAttributeFormatting(node, AttributablePart.NODE, docx, false);
+			docx.renderChildren(node);
+		}
+		else if (!(node.getParent() instanceof ParagraphItemContainer) || !((ParagraphItemContainer) node.getParent()).isItemParagraph(node)) {
+			if (node.getParent() instanceof BlockQuote || node.getParent() instanceof AsideBlock) {
+				// the parent handles our formatting
+				// addBlockAttributeFormatting(node, AttributablePart.NODE, docx, true);
+				docx.renderChildren(node);
+			} else {
+				if (node.getFirstChildAnyNot(NonRenderingInline.class) != null || hasRenderingAttribute(node)) {
+					// docx.setBlockFormatProvider(new BlockFormatProviderBase<>(docx, docx.getDocxRendererOptions().LOOSE_PARAGRAPH_STYLE));
+					// addBlockAttributeFormatting(node, AttributablePart.NODE, docx, true);
+					docx.renderChildren(node);
+				}
+			}
+		}
+		else {
+		//     // the parent handles our formatting
+		//     // for footnotes there is already an open paragraph, re-use it
+		//     addBlockAttributeFormatting(node, AttributablePart.NODE, docx, !(node.getParent() instanceof FootnoteBlock));
+			docx.renderChildren(node);
+		}
+	}
 
-    private boolean hasRenderingAttribute(Node node) {
-        boolean pageBreak = false;
+	private boolean hasRenderingAttribute(Node node) {
+		boolean pageBreak = false;
 
-        for (Node child : node.getChildren()) {
-            if (child instanceof AttributesNode) {
-                AttributesNode attributesNode = (AttributesNode) child;
-                for (Node attribute : attributesNode.getChildren()) {
-                    if (attribute instanceof AttributeNode) {
-                        AttributeNode attributeNode = (AttributeNode) attribute;
-                        if (attributeNode.isClass())
-                            switch (attributeNode.getValue().toString()) {
-                                case "pagebreak":
-                                case "tab":
-                                    return true;
+		for (Node child : node.getChildren()) {
+			if (child instanceof AttributesNode) {
+				AttributesNode attributesNode = (AttributesNode) child;
+				for (Node attribute : attributesNode.getChildren()) {
+					if (attribute instanceof AttributeNode) {
+						AttributeNode attributeNode = (AttributeNode) attribute;
+						if (attributeNode.isClass())
+							switch (attributeNode.getValue().toString()) {
+								case "pagebreak":
+								case "tab":
+									return true;
 
-                                default:
-                                    break;
-                            }
-                    }
-                }
-            }
-        }
-        return false;
-    }
+								default:
+									break;
+							}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 
 }
