@@ -15,11 +15,13 @@
  */
 package com.github.jvalkeal.flexmark;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.Slide;
+import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
@@ -32,8 +34,9 @@ public class FlexmarkParser {
 	private Logger log = LoggerFactory.getLogger(FlexmarkParser.class);
 
 	public Deck parse2(String content) {
+		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
 		DataHolder options = new MutableDataSet();
-		Parser parser = Parser.builder(options).build();
+		Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
 		DeckRenderer renderer = DeckRenderer.builder(options).build();
 		Node document = parser.parse(content);
 		List<List<String>> deckContent = renderer.render(document);

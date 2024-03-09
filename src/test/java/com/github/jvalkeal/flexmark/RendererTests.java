@@ -1,6 +1,7 @@
 package com.github.jvalkeal.flexmark;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.github.jvalkeal.flexmark.DeckRenderer;
@@ -16,6 +17,7 @@ import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.ext.toc.SimTocExtension;
 import com.vladsch.flexmark.ext.toc.TocExtension;
 import com.vladsch.flexmark.ext.wikilink.WikiLinkExtension;
+import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
@@ -26,6 +28,27 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RendererTests {
+
+	@Test
+	void frontmatter() {
+		String markdown = """
+			---
+			key1: value1
+			---
+			# slide1
+			hello1
+			""";
+
+		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
+		DataHolder options = new MutableDataSet();
+		Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
+		// Parser parser = Parser.builder(options).build();
+		DeckRenderer renderer = DeckRenderer.builder(options).build();
+		Node document = parser.parse(markdown);
+		List<List<String>> deckContent = renderer.render(document);
+		assertThat(deckContent).isNotNull();
+
+	}
 
 	@Test
 	void basicSinglePage() {
