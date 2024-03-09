@@ -52,10 +52,6 @@ public class DeckRenderer {
 		return new Builder(options);
 	}
 
-	// public void render(Node node) {
-	// 	MainDeckRenderer renderer = new MainDeckRenderer(options, node.getDocument());
-	// 	renderer.render(node);
-	// }
 	public List<List<String>> render(Node node) {
 		MainDeckRenderer renderer = new MainDeckRenderer(options, node.getDocument());
 		renderer.render(node);

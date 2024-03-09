@@ -25,29 +25,45 @@ import org.springframework.lang.Nullable;
  *
  * @author Janne Valkealahti
  */
-public class Slide {
+public interface Slide {
 
-	private String content[];
-	private List<Section> sections = new ArrayList<>();
+	List<String> content();
 
-	public Slide() {
-		this(null);
-	}
+	static Slide of(List<String> content) {
+		return new Slide() {
 
-	public Slide(@Nullable String[] content) {
-		this.content = content;
-	}
+			@Override
+			public List<String> content() {
+				return content;
+			}
 
-	public void add(Section section) {
-		sections.add(section);
-	}
-
-	public String[] getContent() {
-		return content;
-	}
-
-	public void setContent(String[] content) {
-		this.content = content;
+		};
 	}
 
 }
+// public class Slide {
+
+// 	private String content[];
+// 	private List<Section> sections = new ArrayList<>();
+
+// 	public Slide() {
+// 		this(null);
+// 	}
+
+// 	public Slide(@Nullable String[] content) {
+// 		this.content = content;
+// 	}
+
+// 	public void add(Section section) {
+// 		sections.add(section);
+// 	}
+
+// 	public String[] getContent() {
+// 		return content;
+// 	}
+
+// 	public void setContent(String[] content) {
+// 		this.content = content;
+// 	}
+
+// }

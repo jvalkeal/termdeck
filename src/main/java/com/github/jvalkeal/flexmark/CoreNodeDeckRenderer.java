@@ -33,8 +33,12 @@ import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.ast.NonRenderingInline;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
+
+    private final Logger log = LoggerFactory.getLogger(CoreNodeDeckRenderer.class);
 
     final public static HashSet<DeckRendererPhase> RENDERING_PHASES = new HashSet<>(Arrays.asList(
             DeckRendererPhase.COLLECT,
@@ -81,13 +85,15 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 	}
 
     private void render(Document node, DeckRendererContext docx) {
-		System.out.println("XXX render Document " + node);
+        log.debug("Render {}", node);
+		// System.out.println("XXX render Document " + node);
         docx.addSlide();
         docx.renderChildren(node);
     }
 
     private void render(Heading node, DeckRendererContext docx) {
-		System.out.println("XXX render Heading " + node);
+        log.debug("Render {}", node);
+		// System.out.println("XXX render Heading " + node);
         BasedSequence text = node.getText();
         String string = text.toString();
         docx.append(string);
@@ -97,7 +103,8 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
     }
 
     private void render(Node node, DeckRendererContext docx) {
-		System.out.println("XXX render Node " + node);
+        log.debug("Render {}", node);
+		// System.out.println("XXX render Node " + node);
         // BasedSequence chars = node.getChars();
         // MainDocumentPart mdp = docx.getDocxDocument();
         // if (node instanceof Block) {
@@ -110,12 +117,14 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
     }
 
     private void render(ThematicBreak node, DeckRendererContext docx) {
-		System.out.println("XXX render ThematicBreak " + node);
+        log.debug("Render {}", node);
+		// System.out.println("XXX render ThematicBreak " + node);
         docx.addSlide();
     }
 
     private void render(Paragraph node, DeckRendererContext docx) {
-		System.out.println("XXX render Paragraph " + node);
+        log.debug("Render {}", node);
+		// System.out.println("XXX render Paragraph " + node);
         docx.append(node.getChars().toString());
         if (node.getParent() instanceof EnumeratedReferenceBlock) {
         //     // we need to unwrap the paragraphs

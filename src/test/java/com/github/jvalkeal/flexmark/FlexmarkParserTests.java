@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal;
+package com.github.jvalkeal.flexmark;
 
+import com.github.jvalkeal.flexmark.FlexmarkParser;
 import com.github.jvalkeal.model.Deck;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,8 @@ public class FlexmarkParserTests {
 		assertThat(deck).satisfies(d -> {
 			assertThat(d.getSlides()).hasSize(1);
 			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello");
-			assertThat(d.getSlides().get(0).getContent()).containsExactly("hello");
+			// assertThat(d.getSlides().get(0).getContent()).containsExactly("hello");
+			assertThat(d.getSlides().get(0).content()).containsExactly("hello");
 		});
 	}
 
@@ -48,8 +50,8 @@ public class FlexmarkParserTests {
 			assertThat(d.getSlides()).hasSize(2);
 			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello1");
 			// assertThat(d.getSlides().get(1).getContent()).isEqualTo("hello2");
-			assertThat(d.getSlides().get(0).getContent()).containsExactly("hello1");
-			assertThat(d.getSlides().get(1).getContent()).containsExactly("hello2");
+			assertThat(d.getSlides().get(0).content()).containsExactly("hello1");
+			assertThat(d.getSlides().get(1).content()).containsExactly("hello2");
 		});
 	}
 
@@ -63,7 +65,7 @@ public class FlexmarkParserTests {
 			assertThat(d.getSlides()).hasSize(1);
 			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("X: hello");
 			// assertThat(d.getSlides().get(0).getContent()).containsExactly("X: hello");
-			assertThat(d.getSlides().get(0).getContent()).containsExactly("■ hello");
+			assertThat(d.getSlides().get(0).content()).containsExactly("■ hello");
 		});
 	}
 
@@ -88,6 +90,6 @@ public class FlexmarkParserTests {
 
 	private Deck parse(String data) {
 		FlexmarkParser modelParser = new FlexmarkParser();
-		return modelParser.parse(data);
+		return modelParser.parse2(data);
 	}
 }
