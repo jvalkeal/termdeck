@@ -23,6 +23,7 @@ import com.vladsch.flexmark.ast.BlockQuote;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.ParagraphItemContainer;
+import com.vladsch.flexmark.ast.ThematicBreak;
 import com.vladsch.flexmark.ext.aside.AsideBlock;
 import com.vladsch.flexmark.ext.attributes.AttributeNode;
 import com.vladsch.flexmark.ext.attributes.AttributesNode;
@@ -52,7 +53,8 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
             new NodeDeckRendererHandler<>(Document.class, CoreNodeDeckRenderer.this::render),
 			new NodeDeckRendererHandler<>(Heading.class, CoreNodeDeckRenderer.this::render),
 			new NodeDeckRendererHandler<>(Node.class, CoreNodeDeckRenderer.this::render),
-			new NodeDeckRendererHandler<>(Paragraph.class, CoreNodeDeckRenderer.this::render)
+			new NodeDeckRendererHandler<>(Paragraph.class, CoreNodeDeckRenderer.this::render),
+			new NodeDeckRendererHandler<>(ThematicBreak.class, CoreNodeDeckRenderer.this::render)
 		));
 	}
 
@@ -80,6 +82,7 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 
     private void render(Document node, DeckRendererContext docx) {
 		System.out.println("XXX render Document " + node);
+        docx.addSlide();
         docx.renderChildren(node);
     }
 
@@ -106,8 +109,14 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
         // }
     }
 
+    private void render(ThematicBreak node, DeckRendererContext docx) {
+		System.out.println("XXX render ThematicBreak " + node);
+        docx.addSlide();
+    }
+
     private void render(Paragraph node, DeckRendererContext docx) {
 		System.out.println("XXX render Paragraph " + node);
+        docx.append(node.getChars().toString());
         if (node.getParent() instanceof EnumeratedReferenceBlock) {
         //     // we need to unwrap the paragraphs
         //     addBlockAttributeFormatting(node, AttributablePart.NODE, docx, false);

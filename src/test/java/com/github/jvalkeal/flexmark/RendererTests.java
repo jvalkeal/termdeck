@@ -1,6 +1,7 @@
 package com.github.jvalkeal.flexmark;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.github.jvalkeal.flexmark.DeckRenderer;
 import com.github.jvalkeal.model.Deck;
@@ -29,15 +30,19 @@ class RendererTests {
 	@Test
 	void basicSinglePage() {
 				String markdown = """
-					# slide
-					hello
+					# slide1
+					hello1
+
+					---
+					# slide2
+					hello2
 					""";
 		DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).build();
 		DeckRenderer renderer = DeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
-		renderer.render(document);
-
+		List<List<String>> deckContent = renderer.render(document);
+		assertThat(deckContent).isNotNull();
 	}
 
 	@Test

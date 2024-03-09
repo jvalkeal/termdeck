@@ -18,5 +18,6 @@ package com.github.jvalkeal.flexmark;
 public interface DeckContext<T> {
 
 	void append(String text);
+	void addSlide();
 
 }

@@ -52,9 +52,14 @@ public class DeckRenderer {
 		return new Builder(options);
 	}
 
-	public void render(Node node) {
+	// public void render(Node node) {
+	// 	MainDeckRenderer renderer = new MainDeckRenderer(options, node.getDocument());
+	// 	renderer.render(node);
+	// }
+	public List<List<String>> render(Node node) {
 		MainDeckRenderer renderer = new MainDeckRenderer(options, node.getDocument());
 		renderer.render(node);
+        return renderer.deck;
 	}
 
 	public static class Builder extends BuilderBase<Builder> {
@@ -223,9 +228,22 @@ public class DeckRenderer {
             }
         }
 
+        // List<String> content = new ArrayList<>();
+
         @Override
         public void append(String text) {
+            currentSlide.add(text);
+        }
 
+        List<List<String>> deck = new ArrayList<>();
+		List<String> currentSlide;
+
+
+        @Override
+        public void addSlide() {
+			List<String> slide = new ArrayList<>();
+			deck.add(slide);
+			currentSlide = slide;
         }
 
         @Override
