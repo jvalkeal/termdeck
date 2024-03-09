@@ -46,6 +46,24 @@ class RendererTests {
 	}
 
 	@Test
+	void codeJson() {
+				String markdown = """
+					```json
+					{
+					  "firstName": "John",
+					  "lastName": "Smith"
+					}
+					```
+					""";
+		DataHolder options = new MutableDataSet();
+		Parser parser = Parser.builder(options).build();
+		DeckRenderer renderer = DeckRenderer.builder(options).build();
+		Node document = parser.parse(markdown);
+		List<List<String>> deckContent = renderer.render(document);
+		assertThat(deckContent).isNotNull();
+	}
+
+	@Test
 	void docxTest() {
 		String markdown = """
 			# slide

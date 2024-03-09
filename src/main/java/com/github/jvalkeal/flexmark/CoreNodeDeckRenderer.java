@@ -85,14 +85,14 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 	}
 
 	private void render(Document node, DeckRendererContext docx) {
-		log.debug("Render {}", node);
+		log.debug("Render Document {}", node);
 		// System.out.println("XXX render Document " + node);
 		docx.addSlide();
 		docx.renderChildren(node);
 	}
 
 	private void render(Heading node, DeckRendererContext docx) {
-		log.debug("Render {}", node);
+		log.debug("Render Heading {}", node);
 		// System.out.println("XXX render Heading " + node);
 		BasedSequence text = node.getText();
 		String string = text.toString();
@@ -103,7 +103,7 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 	}
 
 	private void render(Node node, DeckRendererContext docx) {
-		log.debug("Render {}", node);
+		log.debug("Render Node {}", node);
 		// System.out.println("XXX render Node " + node);
 		// BasedSequence chars = node.getChars();
 		// MainDocumentPart mdp = docx.getDocxDocument();
@@ -117,13 +117,13 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 	}
 
 	private void render(ThematicBreak node, DeckRendererContext docx) {
-		log.debug("Render {}", node);
+		log.debug("Render ThematicBreak {}", node);
 		// System.out.println("XXX render ThematicBreak " + node);
 		docx.addSlide();
 	}
 
 	private void render(Paragraph node, DeckRendererContext docx) {
-		log.debug("Render {}", node);
+		log.debug("Render Paragraph {}", node);
 		// System.out.println("XXX render Paragraph " + node);
 		docx.append(node.getChars().toString());
 		if (node.getParent() instanceof EnumeratedReferenceBlock) {
