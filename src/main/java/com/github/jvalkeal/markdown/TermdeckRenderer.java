@@ -30,22 +30,17 @@ import com.vladsch.flexmark.util.data.ScopedDataSet;
 import com.vladsch.flexmark.util.misc.Extension;
 import org.jetbrains.annotations.NotNull;
 
-/**
- *
- *
- * @author Janne Valkealahti
- */
-public class DeckRenderer {
+public class TermdeckRenderer {
 
 	final private DataHolder options;
-	final List<NodeDeckRendererFactory> nodeFormatterFactories;
+	final List<NodeTermdeckRendererFactory> nodeFormatterFactories;
 
-	DeckRenderer(Builder builder) {
+	TermdeckRenderer(Builder builder) {
 		options = builder.toImmutable();
 		this.nodeFormatterFactories = new ArrayList<>(builder.nodeDeckRendererFactories.size() + 1);
 		this.nodeFormatterFactories.addAll(builder.nodeDeckRendererFactories);
 
-		this.nodeFormatterFactories.add(CoreNodeDeckRenderer::new);
+		this.nodeFormatterFactories.add(CoreNodeTermdeckRenderer::new);
 	}
 
 	public static Builder builder(DataHolder options) {
@@ -60,7 +55,7 @@ public class DeckRenderer {
 
 	public static class Builder extends BuilderBase<Builder> {
 
-		final List<NodeDeckRendererFactory> nodeDeckRendererFactories = new ArrayList<>();
+		final List<NodeTermdeckRendererFactory> nodeDeckRendererFactories = new ArrayList<>();
 
 		public Builder(DataHolder options) {
 			super(options);
@@ -81,33 +76,33 @@ public class DeckRenderer {
 		}
 
 		@Override
-		public @NotNull DeckRenderer build() {
-			return new DeckRenderer(this);
+		public @NotNull TermdeckRenderer build() {
+			return new TermdeckRenderer(this);
 		}
 
 	}
 
-	private class MainDeckRenderer extends DeckContextImpl<Node> implements DeckRendererContext {
+	private class MainDeckRenderer extends TermdeckContextImpl<Node> implements TermdeckRendererContext {
 
-		final private Map<Class<?>, NodeDeckRendererHandler<?>> renderers;
-		final private Set<DeckRendererPhase> renderingPhases;
-		private DeckRendererPhase phase;
+		final private Map<Class<?>, NodeTermdeckRendererHandler<?>> renderers;
+		final private Set<TermdeckRendererPhase> renderingPhases;
+		private TermdeckRendererPhase phase;
 		Node renderingNode;
-		final private List<PhasedNodeDeckRenderer> phasedFormatters;
+		final private List<PhasedNodeTermdeckRenderer> phasedFormatters;
 
 		MainDeckRenderer(DataHolder options, Document document) {
 			super(new ScopedDataSet(document, options));
-			this.renderingPhases = new HashSet<>(DeckRendererPhase.values().length);
+			this.renderingPhases = new HashSet<>(TermdeckRendererPhase.values().length);
 			this.renderers = new HashMap<>(32);
 			this.phasedFormatters = new ArrayList<>(nodeFormatterFactories.size());
 
 			for (int i = nodeFormatterFactories.size() - 1; i >= 0; i--) {
-				NodeDeckRendererFactory nodeDocxRendererFactory = nodeFormatterFactories.get(i);
-				NodeDeckRenderer nodeDeckRenderer = nodeDocxRendererFactory.create(this.getOptions());
-				Set<NodeDeckRendererHandler<?>> formattingHandlers = nodeDeckRenderer.getNodeFormattingHandlers();
+				NodeTermdeckRendererFactory nodeDocxRendererFactory = nodeFormatterFactories.get(i);
+				NodeTermdeckRenderer nodeDeckRenderer = nodeDocxRendererFactory.create(this.getOptions());
+				Set<NodeTermdeckRendererHandler<?>> formattingHandlers = nodeDeckRenderer.getNodeFormattingHandlers();
 				if (formattingHandlers == null) continue;
 
-				for (NodeDeckRendererHandler<?> nodeType : formattingHandlers) {
+				for (NodeTermdeckRendererHandler<?> nodeType : formattingHandlers) {
 					// Overwrite existing renderer
 					renderers.put(nodeType.getNodeType(), nodeType);
 				}
@@ -124,12 +119,12 @@ public class DeckRenderer {
 				//     bookmarkWrapsChildren.addAll(wrapChildrenClasses);
 				// }
 
-				if (nodeDeckRenderer instanceof PhasedNodeDeckRenderer) {
-					Set<DeckRendererPhase> phases = ((PhasedNodeDeckRenderer) nodeDeckRenderer).getFormattingPhases();
+				if (nodeDeckRenderer instanceof PhasedNodeTermdeckRenderer) {
+					Set<TermdeckRendererPhase> phases = ((PhasedNodeTermdeckRenderer) nodeDeckRenderer).getFormattingPhases();
 					if (phases != null) {
 						if (phases.isEmpty()) throw new IllegalStateException("PhasedNodeDocxRenderer with empty Phases");
 						this.renderingPhases.addAll(phases);
-						this.phasedFormatters.add((PhasedNodeDeckRenderer) nodeDeckRenderer);
+						this.phasedFormatters.add((PhasedNodeTermdeckRenderer) nodeDeckRenderer);
 					} else {
 						throw new IllegalStateException("PhasedNodeDocxRenderer with null Phases");
 					}
@@ -145,20 +140,20 @@ public class DeckRenderer {
 
 		public void render(Node node) {
 			if (node instanceof Document) {
-				for (DeckRendererPhase phase : DeckRendererPhase.values()) {
-					if (phase != DeckRendererPhase.DOCUMENT && !renderingPhases.contains(phase)) {
+				for (TermdeckRendererPhase phase : TermdeckRendererPhase.values()) {
+					if (phase != TermdeckRendererPhase.DOCUMENT && !renderingPhases.contains(phase)) {
 						continue;
 					}
 					this.phase = phase;
-					if (this.phase == DeckRendererPhase.DOCUMENT) {
-						NodeDeckRendererHandler<?> nodeRenderer = renderers.get(node.getClass());
+					if (this.phase == TermdeckRendererPhase.DOCUMENT) {
+						NodeTermdeckRendererHandler<?> nodeRenderer = renderers.get(node.getClass());
 						if (nodeRenderer != null) {
 							renderingNode = node;
 							nodeRenderer.render(node, this);
 							renderingNode = null;
 						}
 					} else {
-						for (PhasedNodeDeckRenderer phasedFormatter : phasedFormatters) {
+						for (PhasedNodeTermdeckRenderer phasedFormatter : phasedFormatters) {
 							if (phasedFormatter.getFormattingPhases().contains(phase)) {
 								renderingNode = node;
 								phasedFormatter.renderDocument(this, (Document) node, phase);
@@ -170,14 +165,14 @@ public class DeckRenderer {
 				}
 			}
 			else {
-				NodeDeckRendererHandler<?> nodeRenderer = renderers.get(node.getClass());
+				NodeTermdeckRendererHandler<?> nodeRenderer = renderers.get(node.getClass());
 
 				if (nodeRenderer == null) {
 					nodeRenderer = renderers.get(Node.class);
 				}
 
 				if (nodeRenderer != null) {
-					NodeDeckRendererHandler<?> finalNodeRenderer = nodeRenderer;
+					NodeTermdeckRendererHandler<?> finalNodeRenderer = nodeRenderer;
 					Node oldNode = MainDeckRenderer.this.renderingNode;
 					renderingNode = node;
 

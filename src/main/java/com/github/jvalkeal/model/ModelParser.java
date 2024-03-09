@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.markdown;
+package com.github.jvalkeal.model;
 
-import com.vladsch.flexmark.util.data.DataHolder;
+public interface ModelParser {
 
-public abstract class DeckContextImpl<T> implements DeckContext<T> {
-
-	public DeckContextImpl(DataHolder options) {
-
-	}
+	Deck parse(String content);
 
 }

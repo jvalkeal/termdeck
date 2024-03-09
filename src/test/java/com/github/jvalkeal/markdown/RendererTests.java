@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.jvalkeal.markdown.DeckRenderer;
+import com.github.jvalkeal.markdown.TermdeckRenderer;
 import com.github.jvalkeal.model.Deck;
 import com.vladsch.flexmark.docx.converter.DocxRenderer;
 import com.vladsch.flexmark.ext.definition.DefinitionExtension;
@@ -43,7 +43,7 @@ class RendererTests {
 		DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
 		// Parser parser = Parser.builder(options).build();
-		DeckRenderer renderer = DeckRenderer.builder(options).build();
+		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
 		List<List<String>> deckContent = renderer.render(document);
 		assertThat(deckContent).isNotNull();
@@ -62,7 +62,7 @@ class RendererTests {
 					""";
 		DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).build();
-		DeckRenderer renderer = DeckRenderer.builder(options).build();
+		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
 		List<List<String>> deckContent = renderer.render(document);
 		assertThat(deckContent).isNotNull();
@@ -80,7 +80,7 @@ class RendererTests {
 					""";
 		DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).build();
-		DeckRenderer renderer = DeckRenderer.builder(options).build();
+		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
 		List<List<String>> deckContent = renderer.render(document);
 		assertThat(deckContent).isNotNull();

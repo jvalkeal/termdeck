@@ -15,9 +15,12 @@
  */
 package com.github.jvalkeal.markdown;
 
-import java.util.Set;
+import com.vladsch.flexmark.util.data.DataHolder;
 
-public interface NodeDeckRenderer {
-	Set<NodeDeckRendererHandler<?>> getNodeFormattingHandlers();
-	Set<Class<?>> getNodeClasses();
+public abstract class TermdeckContextImpl<T> implements TermdeckContext<T> {
+
+	public TermdeckContextImpl(DataHolder options) {
+
+	}
+
 }

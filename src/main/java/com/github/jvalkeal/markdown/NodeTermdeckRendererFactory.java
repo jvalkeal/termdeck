@@ -17,6 +17,8 @@ package com.github.jvalkeal.markdown;
 
 import com.vladsch.flexmark.util.data.DataHolder;
 
-public interface NodeDeckRendererFactory {
-	NodeDeckRenderer create(DataHolder options);
+public interface NodeTermdeckRendererFactory {
+
+	NodeTermdeckRenderer create(DataHolder options);
+
 }

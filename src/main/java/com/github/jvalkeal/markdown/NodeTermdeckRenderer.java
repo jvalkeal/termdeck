@@ -15,10 +15,12 @@
  */
 package com.github.jvalkeal.markdown;
 
-import com.vladsch.flexmark.util.ast.Node;
+import java.util.Set;
 
-public interface DeckRendererContext extends DeckContext<Node> {
+public interface NodeTermdeckRenderer {
 
-	void renderChildren(Node parent);
+	Set<NodeTermdeckRendererHandler<?>> getNodeFormattingHandlers();
+
+	Set<Class<?>> getNodeClasses();
 
 }

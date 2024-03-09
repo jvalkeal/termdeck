@@ -15,7 +15,7 @@
  */
 package com.github.jvalkeal.markdown;
 
-import com.github.jvalkeal.markdown.FlexmarkParser;
+import com.github.jvalkeal.markdown.MarkdownModelParser;
 import com.github.jvalkeal.model.Deck;
 import org.junit.jupiter.api.Test;
 
@@ -89,7 +89,7 @@ public class FlexmarkParserTests {
 	}
 
 	private Deck parse(String data) {
-		FlexmarkParser modelParser = new FlexmarkParser();
-		return modelParser.parse2(data);
+		MarkdownModelParser modelParser = new MarkdownModelParser();
+		return modelParser.parse(data);
 	}
 }

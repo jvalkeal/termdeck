@@ -15,9 +15,10 @@
  */
 package com.github.jvalkeal.markdown;
 
-public interface DeckContext<T> {
-
-	void append(String text);
-	void addSlide();
-
+public enum TermdeckRendererPhase {
+	COLLECT,
+	DOCUMENT_FIRST,
+	DOCUMENT_TOP,
+	DOCUMENT,
+	DOCUMENT_BOTTOM,
 }

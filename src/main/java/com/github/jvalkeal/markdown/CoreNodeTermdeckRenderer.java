@@ -36,29 +36,29 @@ import com.vladsch.flexmark.util.sequence.BasedSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
+public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 
-	private final Logger log = LoggerFactory.getLogger(CoreNodeDeckRenderer.class);
+	private final Logger log = LoggerFactory.getLogger(CoreNodeTermdeckRenderer.class);
 
-	final public static HashSet<DeckRendererPhase> RENDERING_PHASES = new HashSet<>(Arrays.asList(
-			DeckRendererPhase.COLLECT,
-			DeckRendererPhase.DOCUMENT_TOP,
-			DeckRendererPhase.DOCUMENT_BOTTOM
+	final public static HashSet<TermdeckRendererPhase> RENDERING_PHASES = new HashSet<>(Arrays.asList(
+			TermdeckRendererPhase.COLLECT,
+			TermdeckRendererPhase.DOCUMENT_TOP,
+			TermdeckRendererPhase.DOCUMENT_BOTTOM
 	));
 
 
-	public CoreNodeDeckRenderer(DataHolder options) {
+	public CoreNodeTermdeckRenderer(DataHolder options) {
 
 	}
 
 	@Override
-	public Set<NodeDeckRendererHandler<?>> getNodeFormattingHandlers() {
+	public Set<NodeTermdeckRendererHandler<?>> getNodeFormattingHandlers() {
 		return new HashSet<>(Arrays.asList(
-			new NodeDeckRendererHandler<>(Document.class, CoreNodeDeckRenderer.this::render),
-			new NodeDeckRendererHandler<>(Heading.class, CoreNodeDeckRenderer.this::render),
-			new NodeDeckRendererHandler<>(Node.class, CoreNodeDeckRenderer.this::render),
-			new NodeDeckRendererHandler<>(Paragraph.class, CoreNodeDeckRenderer.this::render),
-			new NodeDeckRendererHandler<>(ThematicBreak.class, CoreNodeDeckRenderer.this::render)
+			new NodeTermdeckRendererHandler<>(Document.class, CoreNodeTermdeckRenderer.this::render),
+			new NodeTermdeckRendererHandler<>(Heading.class, CoreNodeTermdeckRenderer.this::render),
+			new NodeTermdeckRendererHandler<>(Node.class, CoreNodeTermdeckRenderer.this::render),
+			new NodeTermdeckRendererHandler<>(Paragraph.class, CoreNodeTermdeckRenderer.this::render),
+			new NodeTermdeckRendererHandler<>(ThematicBreak.class, CoreNodeTermdeckRenderer.this::render)
 		));
 	}
 
@@ -68,12 +68,12 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 	}
 
 	@Override
-	public Set<DeckRendererPhase> getFormattingPhases() {
+	public Set<TermdeckRendererPhase> getFormattingPhases() {
 		return RENDERING_PHASES;
 	}
 
 	@Override
-	public void renderDocument(DeckRendererContext docx, Document document, DeckRendererPhase phase) {
+	public void renderDocument(TermdeckRendererContext docx, Document document, TermdeckRendererPhase phase) {
 		switch (phase) {
 			case COLLECT:
 
@@ -84,13 +84,13 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 		}
 	}
 
-	private void render(Document node, DeckRendererContext docx) {
+	private void render(Document node, TermdeckRendererContext docx) {
 		log.debug("Render Document {}", node);
 		docx.addSlide();
 		docx.renderChildren(node);
 	}
 
-	private void render(Heading node, DeckRendererContext docx) {
+	private void render(Heading node, TermdeckRendererContext docx) {
 		log.debug("Render Heading {}", node);
 		BasedSequence text = node.getText();
 		String string = text.toString();
@@ -100,7 +100,7 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 		docx.renderChildren(node);
 	}
 
-	private void render(Node node, DeckRendererContext docx) {
+	private void render(Node node, TermdeckRendererContext docx) {
 		log.debug("Render Node {}", node);
 		// BasedSequence chars = node.getChars();
 		// MainDocumentPart mdp = docx.getDocxDocument();
@@ -113,12 +113,12 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 		// }
 	}
 
-	private void render(ThematicBreak node, DeckRendererContext docx) {
+	private void render(ThematicBreak node, TermdeckRendererContext docx) {
 		log.debug("Render ThematicBreak {}", node);
 		docx.addSlide();
 	}
 
-	private void render(Paragraph node, DeckRendererContext docx) {
+	private void render(Paragraph node, TermdeckRendererContext docx) {
 		log.debug("Render Paragraph {}", node);
 		docx.append(node.getChars().toString());
 		if (node.getParent() instanceof EnumeratedReferenceBlock) {
@@ -148,7 +148,7 @@ public class CoreNodeDeckRenderer implements PhasedNodeDeckRenderer {
 	}
 
 	private boolean hasRenderingAttribute(Node node) {
-		boolean pageBreak = false;
+		// boolean pageBreak = false;
 
 		for (Node child : node.getChildren()) {
 			if (child instanceof AttributesNode) {

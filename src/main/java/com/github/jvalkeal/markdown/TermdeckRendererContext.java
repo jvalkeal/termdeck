@@ -15,11 +15,10 @@
  */
 package com.github.jvalkeal.markdown;
 
-import java.util.Set;
+import com.vladsch.flexmark.util.ast.Node;
 
-import com.vladsch.flexmark.util.ast.Document;
+public interface TermdeckRendererContext extends TermdeckContext<Node> {
 
-public interface PhasedNodeDeckRenderer extends NodeDeckRenderer {
-	Set<DeckRendererPhase> getFormattingPhases();
-	void renderDocument(DeckRendererContext docx, Document document, DeckRendererPhase phase);
+	void renderChildren(Node parent);
+
 }

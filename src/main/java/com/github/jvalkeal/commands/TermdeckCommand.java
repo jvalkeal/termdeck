@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import com.github.jvalkeal.markdown.FlexmarkParser;
+import com.github.jvalkeal.markdown.MarkdownModelParser;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.ui.TermdeckUI;
 
@@ -40,7 +40,7 @@ public class TermdeckCommand {
 	}
 
 	@Command
-	void termdeck(@Option File file) {
+	void termdeck(@Option(required = true) File file) {
 		Deck deck = buildDeck(file);
 		TermdeckUI.run(builder, themeResolver, deck);
 	}
@@ -48,8 +48,8 @@ public class TermdeckCommand {
 	private Deck buildDeck(File file) {
 		try {
 			byte[] bytes = Files.readAllBytes(file.toPath());
-			FlexmarkParser modelParser = new FlexmarkParser();
-			Deck deck = modelParser.parse2(new String(bytes));
+			MarkdownModelParser modelParser = new MarkdownModelParser();
+			Deck deck = modelParser.parse(new String(bytes));
 			return deck;
 		} catch (IOException e) {
 			throw new RuntimeException("cannot read file", e);
