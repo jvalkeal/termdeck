@@ -20,7 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
+import com.github.jvalkeal.flexmark.DeckRenderer;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.HeadingSection;
 import com.github.jvalkeal.model.ParagraphSection;
@@ -36,6 +38,8 @@ import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.ast.NodeVisitor;
 import com.vladsch.flexmark.util.ast.Visitor;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -44,6 +48,20 @@ import org.slf4j.LoggerFactory;
 public class FlexmarkParser {
 
 	private Logger log = LoggerFactory.getLogger(FlexmarkParser.class);
+
+	public Deck parse2(String content) {
+		DataHolder options = new MutableDataSet();
+		Parser parser = Parser.builder(options).build();
+		DeckRenderer renderer = DeckRenderer.builder(options).build();
+		Node document = parser.parse(content);
+		List<List<String>> deckContent = renderer.render(document);
+		Deck deck = deckContent.stream()
+			.map(c -> new Slide(c.toArray(new String[0])))
+			.collect(Collectors.collectingAndThen(Collectors.toList(), l -> new Deck(l)))
+			;
+		return deck;
+	}
+
 
 	public Deck parse(String content) {
 		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();

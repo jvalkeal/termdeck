@@ -80,7 +80,7 @@ public class TermdeckCommand {
 		try {
 			byte[] bytes = Files.readAllBytes(file.toPath());
 			FlexmarkParser modelParser = new FlexmarkParser();
-			Deck deck = modelParser.parse(new String(bytes));
+			Deck deck = modelParser.parse2(new String(bytes));
 			return deck;
 		} catch (IOException e) {
 			throw new RuntimeException("cannot read file", e);
