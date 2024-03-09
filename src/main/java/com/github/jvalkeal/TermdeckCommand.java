@@ -18,31 +18,22 @@ package com.github.jvalkeal;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
 
 import com.github.jvalkeal.flexmark.FlexmarkParser;
 import com.github.jvalkeal.model.Deck;
-import com.github.jvalkeal.view.TextView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
-import org.springframework.shell.component.view.event.EventLoop;
-import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.style.ThemeResolver;
 
 @Command
-public class TermdeckCommand {
+class TermdeckCommand {
 
-	private final Logger log = LoggerFactory.getLogger(TermdeckCommand.class);
 	private final TerminalUIBuilder builder;
 	private final ThemeResolver themeResolver;
 
-	public TermdeckCommand(TerminalUIBuilder builder, ThemeResolver themeResolver) {
+	TermdeckCommand(TerminalUIBuilder builder, ThemeResolver themeResolver) {
 		this.builder = builder;
 		this.themeResolver = themeResolver;
 	}
@@ -51,35 +42,6 @@ public class TermdeckCommand {
 	void termdeck(@Option File file) {
 		Deck deck = buildDeck(file);
 		TermdeckUI.run(builder, themeResolver, deck);
-		// log.debug("Handling file: {}", file);
-		// TerminalUI ui = builder.build();
-		// TextView view = new TextView();
-		// ui.configure(view);
-		// Deck deck = buildDeck(file);
-		// update(view, deck);
-
-		// EventLoop eventLoop = ui.getEventLoop();
-		// eventLoop.onDestroy(eventLoop.keyEvents()
-		// 	.doOnNext(m -> {
-		// 		if (m.getPlainKey() == Key.q) {
-		// 			deck.move(1);
-		// 			update(view, deck);
-		// 		}
-		// 	})
-		// 	.subscribe());
-
-		// ui.setRoot(view, true);
-		// ui.run();
-	}
-
-	private void update(TextView view, Deck deck) {
-		// String[] content = deck.getCurrentSlide().getContent();
-		// for (int i = 0; i < content.length; i++) {
-		// 	content[i] = themeResolver.evaluateExpression(content[i]).toAnsi();
-		// }
-		// view.setContent(Arrays.asList(content));
-		List<String> content = deck.getCurrentSlide().content();
-		view.setContent(content);
 	}
 
 	private Deck buildDeck(File file) {

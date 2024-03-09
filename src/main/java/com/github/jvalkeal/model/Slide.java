@@ -15,10 +15,7 @@
  */
 package com.github.jvalkeal.model;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.lang.Nullable;
 
 /**
  * Slide represents a partial content in a {@link Deck}.
@@ -41,29 +38,3 @@ public interface Slide {
 	}
 
 }
-// public class Slide {
-
-// 	private String content[];
-// 	private List<Section> sections = new ArrayList<>();
-
-// 	public Slide() {
-// 		this(null);
-// 	}
-
-// 	public Slide(@Nullable String[] content) {
-// 		this.content = content;
-// 	}
-
-// 	public void add(Section section) {
-// 		sections.add(section);
-// 	}
-
-// 	public String[] getContent() {
-// 		return content;
-// 	}
-
-// 	public void setContent(String[] content) {
-// 		this.content = content;
-// 	}
-
-// }

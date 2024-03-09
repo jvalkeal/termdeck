@@ -47,7 +47,6 @@ class TermdeckUI {
 		TerminalUI ui = builder.build();
 		TextView view = new TextView();
 		ui.configure(view);
-		// Deck deck = buildDeck(file);
 		update(view, deck);
 
 		EventLoop eventLoop = ui.getEventLoop();
