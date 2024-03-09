@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import com.github.jvalkeal.flexmark.FlexmarkParser;
+import com.github.jvalkeal.markdown.FlexmarkParser;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.ui.TermdeckUI;
 

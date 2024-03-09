@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.flexmark;
+package com.github.jvalkeal.markdown;
 
-public enum DeckRendererPhase {
-	COLLECT,
-	DOCUMENT_FIRST,
-	DOCUMENT_TOP,
-	DOCUMENT,
-	DOCUMENT_BOTTOM,
+public interface DeckContext<T> {
+
+	void append(String text);
+	void addSlide();
+
 }

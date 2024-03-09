@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.flexmark;
+package com.github.jvalkeal.markdown;
 
-import java.util.Set;
-
-public interface NodeDeckRenderer {
-	Set<NodeDeckRendererHandler<?>> getNodeFormattingHandlers();
-	Set<Class<?>> getNodeClasses();
+public enum DeckRendererPhase {
+	COLLECT,
+	DOCUMENT_FIRST,
+	DOCUMENT_TOP,
+	DOCUMENT,
+	DOCUMENT_BOTTOM,
 }

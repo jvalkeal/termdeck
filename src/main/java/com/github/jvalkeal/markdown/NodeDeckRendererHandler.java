@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.flexmark;
+package com.github.jvalkeal.markdown;
 
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.visitor.AstAction;

@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.flexmark;
+package com.github.jvalkeal.markdown;
 
-import java.util.Set;
+import com.vladsch.flexmark.util.data.DataHolder;
 
-import com.vladsch.flexmark.util.ast.Document;
-
-public interface PhasedNodeDeckRenderer extends NodeDeckRenderer {
-	Set<DeckRendererPhase> getFormattingPhases();
-	void renderDocument(DeckRendererContext docx, Document document, DeckRendererPhase phase);
+public interface NodeDeckRendererFactory {
+	NodeDeckRenderer create(DataHolder options);
 }

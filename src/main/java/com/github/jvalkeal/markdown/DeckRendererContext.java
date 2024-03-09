@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal.flexmark;
+package com.github.jvalkeal.markdown;
 
-import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.ast.Node;
 
-public interface NodeDeckRendererFactory {
-	NodeDeckRenderer create(DataHolder options);
+public interface DeckRendererContext extends DeckContext<Node> {
+
+	void renderChildren(Node parent);
+
 }
