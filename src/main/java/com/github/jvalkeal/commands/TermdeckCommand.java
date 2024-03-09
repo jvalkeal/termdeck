@@ -28,6 +28,13 @@ import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.style.ThemeResolver;
 
+/**
+ * Implement the main and only command for this application. Look
+ * {@code application.yml} and its {@code primary-command} how this becomes
+ * primary command for a shell application.
+ *
+ * @author Janne Valkealahti
+ */
 @Command
 public class TermdeckCommand {
 
