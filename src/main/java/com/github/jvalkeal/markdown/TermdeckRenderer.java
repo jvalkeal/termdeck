@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class TermdeckRenderer {
 
 	final private DataHolder options;
-	final List<NodeTermdeckRendererFactory> nodeFormatterFactories;
+	final private List<NodeTermdeckRendererFactory> nodeFormatterFactories;
 
 	TermdeckRenderer(Builder builder) {
 		options = builder.toImmutable();
@@ -48,7 +48,7 @@ public class TermdeckRenderer {
 	}
 
 	public List<List<String>> render(Node node) {
-		MainDeckRenderer renderer = new MainDeckRenderer(options, node.getDocument());
+		MainDeckRenderer renderer = new MainDeckRenderer(options, node.getDocument(), nodeFormatterFactories);
 		renderer.render(node);
 		return renderer.deck;
 	}
@@ -82,16 +82,18 @@ public class TermdeckRenderer {
 
 	}
 
-	private class MainDeckRenderer extends TermdeckContextImpl<Node> implements TermdeckRendererContext {
+	private static class MainDeckRenderer extends TermdeckContextImpl<Node> implements TermdeckRendererContext {
 
 		final private Map<Class<?>, NodeTermdeckRendererHandler<?>> renderers;
 		final private Set<TermdeckRendererPhase> renderingPhases;
 		private TermdeckRendererPhase phase;
 		Node renderingNode;
 		final private List<PhasedNodeTermdeckRenderer> phasedFormatters;
+		final List<NodeTermdeckRendererFactory> nodeFormatterFactories;
 
-		MainDeckRenderer(DataHolder options, Document document) {
+		MainDeckRenderer(DataHolder options, Document document, List<NodeTermdeckRendererFactory> nodeFormatterFactories) {
 			super(new ScopedDataSet(document, options));
+			this.nodeFormatterFactories = nodeFormatterFactories;
 			this.renderingPhases = new HashSet<>(TermdeckRendererPhase.values().length);
 			this.renderers = new HashMap<>(32);
 			this.phasedFormatters = new ArrayList<>(nodeFormatterFactories.size());

@@ -19,8 +19,10 @@ import com.vladsch.flexmark.util.data.DataHolder;
 
 public abstract class TermdeckContextImpl<T> implements TermdeckContext<T> {
 
-	public TermdeckContextImpl(DataHolder options) {
+	DataHolder options;
 
+	public TermdeckContextImpl(DataHolder options) {
+		this.options = options;
 	}
 
 }
