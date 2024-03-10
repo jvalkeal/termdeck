@@ -27,7 +27,7 @@ import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.ScopedDataSet;
 
-class DefaultTermdeckContext extends TermdeckContextImpl<Node> implements TermdeckRendererContext {
+class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements TermdeckRendererContext {
 
 	final private Map<Class<?>, NodeTermdeckRendererHandler<?>> renderers;
 	final private Set<TermdeckRendererPhase> renderingPhases;
@@ -35,9 +35,11 @@ class DefaultTermdeckContext extends TermdeckContextImpl<Node> implements Termde
 	Node renderingNode;
 	final private List<PhasedNodeTermdeckRenderer> phasedFormatters;
 	final List<NodeTermdeckRendererFactory> nodeFormatterFactories;
+	DataHolder options;
 
 	DefaultTermdeckContext(DataHolder options, Document document, List<NodeTermdeckRendererFactory> nodeFormatterFactories) {
-		super(new ScopedDataSet(document, options));
+		// super(new ScopedDataSet(document, options));
+		this.options = new ScopedDataSet(document, options);
 		this.nodeFormatterFactories = nodeFormatterFactories;
 		this.renderingPhases = new HashSet<>(TermdeckRendererPhase.values().length);
 		this.renderers = new HashMap<>(32);
