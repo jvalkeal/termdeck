@@ -21,6 +21,17 @@ public class SyncRegistry implements IGrammarRepository, IThemeProvider {
 		}
 	}
 
+	public IGrammar grammarForScopeName(String scopeName) {
+		if (!this.grammars.containsKey(scopeName)) {
+			IRawGrammar rawGrammar = this.rawGrammars.get(scopeName);
+			if (rawGrammar == null) {
+				return null;
+			}
+			this.grammars.put(scopeName, Grammar.createGrammar(scopeName));
+		}
+		return this.grammars.get(scopeName);
+	}
+
 	@Override
 	public IRawGrammar lookup(String scopeName) {
 		return rawGrammars.get(scopeName);
