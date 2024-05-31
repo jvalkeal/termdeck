@@ -18,6 +18,9 @@ package com.github.jvalkeal.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
@@ -30,6 +33,7 @@ import org.springframework.shell.geom.Rectangle;
  */
 public class TextView extends BoxView {
 
+	private final Logger log = LoggerFactory.getLogger(TextView.class);
 	private final List<String> content = new ArrayList<>();
 
 	public TextView() {
@@ -54,6 +58,7 @@ public class TextView extends BoxView {
 	@Override
 	protected void drawInternal(Screen screen) {
 		Rectangle rect = getRect();
+		log.debug("Drawing content to {}", rect);
 		Writer writer = screen.writerBuilder().build();
 		for (int i = 0; i < content.size() && rect.y() < content.size(); i++) {
 			String line = content.get(i);

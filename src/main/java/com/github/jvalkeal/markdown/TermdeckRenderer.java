@@ -18,6 +18,7 @@ package com.github.jvalkeal.markdown;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.jvalkeal.model.Deck;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.builder.BuilderBase;
 import com.vladsch.flexmark.util.data.DataHolder;
@@ -38,6 +39,10 @@ public class TermdeckRenderer {
 	public static Builder builder(DataHolder options) {
 		return new Builder(options);
 	}
+
+	// public Deck renderx(Node node) {
+	// 	return null;
+	// }
 
 	public List<List<String>> render(Node node) {
 		DefaultTermdeckContext renderer = new DefaultTermdeckContext(options, node.getDocument(), nodeFormatterFactories);

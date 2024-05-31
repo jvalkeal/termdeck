@@ -15,8 +15,21 @@
  */
 package com.github.jvalkeal.model;
 
+import org.springframework.lang.NonNull;
+
+/**
+ * {@code ModelParser} parses content into a {@link Deck}.
+ *
+ * @author Janne Valkealahti
+ */
 public interface ModelParser {
 
-	Deck parse(String content);
+	/**
+	 * Parse content into a {@link Deck}.
+	 *
+	 * @param content the content to parse
+	 * @return a deck
+	 */
+	Deck parse(@NonNull String content);
 
 }

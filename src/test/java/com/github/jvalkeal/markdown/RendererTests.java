@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.jvalkeal.markdown.TermdeckRenderer;
-import com.github.jvalkeal.model.Deck;
 import com.vladsch.flexmark.docx.converter.DocxRenderer;
 import com.vladsch.flexmark.ext.definition.DefinitionExtension;
 import com.vladsch.flexmark.ext.emoji.EmojiExtension;
@@ -22,7 +20,6 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,30 +39,28 @@ class RendererTests {
 		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
 		DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
-		// Parser parser = Parser.builder(options).build();
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
 		List<List<String>> deckContent = renderer.render(document);
-		assertThat(deckContent).isNotNull();
-
+		assertThat(deckContent).hasSize(1);
 	}
 
 	@Test
-	void basicSinglePage() {
-				String markdown = """
-					# slide1
-					hello1
+	void basicMultiPage() {
+		String markdown = """
+			# slide1
+			hello1
 
-					---
-					# slide2
-					hello2
-					""";
+			---
+			# slide2
+			hello2
+			""";
 		DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).build();
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
 		List<List<String>> deckContent = renderer.render(document);
-		assertThat(deckContent).isNotNull();
+		assertThat(deckContent).hasSize(2);
 	}
 
 	@Test
@@ -86,44 +81,44 @@ class RendererTests {
 		assertThat(deckContent).isNotNull();
 	}
 
-	@Test
-	void docxTest() {
-		String markdown = """
-			# slide
-			hello
-			""";
+	// @Test
+	// void docxTest() {
+	// 	String markdown = """
+	// 		# slide
+	// 		hello
+	// 		""";
 
-		Parser PARSER = Parser.builder(OPTIONS).build();
-		DocxRenderer RENDERER = DocxRenderer.builder(OPTIONS).build();
+	// 	Parser PARSER = Parser.builder(OPTIONS).build();
+	// 	DocxRenderer RENDERER = DocxRenderer.builder(OPTIONS).build();
 
-		Node document = PARSER.parse(markdown);
+	// 	Node document = PARSER.parse(markdown);
 
-		// to get XML
-		String xml = RENDERER.render(document);
+	// 	// to get XML
+	// 	String xml = RENDERER.render(document);
 
-		// or to control the package
-		// WordprocessingMLPackage template = DocxRenderer.getDefaultTemplate();
-		// RENDERER.render(document, template);
+	// 	// or to control the package
+	// 	// WordprocessingMLPackage template = DocxRenderer.getDefaultTemplate();
+	// 	// RENDERER.render(document, template);
 
-	}
+	// }
 
-	final private static DataHolder OPTIONS = new MutableDataSet()
-			.set(Parser.EXTENSIONS, Arrays.asList(
-					DefinitionExtension.create(),
-					EmojiExtension.create(),
-					FootnoteExtension.create(),
-					StrikethroughSubscriptExtension.create(),
-					InsExtension.create(),
-					SuperscriptExtension.create(),
-					TablesExtension.create(),
-					TocExtension.create(),
-					SimTocExtension.create(),
-					WikiLinkExtension.create()
-			))
-			.set(DocxRenderer.SUPPRESS_HTML, true)
-			// the following two are needed to allow doc relative and site relative address resolution
-			.set(DocxRenderer.DOC_RELATIVE_URL, "file:///Users/vlad/src/pdf") // this will be used for URLs like 'images/...' or './' or '../'
-			.set(DocxRenderer.DOC_ROOT_URL, "file:///Users/vlad/src/pdf") // this will be used for URLs like: '/...'
-			;
+	// final private static DataHolder OPTIONS = new MutableDataSet()
+	// 		.set(Parser.EXTENSIONS, Arrays.asList(
+	// 				DefinitionExtension.create(),
+	// 				EmojiExtension.create(),
+	// 				FootnoteExtension.create(),
+	// 				StrikethroughSubscriptExtension.create(),
+	// 				InsExtension.create(),
+	// 				SuperscriptExtension.create(),
+	// 				TablesExtension.create(),
+	// 				TocExtension.create(),
+	// 				SimTocExtension.create(),
+	// 				WikiLinkExtension.create()
+	// 		))
+	// 		.set(DocxRenderer.SUPPRESS_HTML, true)
+	// 		// the following two are needed to allow doc relative and site relative address resolution
+	// 		.set(DocxRenderer.DOC_RELATIVE_URL, "file:///Users/vlad/src/pdf") // this will be used for URLs like 'images/...' or './' or '../'
+	// 		.set(DocxRenderer.DOC_ROOT_URL, "file:///Users/vlad/src/pdf") // this will be used for URLs like: '/...'
+	// 		;
 
 }

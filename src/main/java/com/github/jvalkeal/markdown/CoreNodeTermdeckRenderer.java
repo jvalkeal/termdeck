@@ -46,9 +46,7 @@ public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 			TermdeckRendererPhase.DOCUMENT_BOTTOM
 	));
 
-
 	public CoreNodeTermdeckRenderer(DataHolder options) {
-
 	}
 
 	@Override
@@ -84,23 +82,23 @@ public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 		}
 	}
 
-	private void render(Document node, TermdeckRendererContext docx) {
+	private void render(Document node, TermdeckRendererContext ctx) {
 		log.debug("Render Document {}", node);
-		docx.addSlide();
-		docx.renderChildren(node);
+		ctx.addSlide();
+		ctx.renderChildren(node);
 	}
 
-	private void render(Heading node, TermdeckRendererContext docx) {
+	private void render(Heading node, TermdeckRendererContext ctx) {
 		log.debug("Render Heading {}", node);
 		BasedSequence text = node.getText();
 		String string = text.toString();
-		docx.append(string);
+		ctx.append(string);
 		// docx.setBlockFormatProvider(new HeadingBlockFormatProvider<>(docx, node.getLevel() - 1));
 		// addBlockAttributeFormatting(node, AttributablePart.NODE, docx, false);
-		docx.renderChildren(node);
+		ctx.renderChildren(node);
 	}
 
-	private void render(Node node, TermdeckRendererContext docx) {
+	private void render(Node node, TermdeckRendererContext ctx) {
 		log.debug("Render Node {}", node);
 		// BasedSequence chars = node.getChars();
 		// MainDocumentPart mdp = docx.getDocxDocument();
@@ -113,29 +111,29 @@ public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 		// }
 	}
 
-	private void render(ThematicBreak node, TermdeckRendererContext docx) {
+	private void render(ThematicBreak node, TermdeckRendererContext ctx) {
 		log.debug("Render ThematicBreak {}", node);
-		docx.addSlide();
+		ctx.addSlide();
 	}
 
-	private void render(Paragraph node, TermdeckRendererContext docx) {
+	private void render(Paragraph node, TermdeckRendererContext ctx) {
 		log.debug("Render Paragraph {}", node);
-		docx.append(node.getChars().toString());
+		ctx.append(node.getChars().toString());
 		if (node.getParent() instanceof EnumeratedReferenceBlock) {
 		//     // we need to unwrap the paragraphs
 		//     addBlockAttributeFormatting(node, AttributablePart.NODE, docx, false);
-			docx.renderChildren(node);
+			ctx.renderChildren(node);
 		}
 		else if (!(node.getParent() instanceof ParagraphItemContainer) || !((ParagraphItemContainer) node.getParent()).isItemParagraph(node)) {
 			if (node.getParent() instanceof BlockQuote || node.getParent() instanceof AsideBlock) {
 				// the parent handles our formatting
 				// addBlockAttributeFormatting(node, AttributablePart.NODE, docx, true);
-				docx.renderChildren(node);
+				ctx.renderChildren(node);
 			} else {
 				if (node.getFirstChildAnyNot(NonRenderingInline.class) != null || hasRenderingAttribute(node)) {
 					// docx.setBlockFormatProvider(new BlockFormatProviderBase<>(docx, docx.getDocxRendererOptions().LOOSE_PARAGRAPH_STYLE));
 					// addBlockAttributeFormatting(node, AttributablePart.NODE, docx, true);
-					docx.renderChildren(node);
+					ctx.renderChildren(node);
 				}
 			}
 		}
@@ -143,7 +141,7 @@ public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 		//     // the parent handles our formatting
 		//     // for footnotes there is already an open paragraph, re-use it
 		//     addBlockAttributeFormatting(node, AttributablePart.NODE, docx, !(node.getParent() instanceof FootnoteBlock));
-			docx.renderChildren(node);
+			ctx.renderChildren(node);
 		}
 	}
 

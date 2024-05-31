@@ -28,6 +28,11 @@ import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 
+/**
+ * {@link ModelParser} parsing {@code markdown}.
+ *
+ * @author Janne Valkealahti
+ */
 public class MarkdownModelParser implements ModelParser {
 
 	@Override

@@ -101,7 +101,8 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 						nodeRenderer.render(node, this);
 						renderingNode = null;
 					}
-				} else {
+				}
+				else {
 					for (PhasedNodeTermdeckRenderer phasedFormatter : phasedFormatters) {
 						if (phasedFormatter.getFormattingPhases().contains(phase)) {
 							renderingNode = node;

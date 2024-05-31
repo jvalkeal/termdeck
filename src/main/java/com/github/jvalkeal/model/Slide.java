@@ -33,7 +33,6 @@ public interface Slide {
 			public List<String> content() {
 				return content;
 			}
-
 		};
 	}
 
