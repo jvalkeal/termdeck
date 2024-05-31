@@ -13,13 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jvalkeal;
+package com.github.jvalkeal.model;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.shell.command.annotation.CommandScan;
+import java.util.List;
 
-@Configuration
-@CommandScan
-public class TermdeckConfiguration {
+/**
+ * Slide represents a partial content in a {@link Deck}.
+ *
+ * @author Janne Valkealahti
+ */
+public interface Slide {
+
+	List<String> content();
+
+	static Slide of(List<String> content) {
+		return new Slide() {
+
+			@Override
+			public List<String> content() {
+				return content;
+			}
+		};
+	}
 
 }
