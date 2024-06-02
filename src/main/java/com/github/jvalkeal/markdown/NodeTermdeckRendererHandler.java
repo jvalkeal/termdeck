@@ -28,10 +28,15 @@ public class NodeTermdeckRendererHandler<N extends Node>
 
 	@SuppressWarnings("unchecked")
 	public void render(Node node, TermdeckRendererContext context) {
-		getAdapter().render((N) node, context);
+		// getAdapter().render((N) node, context);
+		getAdapter().render((N) node, context, true);
+		getAdapter().render((N) node, context, false);
 	}
 
+	// public void renderStop(Node node, TermdeckRendererContext context) {}
+
 	public static interface CustomNodeDeckRenderer<N extends Node> extends AstAction<N> {
-		void render(N node, TermdeckRendererContext context);
+		// void render(N node, TermdeckRendererContext context);
+		void render(N node, TermdeckRendererContext context, boolean start);
 	}
 }

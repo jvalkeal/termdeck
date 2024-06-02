@@ -22,6 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vladsch.flexmark.docx.converter.util.BlockFormatProvider;
+import com.vladsch.flexmark.docx.converter.util.ContentContainer;
+import com.vladsch.flexmark.docx.converter.util.ParaContainer;
+import com.vladsch.flexmark.docx.converter.util.RunContainer;
+import com.vladsch.flexmark.docx.converter.util.RunFormatProvider;
 import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
@@ -71,11 +76,14 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 			if (nodeDeckRenderer instanceof PhasedNodeTermdeckRenderer) {
 				Set<TermdeckRendererPhase> phases = ((PhasedNodeTermdeckRenderer) nodeDeckRenderer).getFormattingPhases();
 				if (phases != null) {
-					if (phases.isEmpty()) throw new IllegalStateException("PhasedNodeDocxRenderer with empty Phases");
+					if (phases.isEmpty()) {
+						throw new IllegalStateException("PhasedNodeTermdeckRenderer with empty Phases");
+					}
 					this.renderingPhases.addAll(phases);
 					this.phasedFormatters.add((PhasedNodeTermdeckRenderer) nodeDeckRenderer);
-				} else {
-					throw new IllegalStateException("PhasedNodeDocxRenderer with null Phases");
+				}
+				else {
+					throw new IllegalStateException("PhasedNodeTermdeckRenderer with null Phases");
 				}
 			}
 
@@ -85,6 +93,43 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 	@Override
 	public DataHolder getOptions() {
 		return options;
+	}
+
+    @Override
+    public void contextFramed(Runnable runnable) {
+
+        // myBlockFormatProviders.put(getContextFrame(), myBlockFormatProvider);
+        // myRunFormatProviders.put(getContextFrame(), myRunFormatProvider);
+        // BlockFormatProvider<T> oldRenderingBlockFormatProvider = myBlockFormatProvider;
+        // RunFormatProvider<T> oldRenderingRunFormatProvider = myRunFormatProvider;
+        // ContentContainer oldRenderingContentContainer = myContentContainer;
+        // ParaContainer oldRenderingParaContainer = myParaContainer;
+        // RunContainer oldRenderingRunContainer = myRunContainer;
+        // T oldNode = getContextFrame();
+
+        // runnable.run();
+
+        // if (oldNode != getContextFrame()) {
+        //     RunFormatProvider<T> runFormatProvider = myRunFormatProviders.remove(oldNode);
+
+        //     if (runFormatProvider != oldRenderingRunFormatProvider) {
+        //         runFormatProvider.close();
+        //     }
+        // }
+        // myRunFormatProvider = oldRenderingRunFormatProvider;
+
+        // if (oldNode != getContextFrame()) {
+        //     BlockFormatProvider<T> blockFormatProvider = myBlockFormatProviders.remove(oldNode);
+        //     if (blockFormatProvider != oldRenderingBlockFormatProvider) {
+        //         blockFormatProvider.close();
+        //     }
+        // }
+
+        // myBlockFormatProvider = oldRenderingBlockFormatProvider;
+        // myRunContainer = oldRenderingRunContainer;
+        // myParaContainer = oldRenderingParaContainer;
+        // myContentContainer = oldRenderingContentContainer;
+
 	}
 
 	public void render(Node node) {
@@ -152,6 +197,11 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 				//     }
 				//     renderingNode = oldNode;
 				// });
+
+				contextFramed(() -> {
+
+				});
+
 			} else {
 				// default behavior is controlled by generic Node.class that is implemented in CoreNodeDocxRenderer
 				throw new IllegalStateException("Core Node DocxRenderer should implement generic Node renderer");
@@ -171,11 +221,6 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 
 	// List<String> content = new ArrayList<>();
 
-	@Override
-	public void append(String text) {
-		currentSlide.add(text);
-	}
-
 	List<List<String>> deck = new ArrayList<>();
 	List<String> currentSlide;
 
@@ -185,6 +230,26 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 		List<String> slide = new ArrayList<>();
 		deck.add(slide);
 		currentSlide = slide;
+	}
+
+	@Override
+	public void append(String text) {
+		// currentSlide.add(text);
+		if (buf != null) {
+			buf.append(text);
+		}
+	}
+
+	private StringBuilder buf;
+
+	@Override
+	public void startBlock() {
+		buf = new StringBuilder();
+	}
+
+	@Override
+	public void endBlock() {
+		currentSlide.add(buf.toString());
 	}
 
 	@Override

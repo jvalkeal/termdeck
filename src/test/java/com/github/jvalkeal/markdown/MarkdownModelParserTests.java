@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FlexmarkParserTests {
+public class MarkdownModelParserTests {
 
 	@Test
 	void basicSinglePage() {
@@ -58,7 +58,8 @@ public class FlexmarkParserTests {
 	@Test
 	void basicHeading() {
 		String data = """
-				# hello
+				# title
+				hello
 				""";
 		Deck deck = parse(data);
 		assertThat(deck).satisfies(d -> {

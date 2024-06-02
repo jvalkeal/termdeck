@@ -19,7 +19,13 @@ import com.vladsch.flexmark.util.data.DataHolder;
 
 public interface TermdeckContext<T> {
 
+	void contextFramed(Runnable runnable);
+
 	void append(String text);
+
+	void startBlock();
+
+	void endBlock();
 
 	void addSlide();
 
