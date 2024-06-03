@@ -15,7 +15,6 @@
  */
 package com.github.jvalkeal.markdown;
 
-import com.github.jvalkeal.markdown.MarkdownModelParser;
 import com.github.jvalkeal.model.Deck;
 import org.junit.jupiter.api.Test;
 
@@ -24,21 +23,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MarkdownModelParserTests {
 
 	@Test
-	void basicSinglePage() {
+	void textInParagraphInSinglePage() {
 		String data = """
 				hello
 				""";
 		Deck deck = parse(data);
 		assertThat(deck).satisfies(d -> {
 			assertThat(d.getSlides()).hasSize(1);
-			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello");
-			// assertThat(d.getSlides().get(0).getContent()).containsExactly("hello");
 			assertThat(d.getSlides().get(0).content()).containsExactly("hello");
 		});
 	}
 
 	@Test
-	void basicMultiPage() {
+	void textInParagraphInMultiPage() {
 		String data = """
 				hello1
 
@@ -48,30 +45,25 @@ public class MarkdownModelParserTests {
 		Deck deck = parse(data);
 		assertThat(deck).satisfies(d -> {
 			assertThat(d.getSlides()).hasSize(2);
-			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("hello1");
-			// assertThat(d.getSlides().get(1).getContent()).isEqualTo("hello2");
 			assertThat(d.getSlides().get(0).content()).containsExactly("hello1");
 			assertThat(d.getSlides().get(1).content()).containsExactly("hello2");
 		});
 	}
 
 	@Test
-	void basicHeading() {
+	void textInHeadingInSinglePage() {
 		String data = """
 				# title
-				hello
 				""";
 		Deck deck = parse(data);
 		assertThat(deck).satisfies(d -> {
 			assertThat(d.getSlides()).hasSize(1);
-			// assertThat(d.getSlides().get(0).getContent()).isEqualTo("X: hello");
-			// assertThat(d.getSlides().get(0).getContent()).containsExactly("X: hello");
-			assertThat(d.getSlides().get(0).content()).containsExactly("■ hello");
+			assertThat(d.getSlides().get(0).content()).contains("title");
 		});
 	}
 
 	@Test
-	void metadata1() {
+	void metadataWithContent() {
 		String data = """
 				---
 				key1: value1
