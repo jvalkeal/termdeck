@@ -71,9 +71,9 @@ public class TermdeckUI {
 	}
 
 	private void update(TextView view, Deck deck) {
-		List<String> content = deck.getCurrentSlide().content().stream()
-			.map(c -> themeResolver.evaluateExpression(c).toAnsi())
-			.collect(Collectors.toList());
-		view.setContent(content);
+		// List<String> content = deck.getCurrentSlide().content().stream()
+		// 	.map(c -> themeResolver.evaluateExpression(c).toAnsi())
+		// 	.collect(Collectors.toList());
+		// view.setContent(content);
 	}
 }

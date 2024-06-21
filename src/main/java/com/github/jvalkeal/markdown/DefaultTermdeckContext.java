@@ -221,15 +221,15 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 
 	// List<String> content = new ArrayList<>();
 
-	List<List<String>> deck = new ArrayList<>();
-	List<String> currentSlide;
+	List<List<String>> pages = new ArrayList<>();
+	private List<String> currentBlock;
 
 
 	@Override
 	public void addSlide() {
 		List<String> slide = new ArrayList<>();
-		deck.add(slide);
-		currentSlide = slide;
+		pages.add(slide);
+		currentBlock = slide;
 	}
 
 	@Override
@@ -249,7 +249,7 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 
 	@Override
 	public void endBlock() {
-		currentSlide.add(buf.toString());
+		currentBlock.add(buf.toString());
 	}
 
 	@Override

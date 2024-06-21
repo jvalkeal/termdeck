@@ -43,10 +43,12 @@ public class MarkdownModelParser implements ModelParser {
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(content);
 		List<List<String>> deckContent = renderer.render(document);
-		Deck deck = deckContent.stream()
-			.map(c -> Slide.of(c))
-			.collect(Collectors.collectingAndThen(Collectors.toList(), l -> new Deck(l)));
-		return deck;
+		// Deck deck = deckContent.stream()
+		// 	.map(c -> Slide.of(c))
+		// 	.collect(Collectors.collectingAndThen(Collectors.toList(), l -> new Deck(l)));
+		// return deck;
+
+		return null;
 	}
 
 }

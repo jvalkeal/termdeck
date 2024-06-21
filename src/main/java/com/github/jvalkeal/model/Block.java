@@ -18,35 +18,22 @@ package com.github.jvalkeal.model;
 import java.util.List;
 
 /**
- * Slide represents a partial content in a {@link Deck}.
+ * Block is a representation part of a slide.
  *
  * @author Janne Valkealahti
  */
-public interface Slide {
+public interface Block {
 
-	List<Block> blocks();
+	List<String> content();
 
-	static Slide of(List<Block> blocks) {
-		return new Slide() {
+	static Block of(List<String> content) {
+		return new Block() {
 
 			@Override
-			public List<Block> blocks() {
-				return blocks;
+			public List<String> content() {
+				return content;
 			}
-
 		};
 	}
-
-	// List<String> content();
-
-	// static Slide of(List<String> content) {
-	// 	return new Slide() {
-
-	// 		@Override
-	// 		public List<String> content() {
-	// 			return content;
-	// 		}
-	// 	};
-	// }
 
 }
