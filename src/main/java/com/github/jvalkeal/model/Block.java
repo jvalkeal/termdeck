@@ -15,25 +15,32 @@
  */
 package com.github.jvalkeal.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.lang.NonNull;
+import org.springframework.util.Assert;
 
 /**
  * Block is a representation part of a slide.
  *
  * @author Janne Valkealahti
  */
-public interface Block {
+public class Block {
 
-	List<String> content();
+	private final List<String> content;
 
-	static Block of(List<String> content) {
-		return new Block() {
+	public Block(@NonNull List<String> content) {
+		Assert.notNull(content, "content cannot be null");
+		this.content = new ArrayList<>(content);
+	}
 
-			@Override
-			public List<String> content() {
-				return content;
-			}
-		};
+	public List<String> content() {
+		return content;
+	}
+
+	public static Block of(List<String> content) {
+		return new Block(content);
 	}
 
 }

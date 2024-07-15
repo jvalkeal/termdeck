@@ -92,8 +92,11 @@ public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 	private void render(Document node, TermdeckRendererContext ctx, boolean start) {
 		log.debug("Render Document {} {}", start, node);
 		if (start) {
-			ctx.addSlide();
+			ctx.startSlide();
 			ctx.renderChildren(node);
+		}
+		else {
+			ctx.endSlide();
 		}
 	}
 
@@ -140,7 +143,11 @@ public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 	private void render(ThematicBreak node, TermdeckRendererContext ctx, boolean start) {
 		log.debug("Render ThematicBreak {} {}", start, node);
 		if (start) {
-			ctx.addSlide();
+			// ctx.startSlide();
+		}
+		else {
+			ctx.endSlide();
+			ctx.startSlide();
 		}
 	}
 

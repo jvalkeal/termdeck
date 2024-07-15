@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.jvalkeal.model.Deck;
 import com.vladsch.flexmark.docx.converter.DocxRenderer;
 import com.vladsch.flexmark.ext.definition.DefinitionExtension;
 import com.vladsch.flexmark.ext.emoji.EmojiExtension;
@@ -41,8 +42,21 @@ class RendererTests {
 		Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
-		List<List<String>> deckContent = renderer.render(document);
-		assertThat(deckContent).hasSize(1);
+
+		Deck deck = renderer.renderx(document);
+		assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(slide -> {
+			assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
+				block -> {
+					assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+						assertThat(content).contains("slide1");
+					});
+				},
+				block -> {
+					assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+						assertThat(content).contains("hello1");
+					});
+				});
+		});
 	}
 
 	@Test
@@ -59,8 +73,64 @@ class RendererTests {
 		Parser parser = Parser.builder(options).build();
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
-		List<List<String>> deckContent = renderer.render(document);
-		assertThat(deckContent).hasSize(2);
+
+		Deck deck = renderer.renderx(document);
+
+		assertThat(deck.getSlides()).hasSize(2).satisfiesExactly(
+			slide -> {
+				assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
+					block -> {
+						assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+							assertThat(content).contains("slide1");
+						});
+					},
+					block -> {
+						assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+							assertThat(content).contains("hello1");
+						});
+					});
+			},
+			slide -> {
+				assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
+					block -> {
+						assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+							assertThat(content).contains("slide2");
+						});
+					},
+					block -> {
+						assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+							assertThat(content).contains("hello2");
+						});
+					});
+			}
+		);
+
+
+	}
+
+	@Test
+	void basicMultiSections() {
+		String markdown = """
+			# slide1
+			hello11
+
+			hello12
+
+			---
+			# slide2
+			hello21
+
+			hello22
+			""";
+		DataHolder options = new MutableDataSet();
+		Parser parser = Parser.builder(options).build();
+		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
+		Node document = parser.parse(markdown);
+		// List<List<String>> deckContent = renderer.render(document);
+		// assertThat(deckContent).hasSize(2);
+
+		Deck deck = renderer.renderx(document);
+		assertThat(deck.getSlides()).hasSize(2);
 	}
 
 	@Test
@@ -77,8 +147,8 @@ class RendererTests {
 		Parser parser = Parser.builder(options).build();
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
-		List<List<String>> deckContent = renderer.render(document);
-		assertThat(deckContent).isNotNull();
+		Deck deck = renderer.renderx(document);
+		assertThat(deck.getSlides()).hasSize(1);
 	}
 
 	// @Test

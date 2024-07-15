@@ -18,8 +18,11 @@ package com.github.jvalkeal.ui;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jvalkeal.markdown.CoreNodeTermdeckRenderer;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.view.TextView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
@@ -35,6 +38,7 @@ import org.springframework.util.Assert;
  */
 public class TermdeckUI {
 
+	private final Logger log = LoggerFactory.getLogger(TermdeckUI.class);
 	private final Deck deck;
 	private final TerminalUIBuilder builder;
 	private final ThemeResolver themeResolver;
@@ -71,9 +75,13 @@ public class TermdeckUI {
 	}
 
 	private void update(TextView view, Deck deck) {
-		// List<String> content = deck.getCurrentSlide().content().stream()
-		// 	.map(c -> themeResolver.evaluateExpression(c).toAnsi())
-		// 	.collect(Collectors.toList());
-		// view.setContent(content);
+		List<String> content = deck.getCurrentSlide().blocks().stream()
+			.flatMap(blocks -> blocks.content().stream()
+				.map(c -> themeResolver.evaluateExpression(c).toAnsi())
+			)
+			.collect(Collectors.toList())
+			;
+		log.debug("Update content {}", content);
+		view.setContent(content);
 	}
 }

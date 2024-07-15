@@ -16,12 +16,16 @@
 package com.github.jvalkeal.markdown;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.jvalkeal.model.Block;
+import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.model.Slide;
 import com.vladsch.flexmark.docx.converter.util.BlockFormatProvider;
 import com.vladsch.flexmark.docx.converter.util.ContentContainer;
 import com.vladsch.flexmark.docx.converter.util.ParaContainer;
@@ -219,17 +223,34 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 		}
 	}
 
-	// List<String> content = new ArrayList<>();
-
 	List<List<String>> pages = new ArrayList<>();
 	private List<String> currentBlock;
 
+	// private Deck deck = new Deck();
+	private List<Slide> xSlides = new ArrayList<>();
+	private List<Block> xBlocks; // = new ArrayList<>();
+
+	public Deck getDeck() {
+		return new Deck(xSlides);
+	}
+
 
 	@Override
-	public void addSlide() {
+	public void startSlide() {
 		List<String> slide = new ArrayList<>();
 		pages.add(slide);
 		currentBlock = slide;
+
+		xBlocks = new ArrayList<>();
+	}
+
+	@Override
+	public void endSlide() {
+		if (xBlocks != null) {
+			Slide slide = Slide.of(xBlocks);
+			xSlides.add(slide);
+		}
+		xBlocks = null;
 	}
 
 	@Override
@@ -244,12 +265,17 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 
 	@Override
 	public void startBlock() {
+		if (xBlocks == null) {
+			xBlocks = new ArrayList<>();
+		}
 		buf = new StringBuilder();
 	}
 
 	@Override
 	public void endBlock() {
 		currentBlock.add(buf.toString());
+		Block block = Block.of(Arrays.asList(buf.toString()));
+		xBlocks.add(block);
 	}
 
 	@Override

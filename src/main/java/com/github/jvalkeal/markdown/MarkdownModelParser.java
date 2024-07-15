@@ -42,13 +42,13 @@ public class MarkdownModelParser implements ModelParser {
 		Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(content);
-		List<List<String>> deckContent = renderer.render(document);
+		// List<List<String>> deckContent = renderer.render(document);
 		// Deck deck = deckContent.stream()
 		// 	.map(c -> Slide.of(c))
 		// 	.collect(Collectors.collectingAndThen(Collectors.toList(), l -> new Deck(l)));
 		// return deck;
-
-		return null;
+		// return null;
+		return renderer.renderx(document);
 	}
 
 }

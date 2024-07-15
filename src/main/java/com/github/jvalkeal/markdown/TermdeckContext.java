@@ -27,7 +27,9 @@ public interface TermdeckContext<T> {
 
 	void endBlock();
 
-	void addSlide();
+	void startSlide();
+
+	void endSlide();
 
 	DataHolder getOptions();
 

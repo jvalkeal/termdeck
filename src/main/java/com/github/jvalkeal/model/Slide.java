@@ -15,38 +15,32 @@
  */
 package com.github.jvalkeal.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.lang.NonNull;
+import org.springframework.util.Assert;
 
 /**
  * Slide represents a partial content in a {@link Deck}.
  *
  * @author Janne Valkealahti
  */
-public interface Slide {
+public class Slide {
 
-	List<Block> blocks();
+	private final List<Block> blocks;
 
-	static Slide of(List<Block> blocks) {
-		return new Slide() {
-
-			@Override
-			public List<Block> blocks() {
-				return blocks;
-			}
-
-		};
+	public Slide(@NonNull List<Block> blocks) {
+		Assert.notNull(blocks, "blocks cannot be null");
+		this.blocks = new ArrayList<>(blocks);
 	}
 
-	// List<String> content();
+	public List<Block> blocks() {
+		return blocks;
+	}
 
-	// static Slide of(List<String> content) {
-	// 	return new Slide() {
-
-	// 		@Override
-	// 		public List<String> content() {
-	// 			return content;
-	// 		}
-	// 	};
-	// }
+	public static Slide of(List<Block> blocks) {
+		return new Slide(blocks);
+	}
 
 }
