@@ -54,7 +54,21 @@ public class Deck {
 	}
 
 	public void move(int i) {
-		index = index + i;
+		int newIndex = index + i;
+		if (i < 0) {
+			if (newIndex < 0) {
+				index = 0;
+				return;
+			}
+		}
+		else if (i > 0) {
+			if (newIndex >= slides.size()) {
+				index = slides.size() - 1;
+				return;
+			}
+		}
+		index = newIndex;
+		// index = index + i;
 	}
 
 }

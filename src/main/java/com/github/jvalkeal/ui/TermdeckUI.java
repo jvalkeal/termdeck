@@ -18,7 +18,6 @@ package com.github.jvalkeal.ui;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.jvalkeal.markdown.CoreNodeTermdeckRenderer;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.view.TextView;
 import org.slf4j.Logger;
@@ -63,6 +62,21 @@ public class TermdeckUI {
 		EventLoop eventLoop = ui.getEventLoop();
 		eventLoop.onDestroy(eventLoop.keyEvents()
 			.doOnNext(m -> {
+				log.info("keyevent {}, plain {}", m, m.getPlainKey());
+				switch (m.key()) {
+					case Key.CursorUp:
+						log.info("Cursor up");
+						deck.move(-1);
+						update(view, deck);
+						break;
+					case Key.CursorDown:
+						log.info("Cursor down");
+						deck.move(1);
+						update(view, deck);
+							break;
+					default:
+						break;
+				}
 				if (m.getPlainKey() == Key.q) {
 					deck.move(1);
 					update(view, deck);

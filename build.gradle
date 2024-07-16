@@ -18,7 +18,7 @@ repositories {
 }
 
 ext {
-	set('springShellVersion', "3.3.0")
+	set('springShellVersion', "3.3.2-SNAPSHOT")
 	set('flexmarkVersion', "0.64.8")
 }
 
