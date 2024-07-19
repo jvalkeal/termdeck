@@ -77,10 +77,6 @@ public class TermdeckUI {
 					default:
 						break;
 				}
-				if (m.getPlainKey() == Key.q) {
-					deck.move(1);
-					update(view, deck);
-				}
 			})
 			.subscribe());
 

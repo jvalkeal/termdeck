@@ -16,12 +16,9 @@
 package com.github.jvalkeal.markdown;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.ModelParser;
-import com.github.jvalkeal.model.Slide;
 import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
@@ -33,22 +30,20 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
  *
  * @author Janne Valkealahti
  */
-public class MarkdownModelParser implements ModelParser {
+public class FlexmarkModelParser implements ModelParser {
 
 	@Override
 	public Deck parse(String content) {
-		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
 		DataHolder options = new MutableDataSet();
-		Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
-		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
+
+		Parser parser = Parser.builder(options)
+			.extensions(Collections.singleton(YamlFrontMatterExtension.create()))
+			.build();
 		Node document = parser.parse(content);
-		// List<List<String>> deckContent = renderer.render(document);
-		// Deck deck = deckContent.stream()
-		// 	.map(c -> Slide.of(c))
-		// 	.collect(Collectors.collectingAndThen(Collectors.toList(), l -> new Deck(l)));
-		// return deck;
-		// return null;
-		return renderer.renderx(document);
+
+		TermdeckRenderer renderer = TermdeckRenderer.builder(options)
+			.build();
+		return renderer.render(document);
 	}
 
 }

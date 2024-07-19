@@ -82,7 +82,7 @@ public class MarkdownModelParserTests {
 	}
 
 	private Deck parse(String data) {
-		MarkdownModelParser modelParser = new MarkdownModelParser();
+		FlexmarkModelParser modelParser = new FlexmarkModelParser();
 		return modelParser.parse(data);
 	}
 }

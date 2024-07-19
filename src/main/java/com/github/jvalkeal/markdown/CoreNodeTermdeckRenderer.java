@@ -25,17 +25,14 @@ import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.ParagraphItemContainer;
 import com.vladsch.flexmark.ast.Text;
 import com.vladsch.flexmark.ast.ThematicBreak;
-import com.vladsch.flexmark.docx.converter.util.HeadingBlockFormatProvider;
 import com.vladsch.flexmark.ext.aside.AsideBlock;
 import com.vladsch.flexmark.ext.attributes.AttributeNode;
 import com.vladsch.flexmark.ext.attributes.AttributesNode;
 import com.vladsch.flexmark.ext.enumerated.reference.EnumeratedReferenceBlock;
-import com.vladsch.flexmark.html.renderer.AttributablePart;
 import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.ast.NonRenderingInline;
 import com.vladsch.flexmark.util.data.DataHolder;
-import com.vladsch.flexmark.util.sequence.BasedSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +73,7 @@ public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 
 	@Override
 	public void renderDocument(TermdeckRendererContext docx, Document document, TermdeckRendererPhase phase) {
+		log.debug("renderDocument {}", phase);
 		switch (phase) {
 			case COLLECT:
 				break;
@@ -83,14 +81,13 @@ public class CoreNodeTermdeckRenderer implements PhasedNodeTermdeckRenderer {
 				break;
 			case DOCUMENT_BOTTOM:
 				break;
-
 			default:
 				break;
 		}
 	}
 
 	private void render(Document node, TermdeckRendererContext ctx, boolean start) {
-		log.debug("Render Document {} {}", start, node);
+		log.debug("render {} {}", start, node);
 		if (start) {
 			ctx.startSlide();
 			ctx.renderChildren(node);

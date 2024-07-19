@@ -16,6 +16,7 @@ import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.ext.toc.SimTocExtension;
 import com.vladsch.flexmark.ext.toc.TocExtension;
 import com.vladsch.flexmark.ext.wikilink.WikiLinkExtension;
+import com.vladsch.flexmark.ext.yaml.front.matter.AbstractYamlFrontMatterVisitor;
 import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
@@ -43,7 +44,12 @@ class RendererTests {
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
 
-		Deck deck = renderer.renderx(document);
+		AbstractYamlFrontMatterVisitor v = new AbstractYamlFrontMatterVisitor();
+		v.visit(document);
+		assertThat(v.getData()).hasSize(1);
+		assertThat(v.getData()).containsEntry("key1", Arrays.asList("value1"));
+
+		Deck deck = renderer.render(document);
 		assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(slide -> {
 			assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
 				block -> {
@@ -74,7 +80,7 @@ class RendererTests {
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
 
-		Deck deck = renderer.renderx(document);
+		Deck deck = renderer.render(document);
 
 		assertThat(deck.getSlides()).hasSize(2).satisfiesExactly(
 			slide -> {
@@ -129,7 +135,7 @@ class RendererTests {
 		// List<List<String>> deckContent = renderer.render(document);
 		// assertThat(deckContent).hasSize(2);
 
-		Deck deck = renderer.renderx(document);
+		Deck deck = renderer.render(document);
 		assertThat(deck.getSlides()).hasSize(2);
 	}
 
@@ -147,7 +153,7 @@ class RendererTests {
 		Parser parser = Parser.builder(options).build();
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
-		Deck deck = renderer.renderx(document);
+		Deck deck = renderer.render(document);
 		assertThat(deck.getSlides()).hasSize(1);
 	}
 

@@ -40,16 +40,10 @@ public class TermdeckRenderer {
 		return new Builder(options);
 	}
 
-	// public List<List<String>> render(Node node) {
-	// 	DefaultTermdeckContext renderer = new DefaultTermdeckContext(options, node.getDocument(), nodeFormatterFactories);
-	// 	renderer.render(node);
-	// 	return renderer.pages;
-	// }
-
-	public Deck renderx(Node node) {
-		DefaultTermdeckContext renderer = new DefaultTermdeckContext(options, node.getDocument(), nodeFormatterFactories);
-		renderer.render(node);
-		return renderer.getDeck();
+	public Deck render(Node node) {
+		DefaultTermdeckContext ctx = new DefaultTermdeckContext(options, node.getDocument(), nodeFormatterFactories);
+		ctx.render(node);
+		return ctx.getDeck();
 	}
 
 	public static class Builder extends BuilderBase<Builder> {

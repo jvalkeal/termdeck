@@ -19,7 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import com.github.jvalkeal.markdown.MarkdownModelParser;
+import com.github.jvalkeal.commonmark.CommonmarkModelParser;
+import com.github.jvalkeal.markdown.FlexmarkModelParser;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.ui.TermdeckUI;
 
@@ -55,7 +56,8 @@ public class TermdeckCommand {
 	private Deck buildDeck(File file) {
 		try {
 			byte[] bytes = Files.readAllBytes(file.toPath());
-			MarkdownModelParser modelParser = new MarkdownModelParser();
+			// FlexmarkModelParser modelParser = new FlexmarkModelParser();
+			CommonmarkModelParser modelParser = new CommonmarkModelParser();
 			Deck deck = modelParser.parse(new String(bytes));
 			return deck;
 		} catch (IOException e) {
