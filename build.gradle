@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.0'
+	id 'org.springframework.boot' version '3.4.0-M1'
 	id 'io.spring.dependency-management' version '1.1.4'
 }
 
@@ -12,21 +12,22 @@ java {
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	maven { url 'https://repo.spring.io/milestone' }
 	maven { url 'https://repo.spring.io/snapshot' }
 }
 
 ext {
-	set('springShellVersion', "3.3.2-SNAPSHOT")
-	set('flexmarkVersion', "0.64.8")
+	set('springShellVersion', "3.4.0-SNAPSHOT")
+	// set('flexmarkVersion', "0.64.8")
 	set('commonmarkVersion', "0.22.0")
 }
 
 dependencies {
 	implementation 'org.springframework.shell:spring-shell-starter-jna'
-	implementation "com.vladsch.flexmark:flexmark-all:${flexmarkVersion}"
-	implementation "com.vladsch.flexmark:flexmark-docx-converter:${flexmarkVersion}"
+	// implementation "com.vladsch.flexmark:flexmark-all:${flexmarkVersion}"
+	// implementation "com.vladsch.flexmark:flexmark-docx-converter:${flexmarkVersion}"
 	implementation "org.commonmark:commonmark:${commonmarkVersion}"
 	// implementation 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.800'
 	// implementation 'org.jruby.joni:joni:2.2.1'

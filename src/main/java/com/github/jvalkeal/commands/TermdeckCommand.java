@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import com.github.jvalkeal.commonmark.CommonmarkModelParser;
-import com.github.jvalkeal.markdown.FlexmarkModelParser;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.ui.TermdeckUI;
 
