@@ -1,7 +1,20 @@
 # hello1
 data1
 
----
+```grave accent```
 
-# hello2
-data2
+```grave accent```
+
+ `grave accent`
+
+```
+code1
+```
+
+``
+code1
+``
+
+`
+code1
+`

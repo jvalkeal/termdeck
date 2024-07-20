@@ -19,10 +19,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.model.MarkdownSettings;
 import com.github.jvalkeal.view.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.component.view.event.EventLoop;
@@ -63,6 +65,10 @@ public class TermdeckUI {
 		eventLoop.onDestroy(eventLoop.keyEvents()
 			.doOnNext(m -> {
 				log.info("keyevent {}, plain {}", m, m.getPlainKey());
+				if (m.getPlainKey() == Key.q && m.hasCtrl()) {
+					eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
+					return;
+				}
 				switch (m.key()) {
 					case Key.CursorUp:
 						log.info("Cursor up");
@@ -85,12 +91,18 @@ public class TermdeckUI {
 	}
 
 	private void update(TextView view, Deck deck) {
+
 		List<String> content = deck.getCurrentSlide().blocks().stream()
-			.flatMap(blocks -> blocks.content().stream()
-				.map(c -> themeResolver.evaluateExpression(c).toAnsi())
+			.flatMap(blocks -> blocks.resolveContent(themeResolver, MarkdownSettings.defaults()).stream()
+				// .map(c -> themeResolver.evaluateExpression(c).toAnsi())
 			)
-			.collect(Collectors.toList())
-			;
+			.collect(Collectors.toList());
+
+		// List<String> content = deck.getCurrentSlide().blocks().stream()
+		// 	.flatMap(blocks -> blocks.content().stream()
+		// 		.map(c -> themeResolver.evaluateExpression(c).toAnsi())
+		// 	)
+		// 	.collect(Collectors.toList());
 		log.debug("Update content {}", content);
 		view.setContent(content);
 	}

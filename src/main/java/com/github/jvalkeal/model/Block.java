@@ -17,8 +17,13 @@ package com.github.jvalkeal.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.jline.utils.AttributedStyle;
 
 import org.springframework.lang.NonNull;
+import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.style.ThemeResolver.ResolvedValues;
 import org.springframework.util.Assert;
 
 /**
@@ -26,21 +31,40 @@ import org.springframework.util.Assert;
  *
  * @author Janne Valkealahti
  */
-public class Block {
+public abstract class Block {
 
-	private final List<String> content;
+	// private final List<String> content;
+	// private ThemeResolver themeResolver;
 
-	public Block(@NonNull List<String> content) {
-		Assert.notNull(content, "content cannot be null");
-		this.content = new ArrayList<>(content);
-	}
+	// public Block(@NonNull List<String> content) {
+	// 	Assert.notNull(content, "content cannot be null");
+	// 	this.content = new ArrayList<>(content);
+	// }
 
-	public List<String> content() {
-		return content;
-	}
+	public abstract List<String> resolveContent(ThemeResolver themeResolver, MarkdownSettings markdownSettings);
 
-	public static Block of(List<String> content) {
-		return new Block(content);
-	}
+	// public List<String> content() {
+	// 	return content;
+	// }
+
+	// public ThemeResolver getThemeResolver() {
+	// 	return themeResolver;
+	// }
+
+
+	// private Optional<ResolvedValues> getThemeResolvedValues(String tag) {
+	// 	ThemeResolver themeResolver = getThemeResolver();
+	// 	if (themeResolver != null) {
+	// 		String styleTag = themeResolver.resolveStyleTag(tag, getThemeName());
+	// 		AttributedStyle attributedStyle = themeResolver.resolveStyle(styleTag);
+	// 		return Optional.of(themeResolver.resolveValues(attributedStyle));
+	// 	}
+	// 	return Optional.empty();
+	// }
+
+
+	// public static Block of(List<String> content) {
+	// 	return new Block(content);
+	// }
 
 }

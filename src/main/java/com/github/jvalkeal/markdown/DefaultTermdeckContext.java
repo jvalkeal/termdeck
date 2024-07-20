@@ -269,8 +269,8 @@ class DefaultTermdeckContext /*extends TermdeckContextImpl<Node>*/ implements Te
 	@Override
 	public void endBlock() {
 		currentBlock.add(buf.toString());
-		Block block = Block.of(Arrays.asList(buf.toString()));
-		xBlocks.add(block);
+		// Block block = Block.of(Arrays.asList(buf.toString()));
+		// xBlocks.add(block);
 	}
 
 	@Override

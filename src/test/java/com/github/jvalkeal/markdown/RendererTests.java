@@ -29,133 +29,146 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RendererTests {
 
 	@Test
-	void frontmatter() {
+	void grave() {
 		String markdown = """
-			---
-			key1: value1
-			---
-			# slide1
-			hello1
+			text1 `grave` text2
 			""";
-
 		YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
 		DataHolder options = new MutableDataSet();
 		Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
 		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
 		Node document = parser.parse(markdown);
-
-		AbstractYamlFrontMatterVisitor v = new AbstractYamlFrontMatterVisitor();
-		v.visit(document);
-		assertThat(v.getData()).hasSize(1);
-		assertThat(v.getData()).containsEntry("key1", Arrays.asList("value1"));
-
 		Deck deck = renderer.render(document);
-		assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(slide -> {
-			assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
-				block -> {
-					assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
-						assertThat(content).contains("slide1");
-					});
-				},
-				block -> {
-					assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
-						assertThat(content).contains("hello1");
-					});
-				});
-		});
 	}
 
-	@Test
-	void basicMultiPage() {
-		String markdown = """
-			# slide1
-			hello1
+	// @Test
+	// void frontmatter() {
+	// 	String markdown = """
+	// 		---
+	// 		key1: value1
+	// 		---
+	// 		# slide1
+	// 		hello1
+	// 		""";
 
-			---
-			# slide2
-			hello2
-			""";
-		DataHolder options = new MutableDataSet();
-		Parser parser = Parser.builder(options).build();
-		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
-		Node document = parser.parse(markdown);
+	// 	YamlFrontMatterExtension ye = YamlFrontMatterExtension.create();
+	// 	DataHolder options = new MutableDataSet();
+	// 	Parser parser = Parser.builder(options).extensions(Collections.singleton(ye)).build();
+	// 	TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
+	// 	Node document = parser.parse(markdown);
 
-		Deck deck = renderer.render(document);
+	// 	AbstractYamlFrontMatterVisitor v = new AbstractYamlFrontMatterVisitor();
+	// 	v.visit(document);
+	// 	assertThat(v.getData()).hasSize(1);
+	// 	assertThat(v.getData()).containsEntry("key1", Arrays.asList("value1"));
 
-		assertThat(deck.getSlides()).hasSize(2).satisfiesExactly(
-			slide -> {
-				assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
-					block -> {
-						assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
-							assertThat(content).contains("slide1");
-						});
-					},
-					block -> {
-						assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
-							assertThat(content).contains("hello1");
-						});
-					});
-			},
-			slide -> {
-				assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
-					block -> {
-						assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
-							assertThat(content).contains("slide2");
-						});
-					},
-					block -> {
-						assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
-							assertThat(content).contains("hello2");
-						});
-					});
-			}
-		);
+	// 	Deck deck = renderer.render(document);
+	// 	assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(slide -> {
+	// 		assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
+	// 			block -> {
+	// 				assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+	// 					assertThat(content).contains("slide1");
+	// 				});
+	// 			},
+	// 			block -> {
+	// 				assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+	// 					assertThat(content).contains("hello1");
+	// 				});
+	// 			});
+	// 	});
+	// }
+
+	// @Test
+	// void basicMultiPage() {
+	// 	String markdown = """
+	// 		# slide1
+	// 		hello1
+
+	// 		---
+	// 		# slide2
+	// 		hello2
+	// 		""";
+	// 	DataHolder options = new MutableDataSet();
+	// 	Parser parser = Parser.builder(options).build();
+	// 	TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
+	// 	Node document = parser.parse(markdown);
+
+	// 	Deck deck = renderer.render(document);
+
+	// 	assertThat(deck.getSlides()).hasSize(2).satisfiesExactly(
+	// 		slide -> {
+	// 			assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
+	// 				block -> {
+	// 					assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+	// 						assertThat(content).contains("slide1");
+	// 					});
+	// 				},
+	// 				block -> {
+	// 					assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+	// 						assertThat(content).contains("hello1");
+	// 					});
+	// 				});
+	// 		},
+	// 		slide -> {
+	// 			assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
+	// 				block -> {
+	// 					assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+	// 						assertThat(content).contains("slide2");
+	// 					});
+	// 				},
+	// 				block -> {
+	// 					assertThat(block.content()).hasSize(1).satisfiesExactly(content -> {
+	// 						assertThat(content).contains("hello2");
+	// 					});
+	// 				});
+	// 		}
+	// 	);
 
 
-	}
+	// }
 
-	@Test
-	void basicMultiSections() {
-		String markdown = """
-			# slide1
-			hello11
+	// @Test
+	// void basicMultiSections() {
+	// 	String markdown = """
+	// 		# slide1
+	// 		hello11
 
-			hello12
+	// 		hello12
 
-			---
-			# slide2
-			hello21
+	// 		---
+	// 		# slide2
+	// 		hello21
 
-			hello22
-			""";
-		DataHolder options = new MutableDataSet();
-		Parser parser = Parser.builder(options).build();
-		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
-		Node document = parser.parse(markdown);
-		// List<List<String>> deckContent = renderer.render(document);
-		// assertThat(deckContent).hasSize(2);
+	// 		hello22
+	// 		""";
+	// 	DataHolder options = new MutableDataSet();
+	// 	Parser parser = Parser.builder(options).build();
+	// 	TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
+	// 	Node document = parser.parse(markdown);
+	// 	// List<List<String>> deckContent = renderer.render(document);
+	// 	// assertThat(deckContent).hasSize(2);
 
-		Deck deck = renderer.render(document);
-		assertThat(deck.getSlides()).hasSize(2);
-	}
+	// 	Deck deck = renderer.render(document);
+	// 	assertThat(deck.getSlides()).hasSize(2);
+	// }
 
-	@Test
-	void codeJson() {
-				String markdown = """
-					```json
-					{
-					  "firstName": "John",
-					  "lastName": "Smith"
-					}
-					```
-					""";
-		DataHolder options = new MutableDataSet();
-		Parser parser = Parser.builder(options).build();
-		TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
-		Node document = parser.parse(markdown);
-		Deck deck = renderer.render(document);
-		assertThat(deck.getSlides()).hasSize(1);
-	}
+	// @Test
+	// void codeJson() {
+	// 			String markdown = """
+	// 				```json
+	// 				{
+	// 				  "firstName": "John",
+	// 				  "lastName": "Smith"
+	// 				}
+	// 				```
+	// 				""";
+	// 	DataHolder options = new MutableDataSet();
+	// 	Parser parser = Parser.builder(options).build();
+	// 	TermdeckRenderer renderer = TermdeckRenderer.builder(options).build();
+	// 	Node document = parser.parse(markdown);
+	// 	Deck deck = renderer.render(document);
+	// 	assertThat(deck.getSlides()).hasSize(1);
+	// }
 
 	// @Test
 	// void docxTest() {

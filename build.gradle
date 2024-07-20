@@ -24,7 +24,7 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.shell:spring-shell-starter'
+	implementation 'org.springframework.shell:spring-shell-starter-jna'
 	implementation "com.vladsch.flexmark:flexmark-all:${flexmarkVersion}"
 	implementation "com.vladsch.flexmark:flexmark-docx-converter:${flexmarkVersion}"
 	implementation "org.commonmark:commonmark:${commonmarkVersion}"

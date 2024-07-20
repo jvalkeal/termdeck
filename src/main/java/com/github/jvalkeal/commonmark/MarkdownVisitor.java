@@ -6,7 +6,9 @@ import java.util.List;
 
 import com.github.jvalkeal.model.Block;
 import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.model.HeadingBlock;
 import com.github.jvalkeal.model.Slide;
+import com.github.jvalkeal.model.TextBlock;
 import org.commonmark.node.BlockQuote;
 import org.commonmark.node.BulletList;
 import org.commonmark.node.Code;
@@ -93,7 +95,9 @@ public class MarkdownVisitor implements Visitor {
 
 	private void exitHeading(Heading heading) {
 		log.debug("Exit {}", heading);
-		endBlock();
+		HeadingBlock block = new HeadingBlock(buf.toString(), heading.getLevel());
+		blocks.add(block);
+		// endBlock();
 	}
 
 	@Override
@@ -162,7 +166,9 @@ public class MarkdownVisitor implements Visitor {
 
 	private void exitParagraph(Paragraph paragraph) {
 		log.debug("Exit {}", paragraph);
-		endBlock();
+		TextBlock block = new TextBlock(Arrays.asList(buf.toString()));
+		blocks.add(block);
+		// endBlock();
 	}
 
 	@Override
@@ -184,13 +190,11 @@ public class MarkdownVisitor implements Visitor {
 
 	private void enterText(Text text) {
 		log.debug("Enter {}", text);
-		append(text.getLiteral());
-
 	}
 
 	private void exitText(Text text) {
 		log.debug("Exit {}", text);
-
+		append(text.getLiteral());
 	}
 
 	@Override
@@ -219,8 +223,6 @@ public class MarkdownVisitor implements Visitor {
 		log.debug("Visit start {}", parent);
         Node node = parent.getFirstChild();
         while (node != null) {
-            // A subclass of this visitor might modify the node, resulting in getNext returning a different node or no
-            // node after visiting it. So get the next node before visiting.
             Node next = node.getNext();
             node.accept(this);
             node = next;
@@ -228,34 +230,32 @@ public class MarkdownVisitor implements Visitor {
 		log.debug("Visit end {}", parent);
     }
 
-	List<List<String>> pages = new ArrayList<>();
-	private List<String> currentBlock;
-
-	private List<Slide> xSlides = new ArrayList<>();
-	private List<Block> xBlocks; // = new ArrayList<>();
+	private List<List<String>> pages = new ArrayList<>();
+	// private List<String> currentBlock;
+	private List<Slide> slides = new ArrayList<>();
+	private List<Block> blocks;
 
 	public Deck getDeck() {
-		return new Deck(xSlides);
+		return new Deck(slides);
 	}
 
-	public void startSlide() {
+	private void startSlide() {
 		List<String> slide = new ArrayList<>();
 		pages.add(slide);
-		currentBlock = slide;
+		// currentBlock = slide;
 
-		xBlocks = new ArrayList<>();
+		blocks = new ArrayList<>();
 	}
 
-	public void endSlide() {
-		if (xBlocks != null) {
-			Slide slide = Slide.of(xBlocks);
-			xSlides.add(slide);
+	private void endSlide() {
+		if (blocks != null) {
+			Slide slide = Slide.of(blocks);
+			slides.add(slide);
 		}
-		xBlocks = null;
+		blocks = null;
 	}
 
-	public void append(String text) {
-		// currentSlide.add(text);
+	private void append(String text) {
 		if (buf != null) {
 			buf.append(text);
 		}
@@ -263,18 +263,17 @@ public class MarkdownVisitor implements Visitor {
 
 	private StringBuilder buf;
 
-	public void startBlock() {
-		if (xBlocks == null) {
-			xBlocks = new ArrayList<>();
+	private void startBlock() {
+		if (blocks == null) {
+			blocks = new ArrayList<>();
 		}
 		buf = new StringBuilder();
 	}
 
-	public void endBlock() {
-		currentBlock.add(buf.toString());
-		Block block = Block.of(Arrays.asList(buf.toString()));
-		xBlocks.add(block);
+	private void endBlock() {
+		// currentBlock.add(buf.toString());
+		// Block block = Block.of(Arrays.asList(buf.toString()));
+		// blocks.add(block);
 	}
-
 
 }

@@ -18,6 +18,8 @@ package com.github.jvalkeal.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +27,7 @@ import org.springframework.shell.component.view.control.BoxView;
 import org.springframework.shell.component.view.screen.Screen;
 import org.springframework.shell.component.view.screen.Screen.Writer;
 import org.springframework.shell.geom.Rectangle;
+import org.springframework.shell.style.ThemeResolver.ResolvedValues;
 
 /**
  * {@code TextView} is used to draw a text.
@@ -59,10 +62,22 @@ public class TextView extends BoxView {
 	protected void drawInternal(Screen screen) {
 		Rectangle rect = getRect();
 		log.debug("Drawing content to {}", rect);
-		Writer writer = screen.writerBuilder().build();
+		// Writer writer = screen.writerBuilder().build();
 		for (int i = 0; i < content.size() && rect.y() < content.size(); i++) {
 			String line = content.get(i);
-			writer.text(line, 0, i);
+			AttributedString fromAnsi = AttributedString.fromAnsi(line);
+			for (int j = 0; j < fromAnsi.length(); j++) {
+				AttributedStyle styleAt = fromAnsi.styleAt(j);
+				ResolvedValues values = getThemeResolver().resolveValues(styleAt);
+				Writer writer2 = screen.writerBuilder()
+					.color(values.foreground())
+					.style(values.style())
+					.build();
+				String string = new String(new char[]{fromAnsi.charAt(j)});
+				writer2.text(string, j, i);
+				writer2.background(new Rectangle(j, i, 1, 1), values.background());
+			}
+			// writer.text(line, 0, i);
 		}
 
 		super.drawInternal(screen);
