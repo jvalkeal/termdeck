@@ -1,5 +1,6 @@
-# Slide1 h1
-hello from slide 1
+# h1
+
+There's heading styles
 
 ## h2
 
@@ -12,5 +13,12 @@ hello from slide 1
 ###### h6
 
 ---
-# Slide2
-hello from slide 2
+# Lists
+
+## Bullets
+* item1
+* item2
+
+## Ordered
+1. item1
+2. item2

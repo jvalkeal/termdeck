@@ -3,10 +3,14 @@ package com.github.jvalkeal.commonmark;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.github.jvalkeal.model.Block;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.HeadingBlock;
+import com.github.jvalkeal.model.ListBlock;
 import com.github.jvalkeal.model.Slide;
 import com.github.jvalkeal.model.TextBlock;
 import org.commonmark.node.BlockQuote;
@@ -46,9 +50,41 @@ public class MarkdownVisitor implements Visitor {
 		visitChildren(blockQuote);
 	}
 
+	private void enterBulletList(BulletList bulletList) {
+		log.debug("Enter {}", bulletList);
+	}
+
+	private static <T> List<T> extractFirstChilds(Node node, Class<T> type) {
+		ArrayList<T> list = new ArrayList<T>();
+		Node child = node.getFirstChild();
+		while(child != null) {
+			if (child.getClass().equals(type)) {
+				list.add((T)child);
+			}
+			child = child.getNext();
+		}
+		return list;
+	}
+
+	private static <T> Stream<T> extractFirstChildsStream(Node node, Class<T> type) {
+		return extractFirstChilds(node, type).stream();
+	}
+
+	private void exitBulletList(BulletList bulletList) {
+		log.debug("Exit {}", bulletList);
+		List<String> items = extractFirstChildsStream(bulletList, ListItem.class)
+			.flatMap(list -> extractFirstChildsStream(list, Paragraph.class))
+			.flatMap(list -> extractFirstChildsStream(list, Text.class))
+			.map(text -> text.getLiteral())
+			.collect(Collectors.toList());
+		blocks.add(new ListBlock(items));
+	}
+
 	@Override
 	public void visit(BulletList bulletList) {
+		enterBulletList(bulletList);
 		visitChildren(bulletList);
+		exitBulletList(bulletList);
 	}
 
 	@Override
@@ -149,14 +185,40 @@ public class MarkdownVisitor implements Visitor {
 		visitChildren(link);
 	}
 
+	private void enterListItem(ListItem listItem) {
+		log.debug("Enter {}", listItem);
+	}
+
+	private void exitListItem(ListItem listItem) {
+		log.debug("Exit {}", listItem);
+	}
+
 	@Override
 	public void visit(ListItem listItem) {
+		enterListItem(listItem);
 		visitChildren(listItem);
+		exitListItem(listItem);
+	}
+
+	private void enterOrderedList(OrderedList orderedList) {
+		log.debug("Enter {}", orderedList);
+	}
+
+	private void exitOrderedList(OrderedList orderedList) {
+		log.debug("Exit {}", orderedList);
+		List<String> items = extractFirstChildsStream(orderedList, ListItem.class)
+			.flatMap(list -> extractFirstChildsStream(list, Paragraph.class))
+			.flatMap(list -> extractFirstChildsStream(list, Text.class))
+			.map(text -> text.getLiteral())
+			.collect(Collectors.toList());
+		blocks.add(new ListBlock(items));
 	}
 
 	@Override
 	public void visit(OrderedList orderedList) {
+		enterOrderedList(orderedList);
 		visitChildren(orderedList);
+		exitOrderedList(orderedList);
 	}
 
 	private void enterParagraph(Paragraph paragraph) {
@@ -165,9 +227,14 @@ public class MarkdownVisitor implements Visitor {
 	}
 
 	private void exitParagraph(Paragraph paragraph) {
+		// org.commonmark.node.Block parent = paragraph.getParent();
 		log.debug("Exit {}", paragraph);
-		TextBlock block = new TextBlock(Arrays.asList(buf.toString()));
-		blocks.add(block);
+
+		if (paragraph.getParent() instanceof Document) {
+			TextBlock block = new TextBlock(Arrays.asList(buf.toString()));
+			blocks.add(block);
+		}
+
 		// endBlock();
 	}
 
@@ -195,6 +262,7 @@ public class MarkdownVisitor implements Visitor {
 	private void exitText(Text text) {
 		log.debug("Exit {}", text);
 		append(text.getLiteral());
+		texts.add(text.getLiteral());
 	}
 
 	@Override
@@ -220,7 +288,7 @@ public class MarkdownVisitor implements Visitor {
 	}
 
     protected void visitChildren(Node parent) {
-		log.debug("Visit start {}", parent);
+		log.debug("Visit start {} {}", parent, parent.getParent());
         Node node = parent.getFirstChild();
         while (node != null) {
             Node next = node.getNext();
@@ -231,7 +299,6 @@ public class MarkdownVisitor implements Visitor {
     }
 
 	private List<List<String>> pages = new ArrayList<>();
-	// private List<String> currentBlock;
 	private List<Slide> slides = new ArrayList<>();
 	private List<Block> blocks;
 
@@ -242,7 +309,6 @@ public class MarkdownVisitor implements Visitor {
 	private void startSlide() {
 		List<String> slide = new ArrayList<>();
 		pages.add(slide);
-		// currentBlock = slide;
 
 		blocks = new ArrayList<>();
 	}
@@ -262,12 +328,14 @@ public class MarkdownVisitor implements Visitor {
 	}
 
 	private StringBuilder buf;
+	private List<String> texts;
 
 	private void startBlock() {
 		if (blocks == null) {
 			blocks = new ArrayList<>();
 		}
 		buf = new StringBuilder();
+		texts = new ArrayList<>();
 	}
 
 	private void endBlock() {

@@ -51,10 +51,6 @@ public abstract class MarkdownSettings {
 	public final static String TEMPLATE_H6_PREFIX = "template-h6-prefix";
 	public final static String TEMPLATE_H6_POSTFIX = "template-h6-postfix";
 
-		// return "bold";
-		// return "bold,fg:bright-cyan";
-		// return "bold,fg:red,bg:green";
-
 	public String styleHeadingText() {
 		return "default";
 	}

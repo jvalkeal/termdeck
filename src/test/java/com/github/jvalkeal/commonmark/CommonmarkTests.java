@@ -2,6 +2,8 @@ package com.github.jvalkeal.commonmark;
 
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.MarkdownSettings;
+import net.bytebuddy.asm.Advice.Enter;
+import net.bytebuddy.asm.Advice.Exit;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.junit.jupiter.api.BeforeEach;
@@ -128,10 +130,136 @@ public class CommonmarkTests {
 
 	}
 
-	// @Test
-	void test1() {
+// Enter Document{}
+// Enter BulletList{}
+// Enter ListItem{}
+// Enter Paragraph{}
+// Enter Text{literal=list1}
+// Exit Paragraph{}
+// Exit ListItem{}
+// Enter ListItem{}
+// Enter Paragraph{}
+// Enter Text{literal=list2}
+
+	@Test
+	void bulletList1() {
 		String markdown = """
-			text1 `grave` text2
+			* list1
+			* list2
+			""";
+		Deck deck = parse(markdown);
+
+		assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(
+			slide -> {
+				assertThat(slide.blocks()).hasSize(1).satisfiesExactly(
+					block -> {
+						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
+							content -> {
+								assertThat(content).contains("  - list1");
+							},
+							content -> {
+								assertThat(content).contains("  - list2");
+							}
+						);
+					}
+				);
+			}
+		);
+
+	}
+
+	@Test
+	void bulletList2() {
+		String markdown = """
+			* para1
+
+			  para21
+			  para22
+			""";
+		Deck deck = parse(markdown);
+
+
+	}
+
+// Enter Document{}
+// Enter BulletList{}
+// Enter ListItem{}
+// Enter Paragraph{}
+// Enter Text{literal=Like bulleted list}
+
+	@Test
+	void numberList() {
+		String markdown = """
+			1. item1
+			2. item2
+			""";
+		Deck deck = parse(markdown);
+
+		assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(
+			slide -> {
+				assertThat(slide.blocks()).hasSize(1).satisfiesExactly(
+					block -> {
+						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
+							content -> {
+								assertThat(content).contains("  - item1");
+							},
+							content -> {
+								assertThat(content).contains("  - item2");
+							}
+						);
+					}
+				);
+			}
+		);
+
+	}
+
+// Enter Document{}
+// Enter Paragraph{}
+// Enter Text{literal=text}
+
+	@Test
+	void simpleParagraph() {
+		String markdown = """
+			text
+			""";
+		Deck deck = parse(markdown);
+
+	}
+
+	@Test
+	void multiLineInParagraph() {
+		String markdown = """
+			text1
+			text2
+			""";
+		Deck deck = parse(markdown);
+
+		assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(
+			slide -> {
+				assertThat(slide.blocks()).hasSize(1).satisfiesExactly(
+					block -> {
+						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(1).satisfiesExactly(
+							content -> {
+								assertThat(content).contains("text1 text2");
+							}
+						);
+					}
+				);
+			}
+		);
+	}
+
+//
+// Enter Document{}
+// Enter Heading{}
+// Enter Text{literal=h1}
+
+
+	@Test
+	void onlyHeading() {
+		String markdown = """
+			# h1
 			""";
 		Deck deck = parse(markdown);
 

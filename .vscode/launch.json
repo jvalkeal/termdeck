@@ -10,6 +10,13 @@
             "request": "launch",
             "mainClass": "com.github.jvalkeal.TermdeckApplication",
             "args": "src/test/resources/test1.md"
+        },
+        {
+            "type": "java",
+            "name": "test3",
+            "request": "launch",
+            "mainClass": "com.github.jvalkeal.TermdeckApplication",
+            "args": "src/test/resources/test3.md"
         }
     ]
 }
