@@ -16,7 +16,9 @@
 package com.github.jvalkeal.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
@@ -28,6 +30,7 @@ import org.springframework.util.Assert;
  */
 public class Deck {
 
+	private final Map<String, List<String>> frontMatterValues = new HashMap<>();
 	private final List<Slide> slides;
 	private int index;
 
@@ -40,8 +43,20 @@ public class Deck {
 		this.slides = new ArrayList<>(slides);
 	}
 
+	public Deck(@NonNull List<Slide> slides, Map<String, List<String>> frontMatterValues) {
+		Assert.notNull(slides, "slides cannot be null");
+		this.slides = new ArrayList<>(slides);
+		if (frontMatterValues != null) {
+			this.frontMatterValues.putAll(frontMatterValues);
+		}
+	}
+
 	public List<Slide> getSlides() {
 		return slides;
+	}
+
+	public Map<String, List<String>> getFrontMatterValues() {
+		return frontMatterValues;
 	}
 
 	public void addSlide(Slide slide) {

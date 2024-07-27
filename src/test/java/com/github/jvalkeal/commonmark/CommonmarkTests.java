@@ -10,6 +10,7 @@ import com.github.jvalkeal.model.Slide;
 import net.bytebuddy.asm.Advice.Enter;
 import net.bytebuddy.asm.Advice.Exit;
 import org.commonmark.Extension;
+import org.commonmark.ext.front.matter.YamlFrontMatterExtension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -303,6 +304,19 @@ public class CommonmarkTests {
 
 	}
 
+	@Test
+	void frontmatter() {
+		String markdown = """
+			---
+			key1: value1
+			---
+			text
+			""";
+		Deck deck = parse(markdown);
+		assertThat(deck.getFrontMatterValues()).hasSize(1);
+		assertThat(deck.getFrontMatterValues()).containsEntry("key1", List.of("value1"));
+	}
+
 	// @Test
 	void test2() {
 		String markdown = """
@@ -315,7 +329,7 @@ public class CommonmarkTests {
 	}
 
 	private Deck parse(String markdown) {
-		List<Extension> extensions = List.of(TablesExtension.create());
+		List<Extension> extensions = List.of(TablesExtension.create(), YamlFrontMatterExtension.create());
 		Parser parser = Parser.builder()
 			.extensions(extensions)
 			.build();

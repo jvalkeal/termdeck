@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.springframework.shell:spring-shell-table'
 	implementation "org.commonmark:commonmark:${commonmarkVersion}"
 	implementation "org.commonmark:commonmark-ext-gfm-tables:${commonmarkVersion}"
+	implementation "org.commonmark:commonmark-ext-yaml-front-matter:${commonmarkVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

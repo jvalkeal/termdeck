@@ -2,7 +2,9 @@ package com.github.jvalkeal.commonmark;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,6 +14,8 @@ import com.github.jvalkeal.model.HeadingBlock;
 import com.github.jvalkeal.model.ListBlock;
 import com.github.jvalkeal.model.Slide;
 import com.github.jvalkeal.model.TextBlock;
+import org.commonmark.ext.front.matter.YamlFrontMatterBlock;
+import org.commonmark.ext.front.matter.YamlFrontMatterNode;
 import org.commonmark.ext.gfm.tables.TableBlock;
 import org.commonmark.ext.gfm.tables.TableBody;
 import org.commonmark.ext.gfm.tables.TableCell;
@@ -356,15 +360,41 @@ public class MarkdownVisitor implements Visitor {
 		log.debug("Exit {}", tableCell);
 	}
 
+	private Map<String, List<String>> frontMatterValues;
+
+	private void enterYamlFrontMatterBlock(YamlFrontMatterBlock yamlFrontMatterBlock) {
+		log.debug("Enter {}", yamlFrontMatterBlock);
+		frontMatterValues = new HashMap<>();
+	}
+
+	private void exitYamlFrontMatterBlock(YamlFrontMatterBlock yamlFrontMatterBlock) {
+		log.debug("Exit {}", yamlFrontMatterBlock);
+	}
+
+	private void enterYamlFrontMatterNode(YamlFrontMatterNode yamlFrontMatterNode) {
+		log.debug("Enter {}", yamlFrontMatterNode);
+		if (frontMatterValues != null) {
+			frontMatterValues.put(yamlFrontMatterNode.getKey(), yamlFrontMatterNode.getValues());
+		}
+	}
+
+	private void exitYamlFrontMatterNode(YamlFrontMatterNode yamlFrontMatterNode) {
+		log.debug("Exit {}", yamlFrontMatterNode);
+	}
+
+// YamlFrontMatterNode{} YamlFrontMatterBlock{}
+
 	@Override
 	public void visit(CustomBlock customBlock) {
 		switch (customBlock) {
 			case TableBlock tableBlock -> enterTableBlock(tableBlock);
+			case YamlFrontMatterBlock yamlFrontMatterBlock -> enterYamlFrontMatterBlock(yamlFrontMatterBlock);
 			default -> {}
 		}
 		visitChildren(customBlock);
 		switch (customBlock) {
 			case TableBlock tableBlock -> exitTableBlock(tableBlock);
+			case YamlFrontMatterBlock yamlFrontMatterBlock -> exitYamlFrontMatterBlock(yamlFrontMatterBlock);
 			default -> {}
 		}
 	}
@@ -376,6 +406,7 @@ public class MarkdownVisitor implements Visitor {
 			case TableBody tableBody -> enterTableBody(tableBody);
 			case TableRow tableRow -> enterTableRow(tableRow);
 			case TableCell tableCell -> enterTableCell(tableCell);
+			case YamlFrontMatterNode yamlFrontMatterNode -> enterYamlFrontMatterNode(yamlFrontMatterNode);
 			default -> {}
 		}
 		visitChildren(customNode);
@@ -384,6 +415,7 @@ public class MarkdownVisitor implements Visitor {
 			case TableBody tableBody -> exitTableBody(tableBody);
 			case TableRow tableRow -> exitTableRow(tableRow);
 			case TableCell tableCell -> exitTableCell(tableCell);
+			case YamlFrontMatterNode yamlFrontMatterNode -> exitYamlFrontMatterNode(yamlFrontMatterNode);
 			default -> {}
 		}
 	}
@@ -404,7 +436,7 @@ public class MarkdownVisitor implements Visitor {
 	private List<Block> blocks;
 
 	public Deck getDeck() {
-		return new Deck(slides);
+		return new Deck(slides, frontMatterValues);
 	}
 
 	private void startSlide() {
