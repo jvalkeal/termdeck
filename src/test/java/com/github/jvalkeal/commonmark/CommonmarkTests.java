@@ -308,13 +308,16 @@ public class CommonmarkTests {
 	void frontmatter() {
 		String markdown = """
 			---
-			key1: value1
+			author: fakeauthor
 			---
 			text
 			""";
 		Deck deck = parse(markdown);
-		assertThat(deck.getFrontMatterValues()).hasSize(1);
-		assertThat(deck.getFrontMatterValues()).containsEntry("key1", List.of("value1"));
+		assertThat(deck.getDeckSettings()).satisfies(settings -> {
+			assertThat(settings.getAuthor()).isEqualTo("fakeauthor");
+		});
+		// assertThat(deck.getFrontMatterValues()).hasSize(1);
+		// assertThat(deck.getFrontMatterValues()).containsEntry("key1", List.of("value1"));
 	}
 
 	@Test

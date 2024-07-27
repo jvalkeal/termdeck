@@ -30,7 +30,8 @@ import org.springframework.util.Assert;
  */
 public class Deck {
 
-	private final Map<String, List<String>> frontMatterValues = new HashMap<>();
+	// private final Map<String, List<String>> frontMatterValues = new HashMap<>();
+	private final DeckSettings deckSettings;
 	private final List<Slide> slides;
 	private int index;
 
@@ -41,22 +42,21 @@ public class Deck {
 	public Deck(@NonNull List<Slide> slides) {
 		Assert.notNull(slides, "slides cannot be null");
 		this.slides = new ArrayList<>(slides);
+		this.deckSettings = null;
 	}
 
-	public Deck(@NonNull List<Slide> slides, Map<String, List<String>> frontMatterValues) {
+	public Deck(@NonNull List<Slide> slides, DeckSettings deckSettings) {
 		Assert.notNull(slides, "slides cannot be null");
 		this.slides = new ArrayList<>(slides);
-		if (frontMatterValues != null) {
-			this.frontMatterValues.putAll(frontMatterValues);
-		}
+		this.deckSettings = deckSettings;
 	}
 
 	public List<Slide> getSlides() {
 		return slides;
 	}
 
-	public Map<String, List<String>> getFrontMatterValues() {
-		return frontMatterValues;
+	public DeckSettings getDeckSettings() {
+		return deckSettings;
 	}
 
 	public void addSlide(Slide slide) {

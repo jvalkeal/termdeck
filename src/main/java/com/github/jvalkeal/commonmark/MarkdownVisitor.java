@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import com.github.jvalkeal.model.Chunk;
 import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.model.DeckSettings;
 import com.github.jvalkeal.model.Slide;
 import com.github.jvalkeal.model.chunk.HeadingChunk;
 import com.github.jvalkeal.model.chunk.ListChunk;
@@ -456,7 +457,11 @@ public class MarkdownVisitor implements Visitor {
 	private List<Chunk> blocks;
 
 	public Deck getDeck() {
-		return new Deck(slides, frontMatterValues);
+		DeckSettings deckSettings = null;
+		if(frontMatterValues != null) {
+			deckSettings = DeckSettings.from(frontMatterValues);
+		}
+		return new Deck(slides, deckSettings);
 	}
 
 	private void startSlide() {
