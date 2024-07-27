@@ -3,7 +3,6 @@ package com.github.jvalkeal.commonmark;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,6 +12,11 @@ import com.github.jvalkeal.model.HeadingBlock;
 import com.github.jvalkeal.model.ListBlock;
 import com.github.jvalkeal.model.Slide;
 import com.github.jvalkeal.model.TextBlock;
+import org.commonmark.ext.gfm.tables.TableBlock;
+import org.commonmark.ext.gfm.tables.TableBody;
+import org.commonmark.ext.gfm.tables.TableCell;
+import org.commonmark.ext.gfm.tables.TableHead;
+import org.commonmark.ext.gfm.tables.TableRow;
 import org.commonmark.node.BlockQuote;
 import org.commonmark.node.BulletList;
 import org.commonmark.node.Code;
@@ -262,7 +266,9 @@ public class MarkdownVisitor implements Visitor {
 	private void exitText(Text text) {
 		log.debug("Exit {}", text);
 		append(text.getLiteral());
-		texts.add(text.getLiteral());
+		if (texts != null) {
+			texts.add(text.getLiteral());
+		}
 	}
 
 	@Override
@@ -277,25 +283,120 @@ public class MarkdownVisitor implements Visitor {
 		visitChildren(linkReferenceDefinition);
 	}
 
+	private List<String> tableHeaderData = null;
+	private List<List<String>> tableRowData = null;
+
+	private void enterTableBlock(TableBlock tableBlock) {
+		log.debug("Enter {}", tableBlock);
+		tableHeaderData = new ArrayList<>();
+		tableRowData = new ArrayList<>();
+	}
+
+	private void exitTableBlock(TableBlock tableBlock) {
+		log.debug("Exit {}", tableBlock);
+
+		com.github.jvalkeal.model.TableBlock tb = new com.github.jvalkeal.model.TableBlock(tableHeaderData, tableRowData);
+		blocks.add(tb);
+		tableHeaderData = null;
+		tableRowData = null;
+	}
+
+	private void enterTableHead(TableHead tableHead) {
+		log.debug("Enter {}", tableHead);
+		List<String> items = extractFirstChildsStream(tableHead, TableRow.class)
+			.flatMap(list -> extractFirstChildsStream(list, TableCell.class))
+			.flatMap(list -> extractFirstChildsStream(list, Text.class))
+			.map(text -> text.getLiteral())
+			.collect(Collectors.toList());
+		tableHeaderData.addAll(items);
+	}
+
+	private void exitTableHead(TableHead tableHead) {
+		log.debug("Exit {}", tableHead);
+	}
+
+	private void enterTableBody(TableBody tableBody) {
+		log.debug("Enter {}", tableBody);
+		// List<String> items = extractFirstChildsStream(tableBody, TableRow.class)
+		// 	.flatMap(list -> extractFirstChildsStream(list, TableCell.class))
+		// 	.flatMap(list -> extractFirstChildsStream(list, Text.class))
+		// 	.map(text -> text.getLiteral())
+		// 	.collect(Collectors.toList());
+
+		List<TableRow> rows = extractFirstChilds(tableBody, TableRow.class);
+		rows.forEach(row -> {
+			List<String> cells = extractFirstChildsStream(row, TableCell.class)
+				.flatMap(list -> extractFirstChildsStream(list, Text.class))
+				.map(text -> text.getLiteral())
+				.collect(Collectors.toList());
+				;
+			tableRowData.add(cells);
+		});
+
+		// tableRowData.addAll(items);
+	}
+
+	private void exitTableBody(TableBody tableBody) {
+		log.debug("Exit {}", tableBody);
+	}
+
+	private void enterTableRow(TableRow tableRow) {
+		log.debug("Enter {}", tableRow);
+	}
+
+	private void exitTableRow(TableRow tableRow) {
+		log.debug("Exit {}", tableRow);
+	}
+
+	private void enterTableCell(TableCell tableCell) {
+		log.debug("Enter {}", tableCell);
+	}
+
+	private void exitTableCell(TableCell tableCell) {
+		log.debug("Exit {}", tableCell);
+	}
+
 	@Override
 	public void visit(CustomBlock customBlock) {
+		switch (customBlock) {
+			case TableBlock tableBlock -> enterTableBlock(tableBlock);
+			default -> {}
+		}
 		visitChildren(customBlock);
+		switch (customBlock) {
+			case TableBlock tableBlock -> exitTableBlock(tableBlock);
+			default -> {}
+		}
 	}
 
 	@Override
 	public void visit(CustomNode customNode) {
+		switch (customNode) {
+			case TableHead tableHead -> enterTableHead(tableHead);
+			case TableBody tableBody -> enterTableBody(tableBody);
+			case TableRow tableRow -> enterTableRow(tableRow);
+			case TableCell tableCell -> enterTableCell(tableCell);
+			default -> {}
+		}
 		visitChildren(customNode);
+		switch (customNode) {
+			case TableHead tableHead -> exitTableHead(tableHead);
+			case TableBody tableBody -> exitTableBody(tableBody);
+			case TableRow tableRow -> exitTableRow(tableRow);
+			case TableCell tableCell -> exitTableCell(tableCell);
+			default -> {}
+		}
 	}
 
     protected void visitChildren(Node parent) {
-		log.debug("Visit start {} {}", parent, parent.getParent());
+		log.trace("Visit start {} {}", parent, parent.getParent());
         Node node = parent.getFirstChild();
         while (node != null) {
             Node next = node.getNext();
             node.accept(this);
             node = next;
         }
-		log.debug("Visit end {}", parent);
+		log.trace("Visit end {}", parent);
     }
 
 	private List<List<String>> pages = new ArrayList<>();

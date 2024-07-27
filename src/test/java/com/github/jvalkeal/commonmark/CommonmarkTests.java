@@ -1,9 +1,16 @@
 package com.github.jvalkeal.commonmark;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.MarkdownSettings;
+import com.github.jvalkeal.model.Slide;
 import net.bytebuddy.asm.Advice.Enter;
 import net.bytebuddy.asm.Advice.Exit;
+import org.commonmark.Extension;
+import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.junit.jupiter.api.BeforeEach;
@@ -148,24 +155,33 @@ public class CommonmarkTests {
 			* list2
 			""";
 		Deck deck = parse(markdown);
+		assertThat(deck.getSlides()).hasSize(1);
+		assertThat(extractSlideLines(deck.getSlides().get(0))).containsExactly("  - list1", "  - list2");
 
-		assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(
-			slide -> {
-				assertThat(slide.blocks()).hasSize(1).satisfiesExactly(
-					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
-							content -> {
-								assertThat(content).contains("  - list1");
-							},
-							content -> {
-								assertThat(content).contains("  - list2");
-							}
-						);
-					}
-				);
-			}
-		);
+		// assertThat(deck.getSlides()).hasSize(1).satisfiesExactly(
+		// 	slide -> {
+		// 		assertThat(slide.blocks()).hasSize(1).satisfiesExactly(
+		// 			block -> {
+		// 				assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
+		// 					content -> {
+		// 						assertThat(content).contains("  - list1");
+		// 					},
+		// 					content -> {
+		// 						assertThat(content).contains("  - list2");
+		// 					}
+		// 				);
+		// 			}
+		// 		);
+		// 	}
+		// );
 
+	}
+
+	private List<String> extractSlideLines(Slide slide) {
+		return slide.blocks().stream()
+			.flatMap(block -> block.resolveContent(themeResolver, markdownSettings).stream())
+			.collect(Collectors.toList())
+			;
 	}
 
 	@Test
@@ -265,6 +281,28 @@ public class CommonmarkTests {
 
 	}
 
+// Visit start TableBlock{} Document{}
+// Visit start TableHead{} TableBlock{}
+// Visit start TableRow{} TableHead{}
+// Visit start TableCell{} TableRow{}
+// Visit start Text{literal=header1} TableCell{}
+// Visit start TableBody{} TableBlock{}
+
+
+	@Test
+	void basicTable() {
+		String markdown = """
+			| header1 | header2 |
+			| ------- | ------- |
+			| row11   | row12   |
+			""";
+		Deck deck = parse(markdown);
+		assertThat(deck.getSlides()).hasSize(1);
+		extractSlideLines(deck.getSlides().get(0));
+		// assertThat(extractSlideLines(deck.getSlides().get(0))).containsExactly("  - list1");
+
+	}
+
 	// @Test
 	void test2() {
 		String markdown = """
@@ -277,7 +315,10 @@ public class CommonmarkTests {
 	}
 
 	private Deck parse(String markdown) {
-		Parser parser = Parser.builder().build();
+		List<Extension> extensions = List.of(TablesExtension.create());
+		Parser parser = Parser.builder()
+			.extensions(extensions)
+			.build();
 		Node document = parser.parse(markdown);
 		MarkdownVisitor visitor = new MarkdownVisitor();
 		document.accept(visitor);

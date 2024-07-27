@@ -25,7 +25,9 @@ ext {
 
 dependencies {
 	implementation 'org.springframework.shell:spring-shell-starter-jna'
+	implementation 'org.springframework.shell:spring-shell-table'
 	implementation "org.commonmark:commonmark:${commonmarkVersion}"
+	implementation "org.commonmark:commonmark-ext-gfm-tables:${commonmarkVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

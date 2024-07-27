@@ -22,3 +22,11 @@ There's heading styles
 ## Ordered
 1. item1
 2. item2
+
+---
+# Tables
+
+| Header1 | Header2 |
+| ------- | ------- |
+| Row11   | Row12   |
+| Row21   | Row22   |
