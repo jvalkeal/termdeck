@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
  *
  * @author Janne Valkealahti
  */
-public abstract class Block {
+public abstract class Chunk {
 
 	// private final List<String> content;
 	// private ThemeResolver themeResolver;

@@ -28,18 +28,18 @@ import org.springframework.util.Assert;
  */
 public class Slide {
 
-	private final List<Block> blocks;
+	private final List<Chunk> blocks;
 
-	public Slide(@NonNull List<Block> blocks) {
+	public Slide(@NonNull List<Chunk> blocks) {
 		Assert.notNull(blocks, "blocks cannot be null");
 		this.blocks = new ArrayList<>(blocks);
 	}
 
-	public List<Block> blocks() {
+	public List<Chunk> blocks() {
 		return blocks;
 	}
 
-	public static Slide of(List<Block> blocks) {
+	public static Slide of(List<Chunk> blocks) {
 		return new Slide(blocks);
 	}
 

@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.github.jvalkeal.model.Block;
+import com.github.jvalkeal.model.Chunk;
 import com.github.jvalkeal.model.Deck;
-import com.github.jvalkeal.model.HeadingBlock;
-import com.github.jvalkeal.model.ListBlock;
 import com.github.jvalkeal.model.Slide;
-import com.github.jvalkeal.model.TextBlock;
+import com.github.jvalkeal.model.chunk.HeadingChunk;
+import com.github.jvalkeal.model.chunk.ListChunk;
+import com.github.jvalkeal.model.chunk.TextChunk;
 import org.commonmark.ext.front.matter.YamlFrontMatterBlock;
 import org.commonmark.ext.front.matter.YamlFrontMatterNode;
 import org.commonmark.ext.gfm.tables.TableBlock;
@@ -85,7 +85,7 @@ public class MarkdownVisitor implements Visitor {
 			.flatMap(list -> extractFirstChildsStream(list, Text.class))
 			.map(text -> text.getLiteral())
 			.collect(Collectors.toList());
-		blocks.add(new ListBlock(items));
+		blocks.add(new ListChunk(items));
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class MarkdownVisitor implements Visitor {
 
 	private void exitHeading(Heading heading) {
 		log.debug("Exit {}", heading);
-		HeadingBlock block = new HeadingBlock(buf.toString(), heading.getLevel());
+		HeadingChunk block = new HeadingChunk(buf.toString(), heading.getLevel());
 		blocks.add(block);
 		// endBlock();
 	}
@@ -239,7 +239,7 @@ public class MarkdownVisitor implements Visitor {
 			.flatMap(list -> extractFirstChildsStream(list, Text.class))
 			.map(text -> text.getLiteral())
 			.collect(Collectors.toList());
-		blocks.add(new ListBlock(items));
+		blocks.add(new ListChunk(items));
 	}
 
 	@Override
@@ -259,7 +259,7 @@ public class MarkdownVisitor implements Visitor {
 		log.debug("Exit {}", paragraph);
 
 		if (paragraph.getParent() instanceof Document) {
-			TextBlock block = new TextBlock(Arrays.asList(buf.toString()));
+			TextChunk block = new TextChunk(Arrays.asList(buf.toString()));
 			blocks.add(block);
 		}
 
@@ -319,7 +319,7 @@ public class MarkdownVisitor implements Visitor {
 	private void exitTableBlock(TableBlock tableBlock) {
 		log.debug("Exit {}", tableBlock);
 
-		com.github.jvalkeal.model.TableBlock tb = new com.github.jvalkeal.model.TableBlock(tableHeaderData, tableRowData);
+		com.github.jvalkeal.model.chunk.TableChunk tb = new com.github.jvalkeal.model.chunk.TableChunk(tableHeaderData, tableRowData);
 		blocks.add(tb);
 		tableHeaderData = null;
 		tableRowData = null;
@@ -453,7 +453,7 @@ public class MarkdownVisitor implements Visitor {
 
 	private List<List<String>> pages = new ArrayList<>();
 	private List<Slide> slides = new ArrayList<>();
-	private List<Block> blocks;
+	private List<Chunk> blocks;
 
 	public Deck getDeck() {
 		return new Deck(slides, frontMatterValues);

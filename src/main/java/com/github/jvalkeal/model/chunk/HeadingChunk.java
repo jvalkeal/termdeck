@@ -1,21 +1,23 @@
-package com.github.jvalkeal.model;
+package com.github.jvalkeal.model.chunk;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.jvalkeal.model.Chunk;
+import com.github.jvalkeal.model.MarkdownSettings;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
 
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeResolver.ResolvedValues;
 
-public class HeadingBlock extends Block {
+public class HeadingChunk extends Chunk {
 
 	private String header;
 	private int level;
 
-	public HeadingBlock(String content, int level) {
+	public HeadingChunk(String content, int level) {
 		// super(Collections.emptyList());
 		header = content;
 		this.level = level;

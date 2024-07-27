@@ -1,10 +1,13 @@
-package com.github.jvalkeal.model;
+package com.github.jvalkeal.model.chunk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import com.github.jvalkeal.model.Chunk;
+import com.github.jvalkeal.model.MarkdownSettings;
 
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.table.ArrayTableModel;
@@ -14,12 +17,12 @@ import org.springframework.shell.table.Table;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
 
-public class TableBlock extends Block {
+public class TableChunk extends Chunk {
 
 	private List<String> tableHeaderData = null;
 	private List<List<String>> tableRowData = null;
 
-	public TableBlock(List<String> tableHeaderData, List<List<String>> tableRowData) {
+	public TableChunk(List<String> tableHeaderData, List<List<String>> tableRowData) {
 		this.tableHeaderData = tableHeaderData;
 		this.tableRowData = tableRowData;
 	}
