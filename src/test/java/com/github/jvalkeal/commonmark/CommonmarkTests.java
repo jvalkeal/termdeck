@@ -317,11 +317,24 @@ public class CommonmarkTests {
 		assertThat(deck.getFrontMatterValues()).containsEntry("key1", List.of("value1"));
 	}
 
-	// @Test
-	void test2() {
+	@Test
+	void code1() {
 		String markdown = """
 			```
 			code
+			```
+			""";
+		Deck deck = parse(markdown);
+
+	}
+
+	@Test
+	void code2() {
+		String markdown = """
+			```
+			text
+				code
+			text
 			```
 			""";
 		Deck deck = parse(markdown);

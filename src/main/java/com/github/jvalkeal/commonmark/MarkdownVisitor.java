@@ -122,9 +122,19 @@ public class MarkdownVisitor implements Visitor {
 		visitChildren(emphasis);
 	}
 
+	private void enterFencedCodeBlock(FencedCodeBlock fencedCodeBlock) {
+		log.debug("Enter {}", fencedCodeBlock);
+	}
+
+	private void exitFencedCodeBlock(FencedCodeBlock fencedCodeBlock) {
+		log.debug("Exit {}", fencedCodeBlock);
+	}
+
 	@Override
 	public void visit(FencedCodeBlock fencedCodeBlock) {
+		enterFencedCodeBlock(fencedCodeBlock);
 		visitChildren(fencedCodeBlock);
+		exitFencedCodeBlock(fencedCodeBlock);
 	}
 
 	@Override
@@ -183,9 +193,19 @@ public class MarkdownVisitor implements Visitor {
 		visitChildren(image);
 	}
 
+	private void enterIndentedCodeBlock(IndentedCodeBlock indentedCodeBlock) {
+		log.debug("Enter {}", indentedCodeBlock);
+	}
+
+	private void exitIndentedCodeBlock(IndentedCodeBlock indentedCodeBlock) {
+		log.debug("Exit {}", indentedCodeBlock);
+	}
+
 	@Override
 	public void visit(IndentedCodeBlock indentedCodeBlock) {
+		enterIndentedCodeBlock(indentedCodeBlock);
 		visitChildren(indentedCodeBlock);
+		exitIndentedCodeBlock(indentedCodeBlock);
 	}
 
 	@Override
