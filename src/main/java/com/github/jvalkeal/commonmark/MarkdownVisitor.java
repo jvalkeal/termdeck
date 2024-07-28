@@ -150,7 +150,13 @@ public class MarkdownVisitor implements Visitor {
 
 	private void exitHeading(Heading heading) {
 		log.debug("Exit {}", heading);
-		HeadingChunk block = new HeadingChunk(buf.toString(), heading.getLevel());
+
+		String collect = extractFirstChildsStream(heading, Text.class)
+			.map(text -> text.getLiteral())
+			.collect(Collectors.joining(" "));
+
+		HeadingChunk block = new HeadingChunk(collect, heading.getLevel());
+		// HeadingChunk block = new HeadingChunk(buf.toString(), heading.getLevel());
 		blocks.add(block);
 		// endBlock();
 	}
@@ -260,7 +266,14 @@ public class MarkdownVisitor implements Visitor {
 		log.debug("Exit {}", paragraph);
 
 		if (paragraph.getParent() instanceof Document) {
-			TextChunk block = new TextChunk(Arrays.asList(buf.toString()));
+
+			String collect = extractFirstChildsStream(paragraph, Text.class)
+				.map(text -> text.getLiteral())
+				.collect(Collectors.joining(" "));
+
+
+			// TextChunk block = new TextChunk(Arrays.asList(buf.toString()));
+			TextChunk block = new TextChunk(Arrays.asList(collect));
 			blocks.add(block);
 		}
 
@@ -290,7 +303,7 @@ public class MarkdownVisitor implements Visitor {
 
 	private void exitText(Text text) {
 		log.debug("Exit {}", text);
-		append(text.getLiteral());
+		// append(text.getLiteral());
 		if (texts != null) {
 			texts.add(text.getLiteral());
 		}
@@ -479,20 +492,20 @@ public class MarkdownVisitor implements Visitor {
 		blocks = null;
 	}
 
-	private void append(String text) {
-		if (buf != null) {
-			buf.append(text);
-		}
-	}
+	// private void append(String text) {
+	// 	if (buf != null) {
+	// 		buf.append(text);
+	// 	}
+	// }
 
-	private StringBuilder buf;
+	// private StringBuilder buf;
 	private List<String> texts;
 
 	private void startBlock() {
 		if (blocks == null) {
 			blocks = new ArrayList<>();
 		}
-		buf = new StringBuilder();
+		// buf = new StringBuilder();
 		texts = new ArrayList<>();
 	}
 

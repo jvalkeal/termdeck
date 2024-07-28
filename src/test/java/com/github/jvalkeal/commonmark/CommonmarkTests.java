@@ -1,19 +1,11 @@
 package com.github.jvalkeal.commonmark;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.MarkdownSettings;
 import com.github.jvalkeal.model.Slide;
-import net.bytebuddy.asm.Advice.Enter;
-import net.bytebuddy.asm.Advice.Exit;
-import org.commonmark.Extension;
-import org.commonmark.ext.front.matter.YamlFrontMatterExtension;
-import org.commonmark.ext.gfm.tables.TablesExtension;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -345,13 +337,15 @@ public class CommonmarkTests {
 	}
 
 	private Deck parse(String markdown) {
-		List<Extension> extensions = List.of(TablesExtension.create(), YamlFrontMatterExtension.create());
-		Parser parser = Parser.builder()
-			.extensions(extensions)
-			.build();
-		Node document = parser.parse(markdown);
-		MarkdownVisitor visitor = new MarkdownVisitor();
-		document.accept(visitor);
-		return visitor.getDeck();
+		CommonmarkModelParser parser = new CommonmarkModelParser();
+		return parser.parse(markdown);
+		// List<Extension> extensions = List.of(TablesExtension.create(), YamlFrontMatterExtension.create());
+		// Parser parser = Parser.builder()
+		// 	.extensions(extensions)
+		// 	.build();
+		// Node document = parser.parse(markdown);
+		// MarkdownVisitor visitor = new MarkdownVisitor();
+		// document.accept(visitor);
+		// return visitor.getDeck();
 	}
 }
