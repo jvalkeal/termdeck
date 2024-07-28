@@ -15,6 +15,7 @@
  */
 package com.github.jvalkeal.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +28,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
+import org.springframework.shell.component.view.control.AppView;
+import org.springframework.shell.component.view.control.GridView;
+import org.springframework.shell.component.view.control.MenuBarView;
+import org.springframework.shell.component.view.control.MenuBarView.MenuBarItem;
+import org.springframework.shell.component.view.control.MenuView.MenuItem;
+import org.springframework.shell.component.view.control.MenuView.MenuItemCheckStyle;
+import org.springframework.shell.component.view.control.StatusBarView;
+import org.springframework.shell.component.view.control.StatusBarView.StatusItem;
 import org.springframework.shell.component.view.event.EventLoop;
+import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
+import org.springframework.shell.component.view.event.KeyEvent.KeyMask;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Handles {@link TerminalUI} logic.
@@ -43,6 +55,10 @@ public class TermdeckUI {
 	private final Deck deck;
 	private final TerminalUIBuilder builder;
 	private final ThemeResolver themeResolver;
+	private TerminalUI ui;
+	private EventLoop eventLoop;
+	private AppView app;
+	private TextView deckView;
 
 	TermdeckUI(TerminalUIBuilder builder, ThemeResolver themeResolver, Deck deck) {
 		Assert.notNull(deck, "Deck must be set");
@@ -56,12 +72,12 @@ public class TermdeckUI {
 	}
 
 	public void run() {
-		TerminalUI ui = builder.build();
-		TextView view = new TextView();
-		ui.configure(view);
-		update(view, deck);
+		ui = builder.build();
+		app = buildMainView(eventLoop, ui);
+		ui.configure(app);
+		update(deckView, deck);
 
-		EventLoop eventLoop = ui.getEventLoop();
+		eventLoop = ui.getEventLoop();
 		eventLoop.onDestroy(eventLoop.keyEvents()
 			.doOnNext(m -> {
 				log.info("keyevent {}, plain {}", m, m.getPlainKey());
@@ -73,12 +89,12 @@ public class TermdeckUI {
 					case Key.CursorUp:
 						log.info("Cursor up");
 						deck.move(-1);
-						update(view, deck);
+						update(deckView, deck);
 						break;
 					case Key.CursorDown:
 						log.info("Cursor down");
 						deck.move(1);
-						update(view, deck);
+						update(deckView, deck);
 							break;
 					default:
 						break;
@@ -86,9 +102,53 @@ public class TermdeckUI {
 			})
 			.subscribe());
 
-		ui.setRoot(view, true);
+		ui.setRoot(app, true);
 		ui.run();
 	}
+
+	private AppView buildMainView(EventLoop eventLoop, TerminalUI component) {
+		MenuBarView menuBar = buildMenuBar(eventLoop);
+		StatusBarView statusBar = buildStatusBar(eventLoop);
+		deckView = new TextView();
+		ui.configure(deckView);
+		AppView app = new AppView(deckView, menuBar, statusBar);
+		component.configure(app);
+		return app;
+	}
+
+	private void requestQuit() {
+		eventLoop.dispatch(ShellMessageBuilder.ofInterrupt());
+	}
+
+	private MenuBarView buildMenuBar(EventLoop eventLoop) {
+		Runnable quitAction = () -> requestQuit();
+		MenuBarView menuBar = MenuBarView.of(
+			MenuBarItem.of("File",
+					MenuItem.of("Quit", MenuItemCheckStyle.NOCHECK, quitAction))
+				.setHotKey(Key.f | KeyMask.AltMask)
+		);
+
+		ui.configure(menuBar);
+		return menuBar;
+	}
+
+	private StatusBarView buildStatusBar(EventLoop eventLoop) {
+		// Runnable quitAction = () -> requestQuit();
+		Runnable visibilyAction = () -> app.toggleStatusBarVisibility();
+		List<StatusItem> statusItems = new ArrayList<>();
+		if (deck.getDeckSettings() != null && StringUtils.hasText(deck.getDeckSettings().getAuthor())) {
+			statusItems.add(StatusItem.of(deck.getDeckSettings().getAuthor()));
+		}
+		statusItems.add(StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10));
+		StatusBarView statusBar = new StatusBarView(statusItems);
+		// StatusBarView statusBar = new StatusBarView(new StatusItem[] {
+		// 	StatusItem.of("CTRL-Q Quit", quitAction),
+		// 	StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10)
+		// });
+		ui.configure(statusBar);
+		return statusBar;
+	}
+
 
 	private void update(TextView view, Deck deck) {
 

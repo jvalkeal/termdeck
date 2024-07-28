@@ -1,5 +1,5 @@
 ---
-author: Janne
+author: John Doe
 ---
 There is just text here.
 And more text.

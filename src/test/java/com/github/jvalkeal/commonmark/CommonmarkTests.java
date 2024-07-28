@@ -305,6 +305,7 @@ public class CommonmarkTests {
 			text
 			""";
 		Deck deck = parse(markdown);
+		assertThat(deck.getSlides()).hasSize(1);
 		assertThat(deck.getDeckSettings()).satisfies(settings -> {
 			assertThat(settings.getAuthor()).isEqualTo("fakeauthor");
 		});

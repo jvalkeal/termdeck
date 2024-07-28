@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "showcase",
+            "request": "launch",
+            "mainClass": "com.github.jvalkeal.TermdeckApplication",
+            "args": "src/test/resources/showcase.md"
+        },
+        {
+            "type": "java",
             "name": "test1",
             "request": "launch",
             "mainClass": "com.github.jvalkeal.TermdeckApplication",

@@ -13,7 +13,6 @@ public class TextChunk extends Chunk {
 	private final List<String> content;
 
 	public TextChunk(List<String> content) {
-		// super(content);
 		this.content = new ArrayList<>(content);
 	}
 

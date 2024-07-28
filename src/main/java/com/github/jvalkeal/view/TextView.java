@@ -60,25 +60,13 @@ public class TextView extends BoxView {
 
 	@Override
 	protected void drawInternal(Screen screen) {
-		Rectangle rect = getRect();
+		Rectangle rect = getInnerRect();
 		log.debug("Drawing content to {}", rect);
 		Writer writer = screen.writerBuilder().build();
-		for (int i = 0; i < content.size() && rect.y() < content.size(); i++) {
+		for (int i = 0; i < content.size() && rect.height() > content.size(); i++) {
 			String line = content.get(i);
 			AttributedString fromAnsi = AttributedString.fromAnsi(line);
-			writer.text(fromAnsi, 0, i);
-			// for (int j = 0; j < fromAnsi.length(); j++) {
-			// 	AttributedStyle styleAt = fromAnsi.styleAt(j);
-			// 	ResolvedValues values = getThemeResolver().resolveValues(styleAt);
-			// 	Writer writer2 = screen.writerBuilder()
-			// 		.color(values.foreground())
-			// 		.style(values.style())
-			// 		.build();
-			// 	String string = new String(new char[]{fromAnsi.charAt(j)});
-			// 	writer2.text(string, j, i);
-			// 	writer2.background(new Rectangle(j, i, 1, 1), values.background());
-			// }
-			// writer.text(line, 0, i);
+			writer.text(fromAnsi, 0, i + rect.y());
 		}
 
 		super.drawInternal(screen);
