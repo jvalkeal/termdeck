@@ -95,7 +95,19 @@ public class TermdeckUI {
 						log.info("Cursor down");
 						deck.move(1);
 						update(deckView, deck);
-							break;
+						break;
+					case Key.CursorRight:
+						log.info("Cursor right");
+						break;
+					case Key.f10:
+						log.info("F10");
+						break;
+					case Key.s | KeyEvent.KeyMask.CtrlMask:
+						app.toggleStatusBarVisibility();
+						break;
+					case Key.n | KeyEvent.KeyMask.CtrlMask:
+						app.toggleMenuBarVisibility();
+						break;
 					default:
 						break;
 				}
@@ -112,6 +124,7 @@ public class TermdeckUI {
 		deckView = new TextView();
 		ui.configure(deckView);
 		AppView app = new AppView(deckView, menuBar, statusBar);
+		app.setMenuBarVisible(false);
 		component.configure(app);
 		return app;
 	}
@@ -139,7 +152,7 @@ public class TermdeckUI {
 		if (deck.getDeckSettings() != null && StringUtils.hasText(deck.getDeckSettings().getAuthor())) {
 			statusItems.add(StatusItem.of(deck.getDeckSettings().getAuthor()));
 		}
-		statusItems.add(StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10));
+		// statusItems.add(StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10));
 		StatusBarView statusBar = new StatusBarView(statusItems);
 		// StatusBarView statusBar = new StatusBarView(new StatusItem[] {
 		// 	StatusItem.of("CTRL-Q Quit", quitAction),

@@ -316,25 +316,29 @@ public class CommonmarkTests {
 	@Test
 	void code1() {
 		String markdown = """
+			text
 			```
 			code
 			```
+			text
 			""";
 		Deck deck = parse(markdown);
-
+		assertThat(deck.getSlides()).hasSize(1);
+		assertThat(extractSlideLines(deck.getSlides().get(0))).containsExactly("text", "code", "text");
 	}
 
 	@Test
 	void code2() {
 		String markdown = """
-			```
 			text
-				code
+
+			    code
+
 			text
-			```
 			""";
 		Deck deck = parse(markdown);
-
+		assertThat(deck.getSlides()).hasSize(1);
+		assertThat(extractSlideLines(deck.getSlides().get(0))).containsExactly("text", "code", "text");
 	}
 
 	private Deck parse(String markdown) {

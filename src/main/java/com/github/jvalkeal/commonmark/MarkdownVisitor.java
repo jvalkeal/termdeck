@@ -12,6 +12,7 @@ import com.github.jvalkeal.model.Chunk;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.DeckSettings;
 import com.github.jvalkeal.model.Slide;
+import com.github.jvalkeal.model.chunk.CodeChunk;
 import com.github.jvalkeal.model.chunk.HeadingChunk;
 import com.github.jvalkeal.model.chunk.ListChunk;
 import com.github.jvalkeal.model.chunk.TextChunk;
@@ -129,6 +130,8 @@ public class MarkdownVisitor implements Visitor {
 
 	private void exitFencedCodeBlock(FencedCodeBlock fencedCodeBlock) {
 		log.debug("Exit {}", fencedCodeBlock);
+		CodeChunk codeChunk = new CodeChunk(fencedCodeBlock.getLiteral().lines().collect(Collectors.toList()));
+		blocks.add(codeChunk);
 	}
 
 	@Override
@@ -206,6 +209,9 @@ public class MarkdownVisitor implements Visitor {
 
 	private void exitIndentedCodeBlock(IndentedCodeBlock indentedCodeBlock) {
 		log.debug("Exit {}", indentedCodeBlock);
+		// indentedCodeBlock.getLiteral().lines().collect(Collectors.toList())
+		CodeChunk codeChunk = new CodeChunk(indentedCodeBlock.getLiteral().lines().collect(Collectors.toList()));
+		blocks.add(codeChunk);
 	}
 
 	@Override
