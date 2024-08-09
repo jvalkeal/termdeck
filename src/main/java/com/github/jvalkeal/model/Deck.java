@@ -68,6 +68,10 @@ public class Deck {
 		return slides.get(index);
 	}
 
+	public int getCurrentIndex() {
+		return index;
+	}
+
 	public void move(int i) {
 		int newIndex = index + i;
 		if (newIndex < 0) {

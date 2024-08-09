@@ -309,8 +309,21 @@ public class CommonmarkTests {
 		assertThat(deck.getDeckSettings()).satisfies(settings -> {
 			assertThat(settings.getAuthor()).isEqualTo("fakeauthor");
 		});
-		// assertThat(deck.getFrontMatterValues()).hasSize(1);
-		// assertThat(deck.getFrontMatterValues()).containsEntry("key1", List.of("value1"));
+	}
+
+	@Test
+	void frontmatter2() {
+		String markdown = """
+			---
+			slideCount:
+			---
+			text
+			""";
+		Deck deck = parse(markdown);
+		assertThat(deck.getSlides()).hasSize(1);
+		assertThat(deck.getDeckSettings()).satisfies(settings -> {
+			assertThat(settings.getSlideCount()).isNull();
+		});
 	}
 
 	@Test

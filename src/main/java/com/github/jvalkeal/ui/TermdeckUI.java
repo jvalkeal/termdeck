@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.jvalkeal.model.Deck;
+import com.github.jvalkeal.model.DeckSettings;
 import com.github.jvalkeal.model.MarkdownSettings;
 import com.github.jvalkeal.view.TextView;
 import org.slf4j.Logger;
@@ -147,11 +148,23 @@ public class TermdeckUI {
 
 	private StatusBarView buildStatusBar(EventLoop eventLoop) {
 		// Runnable quitAction = () -> requestQuit();
-		Runnable visibilyAction = () -> app.toggleStatusBarVisibility();
+		// Runnable visibilyAction = () -> app.toggleStatusBarVisibility();
 		List<StatusItem> statusItems = new ArrayList<>();
-		if (deck.getDeckSettings() != null && StringUtils.hasText(deck.getDeckSettings().getAuthor())) {
-			statusItems.add(StatusItem.of(deck.getDeckSettings().getAuthor()));
+		DeckSettings deckSettings = deck.getDeckSettings();
+
+		if (deckSettings != null && StringUtils.hasText(deckSettings.getAuthor())) {
+			statusItems.add(StatusItem.of(deckSettings.getAuthor()));
 		}
+
+		if (deckSettings != null && StringUtils.hasText(deckSettings.getSlideCount())) {
+			StatusItem slideInfoStatusItem = StatusItem.of(() -> {
+				int index = deck.getCurrentIndex() + 1;
+				int total = deck.getSlides().size();
+				return String.format(deckSettings.getSlideCount(), index, total);
+			});
+			statusItems.add(slideInfoStatusItem);
+		}
+
 		// statusItems.add(StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10));
 		StatusBarView statusBar = new StatusBarView(statusItems);
 		// StatusBarView statusBar = new StatusBarView(new StatusItem[] {
@@ -162,20 +175,13 @@ public class TermdeckUI {
 		return statusBar;
 	}
 
-
 	private void update(TextView view, Deck deck) {
-
 		List<String> content = deck.getCurrentSlide().blocks().stream()
 			.flatMap(blocks -> blocks.resolveContent(themeResolver, MarkdownSettings.defaults()).stream()
 				// .map(c -> themeResolver.evaluateExpression(c).toAnsi())
 			)
 			.collect(Collectors.toList());
 
-		// List<String> content = deck.getCurrentSlide().blocks().stream()
-		// 	.flatMap(blocks -> blocks.content().stream()
-		// 		.map(c -> themeResolver.evaluateExpression(c).toAnsi())
-		// 	)
-		// 	.collect(Collectors.toList());
 		log.debug("Update content {}", content);
 		view.setContent(content);
 	}

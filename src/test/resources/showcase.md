@@ -1,5 +1,6 @@
 ---
 author: John Doe
+slideCount: Slide %1$s
 ---
 There is just text here.
 And more text.
