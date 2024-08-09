@@ -12,9 +12,10 @@ import com.github.jvalkeal.model.Chunk;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.DeckSettings;
 import com.github.jvalkeal.model.Slide;
+import com.github.jvalkeal.model.chunk.BulletListChunk;
 import com.github.jvalkeal.model.chunk.CodeChunk;
 import com.github.jvalkeal.model.chunk.HeadingChunk;
-import com.github.jvalkeal.model.chunk.ListChunk;
+import com.github.jvalkeal.model.chunk.OrderedListChunk;
 import com.github.jvalkeal.model.chunk.TextChunk;
 import org.commonmark.ext.front.matter.YamlFrontMatterBlock;
 import org.commonmark.ext.front.matter.YamlFrontMatterNode;
@@ -87,7 +88,7 @@ public class MarkdownVisitor implements Visitor {
 			.flatMap(list -> extractFirstChildsStream(list, Text.class))
 			.map(text -> text.getLiteral())
 			.collect(Collectors.toList());
-		blocks.add(new ListChunk(items));
+		blocks.add(new BulletListChunk(items));
 	}
 
 	@Override
@@ -252,7 +253,7 @@ public class MarkdownVisitor implements Visitor {
 			.flatMap(list -> extractFirstChildsStream(list, Text.class))
 			.map(text -> text.getLiteral())
 			.collect(Collectors.toList());
-		blocks.add(new ListChunk(items));
+		blocks.add(new OrderedListChunk(items));
 	}
 
 	@Override

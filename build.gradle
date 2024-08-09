@@ -12,7 +12,7 @@ java {
 }
 
 repositories {
-	mavenLocal()
+	// mavenLocal()
 	mavenCentral()
 	maven { url 'https://repo.spring.io/milestone' }
 	maven { url 'https://repo.spring.io/snapshot' }
@@ -21,6 +21,10 @@ repositories {
 ext {
 	set('springShellVersion', "3.4.0-SNAPSHOT")
 	set('commonmarkVersion', "0.22.0")
+}
+
+configurations.all {
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 dependencies {

@@ -30,7 +30,6 @@ import org.springframework.shell.component.message.ShellMessageBuilder;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.component.view.control.AppView;
-import org.springframework.shell.component.view.control.GridView;
 import org.springframework.shell.component.view.control.MenuBarView;
 import org.springframework.shell.component.view.control.MenuBarView.MenuBarItem;
 import org.springframework.shell.component.view.control.MenuView.MenuItem;
@@ -146,9 +145,9 @@ public class TermdeckUI {
 		return menuBar;
 	}
 
+	private StatusItem slideInfoStatusItem;
+
 	private StatusBarView buildStatusBar(EventLoop eventLoop) {
-		// Runnable quitAction = () -> requestQuit();
-		// Runnable visibilyAction = () -> app.toggleStatusBarVisibility();
 		List<StatusItem> statusItems = new ArrayList<>();
 		DeckSettings deckSettings = deck.getDeckSettings();
 
@@ -157,25 +156,23 @@ public class TermdeckUI {
 		}
 
 		if (deckSettings != null && StringUtils.hasText(deckSettings.getSlideCount())) {
-			StatusItem slideInfoStatusItem = StatusItem.of(() -> {
-				int index = deck.getCurrentIndex() + 1;
-				int total = deck.getSlides().size();
-				return String.format(deckSettings.getSlideCount(), index, total);
-			});
+			slideInfoStatusItem = StatusItem.of("", null, null, false, 0);
 			statusItems.add(slideInfoStatusItem);
 		}
 
-		// statusItems.add(StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10));
 		StatusBarView statusBar = new StatusBarView(statusItems);
-		// StatusBarView statusBar = new StatusBarView(new StatusItem[] {
-		// 	StatusItem.of("CTRL-Q Quit", quitAction),
-		// 	StatusItem.of("F10 Status Bar", visibilyAction, KeyEvent.Key.f10)
-		// });
 		ui.configure(statusBar);
 		return statusBar;
 	}
 
 	private void update(TextView view, Deck deck) {
+		if (slideInfoStatusItem != null) {
+				DeckSettings deckSettings = deck.getDeckSettings();
+				int index = deck.getCurrentIndex() + 1;
+				int total = deck.getSlides().size();
+				String text = String.format(deckSettings.getSlideCount(), index, total);
+				slideInfoStatusItem.setTitle(text);
+		}
 		List<String> content = deck.getCurrentSlide().blocks().stream()
 			.flatMap(blocks -> blocks.resolveContent(themeResolver, MarkdownSettings.defaults()).stream()
 				// .map(c -> themeResolver.evaluateExpression(c).toAnsi())

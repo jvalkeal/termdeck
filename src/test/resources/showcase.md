@@ -1,6 +1,6 @@
 ---
 author: John Doe
-slideCount: Slide %1$s
+slideCount: Slide %1$s/%2$s
 ---
 There is just text here.
 And more text.
