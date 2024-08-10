@@ -1,0 +1,7 @@
+heading:
+  text:
+    template: '%s'
+    style: bold
+  prefix:
+    template: '#'
+  postfix:

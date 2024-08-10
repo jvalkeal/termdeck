@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "showcase",
+            "request": "launch",
+            "mainClass": "com.github.jvalkeal.TermdeckApplication",
+            "args": "src/test/resources/showcase.md"
+        },
+        {
+            "type": "java",
+            "name": "test1",
+            "request": "launch",
+            "mainClass": "com.github.jvalkeal.TermdeckApplication",
+            "args": "src/test/resources/test1.md"
+        },
+        {
+            "type": "java",
+            "name": "test3",
+            "request": "launch",
+            "mainClass": "com.github.jvalkeal.TermdeckApplication",
+            "args": "src/test/resources/test3.md"
+        }
+    ]
+}
