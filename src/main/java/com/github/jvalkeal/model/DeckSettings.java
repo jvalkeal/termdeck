@@ -8,9 +8,11 @@ public class DeckSettings {
 
 	public static final String KEY_AUTHOR = "author";
 	public static final String KEY_SLIDECOUNT = "slideCount";
+	public static final String KEY_ELAPSEDTIME = "elapsedTime";
 
 	private String author;
 	private String slideCount = "%s / %s";
+	private String elapsedTime = "%2d:%02d:%02d";
 
 	public static DeckSettings from(Map<String, List<String>> values) {
 		DeckSettings settings = new DeckSettings();
@@ -18,6 +20,7 @@ public class DeckSettings {
 			switch (entry.getKey()) {
 				case KEY_AUTHOR -> settings.bindAuthor(entry.getValue());
 				case KEY_SLIDECOUNT -> settings.bindSlideCount(entry.getValue());
+				case KEY_ELAPSEDTIME -> settings.bindElapsedTime(entry.getValue());
 			}
 		}
 		return settings;
@@ -52,5 +55,22 @@ public class DeckSettings {
 
 	public void setSlideCount(String slideCount) {
 		this.slideCount = slideCount;
+	}
+
+	private void bindElapsedTime(List<String> values) {
+		if (values.size() == 0) {
+			setElapsedTime(null);
+		}
+		else if (values.size() > 0) {
+			setElapsedTime(values.getFirst());
+		}
+	}
+
+	public String getElapsedTime() {
+		return elapsedTime;
+	}
+
+	public void setElapsedTime(String elapsedTime) {
+		this.elapsedTime = elapsedTime;
 	}
 }

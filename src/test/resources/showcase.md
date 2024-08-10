@@ -1,6 +1,7 @@
 ---
 author: John Doe
 slideCount: Slide %1$s/%2$s
+elapsedTime: '%2$02d:%3$02d'
 ---
 There is just text here.
 And more text.

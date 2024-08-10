@@ -15,7 +15,9 @@
  */
 package com.github.jvalkeal.ui;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +27,13 @@ import com.github.jvalkeal.model.MarkdownSettings;
 import com.github.jvalkeal.view.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.shell.component.message.ShellMessageBuilder;
+import org.springframework.shell.component.message.ShellMessageHeaderAccessor;
+import org.springframework.shell.component.message.StaticShellMessageHeaderAccessor;
 import org.springframework.shell.component.view.TerminalUI;
 import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.component.view.control.AppView;
@@ -114,6 +121,30 @@ public class TermdeckUI {
 			})
 			.subscribe());
 
+		Flux<Message<?>> times = Flux.interval(Duration.ofSeconds(1)).map(l -> {
+			Message<Long> message = MessageBuilder
+				.withPayload(l * 1000)
+				.setHeader(ShellMessageHeaderAccessor.EVENT_TYPE, EventLoop.Type.USER)
+				.build();
+			return message;
+		});
+		eventLoop.dispatch(times);
+
+		eventLoop.onDestroy(eventLoop.events()
+			.filter(m -> EventLoop.Type.USER.equals(StaticShellMessageHeaderAccessor.getEventType(m)))
+			.subscribe(m -> {
+				if (m.getPayload() instanceof Long l) {
+					if (elapsedTimeStatusItem != null) {
+						Duration duration = Duration.ofMillis(l);
+						String formattedElapsedTime = String.format(deck.getDeckSettings().getElapsedTime(),
+								duration.toHours() % 24, duration.toMinutes() % 60, duration.toSeconds() % 60);
+						elapsedTimeStatusItem.setTitle(formattedElapsedTime);
+						eventLoop.dispatch(ShellMessageBuilder.ofRedraw());
+					}
+				}
+			}));
+
+
 		ui.setRoot(app, true);
 		ui.run();
 	}
@@ -146,6 +177,7 @@ public class TermdeckUI {
 	}
 
 	private StatusItem slideInfoStatusItem;
+	private StatusItem elapsedTimeStatusItem;
 
 	private StatusBarView buildStatusBar(EventLoop eventLoop) {
 		List<StatusItem> statusItems = new ArrayList<>();
@@ -158,6 +190,11 @@ public class TermdeckUI {
 		if (deckSettings != null && StringUtils.hasText(deckSettings.getSlideCount())) {
 			slideInfoStatusItem = StatusItem.of("", null, null, false, 0);
 			statusItems.add(slideInfoStatusItem);
+		}
+
+		if (deckSettings != null && StringUtils.hasText(deckSettings.getSlideCount())) {
+			elapsedTimeStatusItem = StatusItem.of("", null, null, false, 0);
+			statusItems.add(elapsedTimeStatusItem);
 		}
 
 		StatusBarView statusBar = new StatusBarView(statusItems);
