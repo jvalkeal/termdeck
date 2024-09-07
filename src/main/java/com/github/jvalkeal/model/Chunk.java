@@ -24,6 +24,7 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.lang.NonNull;
 import org.springframework.shell.style.ThemeResolver;
 import org.springframework.shell.style.ThemeResolver.ResolvedValues;
+import org.springframework.shell.treesitter.TreeSitterLanguages;
 import org.springframework.util.Assert;
 
 /**
@@ -41,7 +42,11 @@ public abstract class Chunk {
 	// 	this.content = new ArrayList<>(content);
 	// }
 
-	public abstract List<String> resolveContent(ThemeResolver themeResolver, MarkdownSettings markdownSettings);
+	public record ResolveContentContext(ThemeResolver themeResolver, MarkdownSettings markdownSettings, TreeSitterLanguages treeSitterLanguages) {
+	}
+
+	public abstract List<String> resolveContent(ResolveContentContext context);
+	// public abstract List<String> resolveContent(ThemeResolver themeResolver, MarkdownSettings markdownSettings);
 
 	// public List<String> content() {
 	// 	return content;

@@ -28,7 +28,7 @@ public class TableChunk extends Chunk {
 	}
 
 	@Override
-	public List<String> resolveContent(ThemeResolver themeResolver, MarkdownSettings markdownSettings) {
+	public List<String> resolveContent(ResolveContentContext context) {
 
 		Stream<List<String>> s1 = Stream.of(tableHeaderData);
 		Stream<List<String>> s2 = tableRowData.stream();

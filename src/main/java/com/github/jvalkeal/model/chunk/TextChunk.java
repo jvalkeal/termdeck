@@ -17,7 +17,7 @@ public class TextChunk extends Chunk {
 	}
 
 	@Override
-	public List<String> resolveContent(ThemeResolver themeResolver, MarkdownSettings markdownSettings) {
+	public List<String> resolveContent(ResolveContentContext context) {
 		return content;
 	}
 

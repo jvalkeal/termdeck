@@ -9,7 +9,8 @@
             "name": "showcase",
             "request": "launch",
             "mainClass": "com.github.jvalkeal.TermdeckApplication",
-            "args": "src/test/resources/showcase.md"
+            "args": "src/test/resources/showcase.md",
+            "vmArgs": "--enable-native-access=ALL-UNNAMED"
         },
         {
             "type": "java",

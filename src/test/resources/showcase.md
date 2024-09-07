@@ -41,7 +41,21 @@ Here we have a json code block:
 
 ```json
 {
-  "firstName": "John",
-  "lastName": "Smith"
+  "stringkey": "stringvalue",
+  "intkey": 1,
+  "stringarraykey": ["string1", "string2"]
+}
+```
+
+---
+Here we have a java code block:
+
+```java
+package demo;
+
+class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hello, World!");
+  }
 }
 ```

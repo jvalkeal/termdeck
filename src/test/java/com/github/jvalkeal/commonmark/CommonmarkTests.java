@@ -3,6 +3,8 @@ package com.github.jvalkeal.commonmark;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jvalkeal.model.Chunk;
+import com.github.jvalkeal.model.Chunk.ResolveContentContext;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.MarkdownSettings;
 import com.github.jvalkeal.model.Slide;
@@ -20,6 +22,7 @@ public class CommonmarkTests {
 
 	private ThemeResolver themeResolver;
 	private MarkdownSettings markdownSettings;
+	private ResolveContentContext context;
 
 	@BeforeEach
 	public void setup() {
@@ -36,6 +39,7 @@ public class CommonmarkTests {
 		});
 		themeResolver = new ThemeResolver(themeRegistry, "default");
 		markdownSettings = MarkdownSettings.defaults();
+		context = new Chunk.ResolveContentContext(themeResolver, markdownSettings, null);
 	}
 
 
@@ -51,7 +55,7 @@ public class CommonmarkTests {
 			slide -> {
 				assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
 					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
+						assertThat(block.resolveContent(context)).hasSize(2).satisfiesExactly(
 							content -> {
 								assertThat(content).contains("slide1");
 							},
@@ -61,7 +65,7 @@ public class CommonmarkTests {
 						);
 					},
 					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(1).satisfiesExactly(
+						assertThat(block.resolveContent(context)).hasSize(1).satisfiesExactly(
 							content -> {
 								assertThat(content).contains("hello1");
 							}
@@ -88,7 +92,7 @@ public class CommonmarkTests {
 			slide -> {
 				assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
 					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
+						assertThat(block.resolveContent(context)).hasSize(2).satisfiesExactly(
 							content -> {
 								assertThat(content).contains("slide1");
 							},
@@ -98,7 +102,7 @@ public class CommonmarkTests {
 						);
 					},
 					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(1).satisfiesExactly(
+						assertThat(block.resolveContent(context)).hasSize(1).satisfiesExactly(
 							content -> {
 								assertThat(content).contains("hello1");
 							}
@@ -108,7 +112,7 @@ public class CommonmarkTests {
 			slide -> {
 				assertThat(slide.blocks()).hasSize(2).satisfiesExactly(
 					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
+						assertThat(block.resolveContent(context)).hasSize(2).satisfiesExactly(
 							content -> {
 								assertThat(content).contains("slide2");
 							},
@@ -118,7 +122,7 @@ public class CommonmarkTests {
 						);
 					},
 					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(1).satisfiesExactly(
+						assertThat(block.resolveContent(context)).hasSize(1).satisfiesExactly(
 							content -> {
 								assertThat(content).contains("hello2");
 							}
@@ -155,7 +159,7 @@ public class CommonmarkTests {
 		// 	slide -> {
 		// 		assertThat(slide.blocks()).hasSize(1).satisfiesExactly(
 		// 			block -> {
-		// 				assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
+		// 				assertThat(block.resolveContent(context)).hasSize(2).satisfiesExactly(
 		// 					content -> {
 		// 						assertThat(content).contains("  - list1");
 		// 					},
@@ -172,7 +176,7 @@ public class CommonmarkTests {
 
 	private List<String> extractSlideLines(Slide slide) {
 		return slide.blocks().stream()
-			.flatMap(block -> block.resolveContent(themeResolver, markdownSettings).stream())
+			.flatMap(block -> block.resolveContent(context).stream())
 			.collect(Collectors.toList())
 			;
 	}
@@ -208,7 +212,7 @@ public class CommonmarkTests {
 			slide -> {
 				assertThat(slide.blocks()).hasSize(1).satisfiesExactly(
 					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(2).satisfiesExactly(
+						assertThat(block.resolveContent(context)).hasSize(2).satisfiesExactly(
 							content -> {
 								assertThat(content).contains("  - item1");
 							},
@@ -248,7 +252,7 @@ public class CommonmarkTests {
 			slide -> {
 				assertThat(slide.blocks()).hasSize(1).satisfiesExactly(
 					block -> {
-						assertThat(block.resolveContent(themeResolver, markdownSettings)).hasSize(1).satisfiesExactly(
+						assertThat(block.resolveContent(context)).hasSize(1).satisfiesExactly(
 							content -> {
 								assertThat(content).contains("text1 text2");
 							}
@@ -347,6 +351,20 @@ public class CommonmarkTests {
 
 			    code
 
+			text
+			""";
+		Deck deck = parse(markdown);
+		assertThat(deck.getSlides()).hasSize(1);
+		assertThat(extractSlideLines(deck.getSlides().get(0))).containsExactly("text", "code", "text");
+	}
+
+	@Test
+	void code3() {
+		String markdown = """
+			text
+			```language
+			code
+			```
 			text
 			""";
 		Deck deck = parse(markdown);

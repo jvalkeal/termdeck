@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jvalkeal.model.Chunk;
+import com.github.jvalkeal.model.Chunk.ResolveContentContext;
 import com.github.jvalkeal.model.Deck;
 import com.github.jvalkeal.model.DeckSettings;
 import com.github.jvalkeal.model.MarkdownSettings;
@@ -48,6 +50,7 @@ import org.springframework.shell.component.view.event.KeyEvent;
 import org.springframework.shell.component.view.event.KeyEvent.Key;
 import org.springframework.shell.component.view.event.KeyEvent.KeyMask;
 import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.treesitter.TreeSitterLanguages;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -62,20 +65,22 @@ public class TermdeckUI {
 	private final Deck deck;
 	private final TerminalUIBuilder builder;
 	private final ThemeResolver themeResolver;
+	private final TreeSitterLanguages treeSitterLanguages;
 	private TerminalUI ui;
 	private EventLoop eventLoop;
 	private AppView app;
 	private TextView deckView;
 
-	TermdeckUI(TerminalUIBuilder builder, ThemeResolver themeResolver, Deck deck) {
+	TermdeckUI(TerminalUIBuilder builder, ThemeResolver themeResolver, TreeSitterLanguages treeSitterLanguages, Deck deck) {
 		Assert.notNull(deck, "Deck must be set");
 		this.builder = builder;
 		this.themeResolver = themeResolver;
+		this.treeSitterLanguages = treeSitterLanguages;
 		this.deck = deck;
 	}
 
-	public static void run(TerminalUIBuilder builder, ThemeResolver themeResolver, Deck deck) {
-		new TermdeckUI(builder, themeResolver, deck).run();
+	public static void run(TerminalUIBuilder builder, ThemeResolver themeResolver, TreeSitterLanguages treeSitterLanguages, Deck deck) {
+		new TermdeckUI(builder, themeResolver, treeSitterLanguages, deck).run();
 	}
 
 	public void run() {
@@ -210,8 +215,9 @@ public class TermdeckUI {
 				String text = String.format(deckSettings.getSlideCount(), index, total);
 				slideInfoStatusItem.setTitle(text);
 		}
+		ResolveContentContext context = new Chunk.ResolveContentContext(themeResolver, MarkdownSettings.defaults(), treeSitterLanguages);
 		List<String> content = deck.getCurrentSlide().blocks().stream()
-			.flatMap(blocks -> blocks.resolveContent(themeResolver, MarkdownSettings.defaults()).stream()
+			.flatMap(blocks -> blocks.resolveContent(context).stream()
 				// .map(c -> themeResolver.evaluateExpression(c).toAnsi())
 			)
 			.collect(Collectors.toList());

@@ -18,8 +18,12 @@ package com.github.jvalkeal.config;
 import com.github.jvalkeal.TermdeckApplication;
 import com.github.jvalkeal.commands.TermdeckCommand;
 
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.command.annotation.CommandScan;
+import org.springframework.shell.treesitter.TreeSitterLanguages;
 
 /**
  * Only purpose if this configuration class is to introduce {@link CommandScan}
@@ -32,4 +36,10 @@ import org.springframework.shell.command.annotation.CommandScan;
 @Configuration
 @CommandScan(basePackageClasses = TermdeckCommand.class)
 public class TermdeckConfiguration {
+
+	@Bean
+	public TreeSitterLanguages treeSitterLanguages(ConfigurableListableBeanFactory beanFactory, ResourceLoader resourceLoader) {
+		return new TreeSitterLanguages(beanFactory, resourceLoader);
+	}
+
 }

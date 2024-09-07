@@ -131,7 +131,9 @@ public class MarkdownVisitor implements Visitor {
 
 	private void exitFencedCodeBlock(FencedCodeBlock fencedCodeBlock) {
 		log.debug("Exit {}", fencedCodeBlock);
-		CodeChunk codeChunk = new CodeChunk(fencedCodeBlock.getLiteral().lines().collect(Collectors.toList()));
+		// CodeChunk codeChunk = new CodeChunk(fencedCodeBlock.getLiteral().lines().collect(Collectors.toList()),
+		// 		fencedCodeBlock.getInfo());
+		CodeChunk codeChunk = new CodeChunk(fencedCodeBlock.getLiteral(), fencedCodeBlock.getInfo());
 		blocks.add(codeChunk);
 	}
 
@@ -211,7 +213,8 @@ public class MarkdownVisitor implements Visitor {
 	private void exitIndentedCodeBlock(IndentedCodeBlock indentedCodeBlock) {
 		log.debug("Exit {}", indentedCodeBlock);
 		// indentedCodeBlock.getLiteral().lines().collect(Collectors.toList())
-		CodeChunk codeChunk = new CodeChunk(indentedCodeBlock.getLiteral().lines().collect(Collectors.toList()));
+		// CodeChunk codeChunk = new CodeChunk(indentedCodeBlock.getLiteral().lines().collect(Collectors.toList()));
+		CodeChunk codeChunk = new CodeChunk(indentedCodeBlock.getLiteral());
 		blocks.add(codeChunk);
 	}
 

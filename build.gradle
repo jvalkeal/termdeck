@@ -8,14 +8,17 @@ group = 'com.github.jvalkeal'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '21'
+	sourceCompatibility = '22'
 }
 
 repositories {
 	// mavenLocal()
+	maven {
+		url '/home/jvalkealahti/repos/jvalkeal/spring-shell/ts/build/publications/repos'
+	}
 	mavenCentral()
 	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/snapshot' }
+	// maven { url 'https://repo.spring.io/snapshot' }
 }
 
 ext {
@@ -27,8 +30,16 @@ configurations.all {
 	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
+tasks.named("bootJar") {
+	manifest {
+		attributes 'Enable-Native-Access': 'ALL-UNNAMED'
+	}
+}
+
 dependencies {
-	implementation 'org.springframework.shell:spring-shell-starter-jna'
+	//implementation 'org.springframework.shell:spring-shell-starter-jna'
+	implementation 'org.springframework.shell:spring-shell-starter-ffm'
+	implementation 'org.springframework.shell:spring-shell-starter-treesitter-all'
 	implementation 'org.springframework.shell:spring-shell-table'
 	implementation "org.commonmark:commonmark:${commonmarkVersion}"
 	implementation "org.commonmark:commonmark-ext-gfm-tables:${commonmarkVersion}"

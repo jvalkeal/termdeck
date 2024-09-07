@@ -18,7 +18,7 @@ public class BulletListChunk extends Chunk {
 	}
 
 	@Override
-	public List<String> resolveContent(ThemeResolver themeResolver, MarkdownSettings markdownSettings) {
+	public List<String> resolveContent(ResolveContentContext context) {
 		return content.stream()
 			.map(c -> "  " + "- " + c)
 			.collect(Collectors.toList());

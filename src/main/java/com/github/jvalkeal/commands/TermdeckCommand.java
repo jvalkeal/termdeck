@@ -27,6 +27,7 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.view.TerminalUIBuilder;
 import org.springframework.shell.style.ThemeResolver;
+import org.springframework.shell.treesitter.TreeSitterLanguages;
 
 /**
  * Implement the main and only command for this application. Look
@@ -40,16 +41,18 @@ public class TermdeckCommand {
 
 	private final TerminalUIBuilder builder;
 	private final ThemeResolver themeResolver;
+	private final TreeSitterLanguages treeSitterLanguages;
 
-	TermdeckCommand(TerminalUIBuilder builder, ThemeResolver themeResolver) {
+	TermdeckCommand(TerminalUIBuilder builder, ThemeResolver themeResolver, TreeSitterLanguages treeSitterLanguages) {
 		this.builder = builder;
 		this.themeResolver = themeResolver;
+		this.treeSitterLanguages = treeSitterLanguages;
 	}
 
 	@Command
 	void termdeck(@Option(required = true) File file) {
 		Deck deck = buildDeck(file);
-		TermdeckUI.run(builder, themeResolver, deck);
+		TermdeckUI.run(builder, themeResolver, treeSitterLanguages, deck);
 	}
 
 	private Deck buildDeck(File file) {

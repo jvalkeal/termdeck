@@ -19,7 +19,7 @@ public class OrderedListChunk extends Chunk {
 	}
 
 	@Override
-	public List<String> resolveContent(ThemeResolver themeResolver, MarkdownSettings markdownSettings) {
+	public List<String> resolveContent(ResolveContentContext context) {
 		AtomicInteger index = new AtomicInteger(1);
 		return content.stream()
 			.map(c -> String.format("  %s. %s", index.getAndIncrement(), c))

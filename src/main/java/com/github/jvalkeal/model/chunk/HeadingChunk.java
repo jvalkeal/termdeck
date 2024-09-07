@@ -23,7 +23,9 @@ public class HeadingChunk extends Chunk {
 		this.level = level;
 	}
 
-	public List<String> resolveContent(ThemeResolver themeResolver, MarkdownSettings markdownSettings) {
+	public List<String> resolveContent(ResolveContentContext context) {
+		ThemeResolver themeResolver = context.themeResolver();
+		MarkdownSettings markdownSettings = context.markdownSettings();
 		String prefixStyle = deducePrefixStyle(markdownSettings);
 		String textStyle = deduceTextStyle(markdownSettings);
 		String prefixTemplate = deducePrefixTemplate(markdownSettings);
